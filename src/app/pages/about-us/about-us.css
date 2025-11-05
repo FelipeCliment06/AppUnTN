@@ -1,0 +1,47 @@
+body, :host {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+.main-content {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.about-us {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.image-container img {
+  max-width: 400px;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.text-container {
+  flex: 1;
+}
+
+.text-container h2 {
+  color: #004080;
+}
+
+.footer {
+  background-color: #004080;
+  color: white;
+  text-align: center;
+  padding: 15px 0;
+  margin-top: 40px;
+}

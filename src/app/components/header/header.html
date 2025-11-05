@@ -1,1 +1,23 @@
-<p>header works!</p>
+<header>
+  <div class="logo">
+    <a href="https://mdp.utn.edu.ar/" target="_blank"><img src="assets/img/utn_mdp.png" alt="Logo UTN"  /></a>
+
+  </div>
+
+  <nav class="nav-links">
+  <a routerLink="/aboutUs">Nosotros</a> 
+    <a routerLink="/home">Inicio</a>
+    <a (click)="goToUpload()">Subir resumen</a>
+    <a (click)="goToExplorar()">Explorar</a>
+  </nav>
+
+  <div class="auth-buttons">
+    @if (!auth.isLoggedInSignal()) {
+      <a routerLink="/register" class="btn-outline">Registrarse</a>
+      <a routerLink="/login" class="btn-primary">Iniciar sesión</a>
+    } @else {
+      <a routerLink="/profile" class="btn-primary">Perfil</a>
+      <button (click)="logout()" class="btn-outline">Cerrar sesión</button>
+    }
+  </div>
+</header>
