@@ -1,1 +1,97 @@
-<p>document-preview works!</p>
+<header class="header">
+  <div class="logo">
+    <img src="assets/img/utn_mdp.png" alt="Logo UTN" class="logo-img" />
+  </div>
+  <nav class="nav-links">
+    <a routerLink="/home">Inicio</a>
+    <a routerLink="/resume-upload">Subir resumen</a>
+    <a routerLink="/documents">Explorar</a>
+  </nav>
+  <div class="auth-buttons">
+    <a routerLink="/profile">Mi perfil</a>
+  </div>
+</header>
+
+<div class="container">
+  <h2 class="mb-4">Vista previa del resumen</h2>
+
+  <div *ngIf="document" class="mb-4">
+    <h3>{{ document.title }}</h3>
+    <p><strong>Descripción:</strong> {{ document.description }}</p>
+    <p><strong>Materia:</strong> {{ document.subject }}</p>
+    <p><strong>Autor:</strong> {{ document.authorUsername }}</p>
+    <p><strong>Fecha de subida:</strong> {{ document.uploadDate }}</p>
+  </div>
+
+  <button class="btn btn-success mb-4" (click)="descargarResumen()">Descargar</button>
+
+  <div class="mb-5">
+    <h4>Puntuaciones</h4>
+    <ul class="list-group mb-3">
+      <li
+        *ngFor="let p of document?.punctuations"
+        class="list-group-item d-flex justify-content-between align-items-center"
+      >
+        <span>
+          <strong>{{ p.authorUsername }}</strong>:
+          {{ p.value }}
+          <span [class.star-destacada]="p.destacado">★</span>
+        </span>
+        <button
+          *ngIf="p.authorUsername === username"
+          class="btn btn-danger btn-sm"
+          (click)="eliminarPuntuacion(p.id)"
+        >
+          Eliminar
+        </button>
+      </li>
+    </ul>
+
+    <div class="mb-3">
+      <label class="form-label">Tu puntuación:</label><br />
+      <span
+        class="star"
+        *ngFor="let s of [1,2,3,4,5]"
+        [class.selected]="s <= puntuacionSeleccionada"
+        (click)="selectStar(s)"
+        >★</span
+      >
+      <button class="btn btn-primary btn-sm ms-2" (click)="enviarPuntuacion()">
+        Enviar
+      </button>
+    </div>
+  </div>
+
+  <div class="mb-5">
+    <h4>Comentarios</h4>
+    <ul class="list-group mb-3">
+      <li
+        *ngFor="let c of document?.commentaries"
+        class="list-group-item d-flex justify-content-between align-items-start"
+        [class.comment-destacado]="c.destacado"
+      >
+        <div>
+          <strong>{{ c.authorUsername }}</strong> ({{ c.creationDate }}):<br />
+          {{ c.content }}
+        </div>
+        <button
+          *ngIf="c.authorUsername === username"
+          class="btn btn-danger btn-sm ms-2"
+          (click)="eliminarComentario(c.id)"
+        >
+          Eliminar
+        </button>
+      </li>
+    </ul>
+
+    <div class="mb-3">
+      <label class="form-label">Agregar comentario:</label>
+      <textarea
+        class="form-control"
+        [(ngModel)]="nuevoComentario"
+        rows="3"
+      ></textarea>
+    </div>
+    <button class="btn btn-primary" (click)="enviarComentario()">Comentar</button>
+  </div>
+</div>

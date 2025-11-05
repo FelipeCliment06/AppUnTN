@@ -1,1 +1,40 @@
-<p>documents works!</p>
+<header>
+  <div class="logo">
+    <img src="assets/img/utn_mdp.png" alt="Logo UTN">
+  </div>
+  <nav class="nav-links">
+    <a routerLink="/profile">Inicio</a>
+    <a routerLink="/resume-upload">Subir resumen</a>
+    <a routerLink="/documents">Explorar</a>
+  </nav>
+  <div class="auth-buttons">
+    <a routerLink="/profile">Mi perfil</a>
+  </div>
+</header>
+
+<div class="container">
+  <h2 class="mb-4">Explorar resúmenes</h2>
+
+  <div class="mb-4">
+    <label for="filterSelect" class="form-label">Filtrar por materia:</label>
+    <select id="filterSelect" class="form-select" [(ngModel)]="selectedSubject" (change)="onFilterChange()">
+      <option value="">Todas las materias</option>
+      <option *ngFor="let s of subjects" [value]="s">{{ s.replaceAll('_', ' ') }}</option>
+    </select>
+  </div>
+
+  <div *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</div>
+
+  <div *ngIf="!errorMessage && documents.length === 0" class="text-muted">
+    No hay resúmenes disponibles.
+  </div>
+
+  <div class="list-group">
+    <a *ngFor="let doc of documents" class="list-group-item list-group-item-action"
+       (click)="goToPreview(doc.id)">
+      <strong>{{ doc.title }}</strong><br>
+      {{ doc.description }}<br>
+      <small>{{ doc.subject }}</small>
+    </a>
+  </div>
+</div>

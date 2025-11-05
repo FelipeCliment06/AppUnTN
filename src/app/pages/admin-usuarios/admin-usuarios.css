@@ -1,0 +1,25 @@
+.container {
+  max-width: 900px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+h2 {
+  font-weight: 700;
+  color: #0a2540;
+}
+
+.table {
+  font-size: 15px;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #b92c39;
+}

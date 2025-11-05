@@ -120,6 +120,28 @@ header {
   margin-bottom: 10px;
 }
 
+.search-section {
+  background-color: #ffffff;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.search-section form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.search-section select,
+.search-section input {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+}
+
 a.btn-primary,
 a.btn-outline {
   display: inline-block;

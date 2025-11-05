@@ -1,0 +1,40 @@
+<div class="container py-4">
+  <h2 class="mb-4 text-center">Gestión de Administradores</h2>
+
+  <div class="mb-3 text-end">
+    <button class="btn btn-primary" (click)="goToRegisterAdmin()">
+      Agregar nuevo administrador
+    </button>
+  </div>
+
+  <div *ngIf="admins.length > 0; else noAdmins">
+    <table class="table table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>Usuario</th>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let admin of admins">
+          <td>{{ admin.username }}</td>
+          <td>{{ admin.name }} {{ admin.lastname }}</td>
+          <td>{{ admin.mail }}</td>
+          <td>
+            <button class="btn btn-danger btn-sm" (click)="deleteUser(admin.username)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noAdmins>
+    <p class="text-center text-muted mt-4">No hay administradores registrados.</p>
+  </ng-template>
+
+  <div class="mt-4 text-center">
+    <button class="btn btn-secondary" (click)="goBack()">Volver al perfil</button>
+  </div>
+</div>

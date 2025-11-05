@@ -1,1 +1,46 @@
-<p>admin-usuarios works!</p>
+<div class="container mt-4">
+  <h2 class="mb-4 text-center">Gestión de Usuarios</h2>
+
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && users.length > 0; else noUsers">
+    <table class="table table-bordered table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Usuario</th>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.username }}</td>
+          <td>{{ user.name }} {{ user.lastname }}</td>
+          <td>{{ user.mail }}</td>
+          <td>{{ user.role }}</td>
+          <td class="text-center">
+            <button class="btn btn-danger btn-sm" (click)="deleteUser(user.username)">
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noUsers>
+    <div class="alert alert-info text-center" role="alert">
+      No se encontraron usuarios.
+    </div>
+  </ng-template>
+
+  <div class="mt-4 text-center">
+    <button class="btn btn-secondary" (click)="goBack()">Volver al perfil</button>
+  </div>
+</div>

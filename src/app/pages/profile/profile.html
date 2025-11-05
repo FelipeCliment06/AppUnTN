@@ -1,1 +1,93 @@
-<p>profile works!</p>
+<header class="d-flex justify-content-between align-items-center p-3 bg-white shadow-sm">
+  <div class="logo d-flex align-items-center fw-bold fs-5">
+    <img src="assets/img/utn_mdp.png" alt="Logo UTN" height="60" class="me-2">
+  </div>
+  <nav>
+    <a routerLink="/" class="mx-2">Inicio</a>
+    <a routerLink="/documents" class="mx-2">Explorar</a>
+  </nav>
+  <button (click)="logout()" class="btn btn-outline-danger btn-sm">Cerrar sesión</button>
+</header>
+
+<div class="container mt-4" *ngIf="user">
+  <h1 class="mb-3">¡Bienvenido/a {{ user.name }} {{ user.lastname }}!</h1>
+
+  <ul class="list-group mb-4">
+    <li class="list-group-item"><strong>Ciudad:</strong> {{ user.city }}</li>
+    <li class="list-group-item"><strong>Sobre mí:</strong> {{ user.about }}</li>
+    <li class="list-group-item"><strong>Rol:</strong> {{ user.role }}</li>
+  </ul>
+
+  <div *ngIf="isAdmin()" class="mt-4">
+    <hr>
+    <h4>Panel de Administración</h4>
+    <div class="d-flex flex-column gap-2">
+      <a routerLink="/admin-usuarios" class="btn btn-danger">Dar de baja usuarios</a>
+      <a routerLink="/admin-admins" class="btn btn-warning">Gestionar administradores</a>
+    </div>
+  </div>
+
+  <div *ngIf="isProfessor()" class="mt-4">
+    <hr>
+    <h4>Materias que dictás</h4>
+    <ul class="list-group mb-3">
+      <li *ngFor="let sub of subjects" class="list-group-item d-flex justify-content-between align-items-center">
+        {{ sub }}
+        <button class="btn btn-sm btn-outline-danger" (click)="deleteSubject(sub)">Eliminar</button>
+      </li>
+    </ul>
+
+    <div class="input-group mb-3">
+      <select [(ngModel)]="selectedSubject" class="form-select">
+        <option value="">Seleccioná una materia</option>
+            <option value="PROGRAMACION_I">Programación I</option>
+            <option value="ARQUITECTURA_Y_SISTEMAS_OPERATIVOS">Arquitectura y Sistemas Operativos</option>
+            <option value="MATEMATICA">Matemática</option>
+            <option value="ORGANIZACION_EMPRESARIAL">Organización Empresarial</option>
+            <option value="PROGRAMACION_II">Programación II</option>
+            <option value="PROBABILIDAD_Y_ESTADISTICA">Probabilidad y Estadística</option>
+            <option value="BASE_DE_DATOS_II">Base de Datos II</option>
+            <option value="INGLES_I">Inglés I</option>
+            <option value="PROGRAMACION_III">Programación III</option>
+            <option value="BASE_DE_DATOS_I">Base de Datos I</option>
+            <option value="METODOLOGIA_DE_SISTEMAS_I">Metodología de Sistemas I</option>
+            <option value="INGLES_II">Inglés II</option>
+            <option value="PROGRAMACION_IV">Programación IV</option>
+            <option value="METODOLOGIA_DE_SISTEMAS_II">Metodología de Sistemas II</option>
+            <option value="INTRODUCCION_AL_ANALISIS_DE_DATOS">Introducción al Análisis de Datos</option>
+            <option value="LEGISLACION">Legislación</option>
+            <option value="GESTION_DE_DESARROLLO_DE_SOFTWARE">Gestión de Desarrollo de Software</option>
+      </select>
+      <button class="btn btn-outline-primary" (click)="addSubject()">Asignar materia</button>
+    </div>
+  </div>
+
+  <div class="mt-5" *ngIf="user.username !== 'Admin0'">
+    <h3 class="mb-3">Editar perfil</h3>
+    <form (ngSubmit)="updateUser()" #form="ngForm">
+      <div class="mb-3">
+        <label for="name" class="form-label">Nombre</label>
+        <input id="name" [(ngModel)]="user.name" name="name" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="lastname" class="form-label">Apellido</label>
+        <input id="lastname" [(ngModel)]="user.lastname" name="lastname" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="mail" class="form-label">Email</label>
+        <input id="mail" [(ngModel)]="user.mail" name="mail" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Nueva contraseña (opcional)</label>
+        <input id="password" [(ngModel)]="user.password" name="password" type="password" class="form-control">
+      </div>
+
+      <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    </form>
+
+    <div class="mt-3 text-success">{{ updateMessage }}</div>
+  </div>
+</div>
