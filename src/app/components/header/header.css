@@ -67,6 +67,7 @@ header {
   background-color: #ffffff;
   color:#1f6feb;
   border: 2px solid #1f6feb;
+  transition: 0.2s ease;
 }
 
 .btn-outline {
@@ -78,6 +79,7 @@ header {
 .btn-outline:hover {
   background-color: #1f6feb;
   color: #ffffff;
+  transition: 0.2s ease;
 }
 
 /* ---------------- RESPONSIVE ---------------- */
