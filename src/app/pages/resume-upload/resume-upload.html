@@ -1,1 +1,95 @@
-<p>resume-upload works!</p>
+<div class="upload-wrapper">
+  <div class="upload-container">
+    <h2 class="text-center mb-4">¡Subí tu resumen!</h2>
+
+    <form 
+      (ngSubmit)="uploadResume()" 
+      enctype="multipart/form-data" 
+      class="upload-form"
+    >
+      <div class="form-group">
+        <label for="titulo" class="form-label">Título</label>
+        <input
+          type="text"
+          class="form-control"
+          id="titulo"
+          name="title"
+          [(ngModel)]="title"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion" class="form-label">Descripción</label>
+        <textarea
+          class="form-control"
+          id="descripcion"
+          name="description"
+          rows="3"
+          [(ngModel)]="description"
+          required
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="materia" class="form-label">Materia</label>
+        <select
+          class="form-select"
+          id="materia"
+          name="subject"
+          [(ngModel)]="subject"
+          required
+        >
+          <option value="">Seleccioná una materia</option>
+          <option value="PROGRAMACION_I">Programación I</option>
+          <option value="ARQUITECTURA_Y_SISTEMAS_OPERATIVOS">Arquitectura y Sistemas Operativos</option>
+          <option value="MATEMATICA">Matemática</option>
+          <option value="ORGANIZACION_EMPRESARIAL">Organización Empresarial</option>
+          <option value="PROGRAMACION_II">Programación II</option>
+          <option value="PROBABILIDAD_Y_ESTADISTICA">Probabilidad y Estadística</option>
+          <option value="BASE_DE_DATOS_I">Base de Datos I</option>
+          <option value="BASE_DE_DATOS_II">Base de Datos II</option>
+          <option value="INGLES_I">Inglés I</option>
+          <option value="INGLES_II">Inglés II</option>
+          <option value="PROGRAMACION_III">Programación III</option>
+          <option value="PROGRAMACION_IV">Programación IV</option>
+          <option value="METODOLOGIA_DE_SISTEMAS_I">Metodología de Sistemas I</option>
+          <option value="METODOLOGIA_DE_SISTEMAS_II">Metodología de Sistemas II</option>
+          <option value="INTRODUCCION_AL_ANALISIS_DE_DATOS">Introducción al Análisis de Datos</option>
+          <option value="LEGISLACION">Legislación</option>
+          <option value="GESTION_DE_DESARROLLO_DE_SOFTWARE">Gestión de Desarrollo de Software</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="archivo" class="form-label">Archivo (.pdf, .docx, .txt)</label>
+        <input
+          class="form-control"
+          type="file"
+          id="archivo"
+          name="file"
+          accept=".pdf,.docx,.doc,.txt"
+          (change)="onFileSelected($event)"
+          required
+        />
+      </div>
+
+      <div class="btn-container text-center mt-3">
+        <button type="submit" class="btn btn-primary">Subir resumen</button>
+      </div>
+    </form>
+
+    <!-- ✅ Mensaje con @if -->
+  @if (successMessage) {
+    <div class="alert alert-success mt-3">
+      {{ successMessage }}
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger mt-3">
+      {{ errorMessage }}
+    </div>
+  }
+  </div>
+</div>

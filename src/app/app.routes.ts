@@ -19,6 +19,8 @@ export const routes: Routes = [
   { path: 'resumeUpload', component: ResumeUpload, canActivate: [authGuard] },
   { path: 'documents', component: Documents, canActivate: [authGuard] },
   { path: 'profile', component: Profile, canActivate: [authGuard] },
+  { path: 'document-preview/:id', component: DocumentPreview, canActivate: [authGuard] },
+  
 
   // Rutas públicas
   { path: 'login', component: Login },
