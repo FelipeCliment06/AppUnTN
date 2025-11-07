@@ -1,1 +1,101 @@
-<p>register works!</p>
+<div class="register-container">
+  <div class="register-card">
+    <h2>Registro de Usuario</h2>
+
+    @if (message) {
+      <div class="alert" [class.alert-success]="!error" [class.alert-danger]="error">
+        {{ message }}
+      </div>
+    }
+
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      <!-- Nombre -->
+      <div class="form-group">
+        <label>Nombre</label>
+        <input type="text" formControlName="name" />
+        @if (f['name'].touched && f['name'].invalid) {
+          <small class="error-text">El nombre es obligatorio (mínimo 2 letras).</small>
+        }
+      </div>
+
+      <!-- Apellido -->
+      <div class="form-group">
+        <label>Apellido</label>
+        <input type="text" formControlName="lastname" />
+        @if (f['lastname'].touched && f['lastname'].invalid) {
+          <small class="error-text">El apellido es obligatorio (mínimo 2 letras).</small>
+        }
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" formControlName="mail" />
+        @if (f['mail'].touched && f['mail'].errors?.['required']) {
+          <small class="error-text">El email es obligatorio.</small>
+        }
+        @if (f['mail'].errors?.['email']) {
+          <small class="error-text">Formato de email inválido.</small>
+        }
+        @if (f['mail'].pending) {
+          <small class="info-text">Verificando disponibilidad...</small>
+        }
+        @if (f['mail'].errors?.['emailTaken']) {
+          <small class="error-text">Este email ya está registrado.</small>
+        }
+      </div>
+
+      <!-- Usuario -->
+      <div class="form-group">
+        <label>Usuario</label>
+        <input type="text" formControlName="username" />
+        @if (f['username'].touched && f['username'].errors?.['required']) {
+          <small class="error-text">El usuario es obligatorio.</small>
+        }
+        @if (f['username'].errors?.['minlength']) {
+          <small class="error-text">Debe tener al menos 4 caracteres.</small>
+        }
+        @if (f['username'].pending) {
+          <small class="info-text">Verificando disponibilidad...</small>
+        }
+        @if (f['username'].errors?.['usernameTaken']) {
+          <small class="error-text">Este nombre de usuario ya existe.</small>
+        }
+      </div>
+
+      <!-- Contraseña -->
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" formControlName="password" />
+        @if (f['password'].touched && f['password'].invalid) {
+          <small class="error-text">Debe tener al menos 6 caracteres.</small>
+        }
+      </div>
+
+      <!-- Ciudad -->
+      <div class="form-group">
+        <label>Ciudad</label>
+        <input type="text" formControlName="city" />
+      </div>
+
+      <!-- Sobre vos -->
+      <div class="form-group">
+        <label>Sobre vos</label>
+        <textarea formControlName="about" rows="3"></textarea>
+      </div>
+
+      <!-- Rol -->
+      <div class="form-group">
+        <label>Rol</label>
+        <select formControlName="role">
+          <option value="STUDENT">Alumno</option>
+          <option value="PROFESSOR">Profesor</option>
+        </select>
+      </div>
+
+      <button type="submit" [disabled]="registerForm.invalid" class="btn-primary">
+        Registrarse
+      </button>
+    </form>
+  </div>
+</div>
