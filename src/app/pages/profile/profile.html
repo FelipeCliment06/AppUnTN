@@ -1,1 +1,86 @@
-<p>profile works!</p>
+<div class="container">
+  <h1 class="title">¡Bienvenido/a <span class="username">
+    @if (userData?.name) {
+      {{ userData?.name }}
+    } @else {
+      {{ auth.getUsername() }}
+    }
+  </span>!</h1>
+  <p>Este es tu perfil de AppUnTN</p>
+  <div id="userDetails"></div>
+
+  @if (isAdmin) {
+    <div id="adminPanel" class="box4">
+      <hr>
+      <h4>Panel de Administración</h4>
+      <div class="admin-buttons">
+        <button class="users-button" (click)="goToUsers()">
+          Dar de baja usuarios
+        </button>
+        <button class="admins-button" (click)="goToAdmins()">
+          Administrar administradores
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (isProfessor) {
+  <div id="professorPanel" class="box4">
+    <hr />
+    <h4>Materias que dictás</h4>
+
+    <ul class="ul-professor">
+      @for (sub of subjects; track sub) {
+        <li class="li-professor">
+          {{ sub }}
+          <button class="button-professor" (click)="eliminarMateria(sub)">
+            Eliminar
+          </button>
+        </li>
+      }
+      @empty {
+        <li class="no-subjects">No tenés materias asignadas.</li>
+      }
+    </ul>
+
+    <div class="new-subject-container">
+      <select id="subject-select" [(ngModel)]="nuevaMateria" class="form-select">
+        <option value="">Seleccioná una materia</option>
+
+        @for (m of materiasDisponibles; track m.value) {
+          <option [value]="m.value">{{ m.label }}</option>
+        }
+      </select>
+      <button class="button-add-subject" (click)="agregarMateria()">
+        Asignar materia
+      </button>
+    </div>
+  </div>
+}
+
+  <!-- Seccion para editar el perfil -->
+  <div class="box5" >
+    <h3 class="box3">Editar perfil</h3>
+    <form id="updateForm" class="form-updateForm">
+      <div class="box3">
+        <label for="nameInput" class="form-label">Nombre</label>
+        <input type="text" class="form-control" id="nameInput" name="name" required>
+      </div>
+      <div class="box3">
+        <label for="lastnameInput" class="form-label">Apellido</label>
+        <input type="text" class="form-control" id="lastnameInput" name="lastname" required>
+      </div>
+      <div class="box3">
+        <label for="mailInput" class="form-label">Email</label>
+        <input type="email" class="form-control" id="mailInput" name="mail" required>
+      </div>
+      <div class="box3">
+        <label for="passwordInput" class="form-label">Nueva Contraseña (opcional)</label>
+        <input type="password" class="form-control" id="passwordInput" name="password">
+      </div>
+      <button type="submit" class="button-saveUpdate">Guardar cambios</button>
+    </form>
+    <div id="updateMessage" class="box3"></div>
+  </div>
+
+</div>
