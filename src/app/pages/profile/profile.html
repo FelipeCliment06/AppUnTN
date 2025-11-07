@@ -7,11 +7,21 @@
     }
   </span>!</h1>
   <p>Este es tu perfil de AppUnTN</p>
-  <div id="userDetails"></div>
+  @if (userData) {
+  <div id="userDetails" class="user-details-card">
+    <h3 class="details-title">Información de la Cuenta</h3>
+    <ul class="details-list">
+        <li><strong>Nombre:</strong> {{ userData.name }}</li>
+        <li><strong>Apellido:</strong> {{ userData.lastname }}</li>
+        <li><strong>Email:</strong> {{ userData.mail }}</li>
+        <li><strong>Ciudad:</strong> {{ userData.city || 'No especificada' }}</li>
+        <li><strong>Sobre mí:</strong> {{ userData.about || 'Sin descripción' }}</li>
+    </ul>
+  </div>
+}
 
   @if (isAdmin) {
     <div id="adminPanel" class="box4">
-      <hr>
       <h4>Panel de Administración</h4>
       <div class="admin-buttons">
         <button class="users-button" (click)="goToUsers()">
@@ -26,7 +36,6 @@
 
   @if (isProfessor) {
   <div id="professorPanel" class="box4">
-    <hr />
     <h4>Materias que dictás</h4>
 
     <ul class="ul-professor">

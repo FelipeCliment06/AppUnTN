@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
@@ -22,6 +22,10 @@ interface UserProfile {
   styleUrls: ['./profile.css'],
 })
 export class Profile implements OnInit {
+
+  constructor(
+    private readonly cdr: ChangeDetectorRef
+  ) {}
 
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
@@ -109,8 +113,14 @@ export class Profile implements OnInit {
         this.isProfessor = role === 'PROFESSOR' || role === 'ROLE_PROFESSOR';
 
         if (this.isProfessor) {
-          this.cargarMateriasProfesor();
+          if (this.isProfessor) {
+          setTimeout(() => {
+            this.cargarMateriasProfesor();
+          }, 1000);
+      }
         }
+
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar perfil:', err);
@@ -122,10 +132,24 @@ export class Profile implements OnInit {
   }
 
   cargarMateriasProfesor(): void {
-    this.http.get<string[]>('http://localhost:8080/api/users/subjects/get', { headers: this.headers })
+     console.log('Cargando materias del profesor...');
+
+    this.http
+      .get<any[]>('http://localhost:8080/api/users/subjects/get', { headers: this.headers })
       .subscribe({
-        next: (subjects) => (this.subjects = subjects),
-        error: () => (this.subjects = []),
+        next: (subjects) => {
+          console.log('Materias recibidas desde el backend:', subjects);
+
+          this.subjects = subjects.map((s: any) => s.name || s);
+          console.log('Materias procesadas para mostrar:', this.subjects)
+
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error al obtener materias:', err);
+          this.subjects = [];
+          this.cdr.detectChanges();
+        },
       });
   }
 
