@@ -6,12 +6,6 @@ body, :host {
   background-color: #f9f9f9;
   color: #333;
 }
-.image-container video {
-  border-radius: 12px;
-  object-fit: cover;
-  max-height: 400px;
-  width: 100%;
-}
 
 .main-content {
   max-width: 1000px;
@@ -21,27 +15,33 @@ body, :host {
 
 .about-us {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column; /* la imagen arriba, texto abajo */
   gap: 20px;
   background-color: white;
-  padding: 30px;
+  padding: 0; /* sin padding para que la imagen toque los bordes */
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  overflow: hidden; /* mantiene bordes redondeados */
+}
+
+.image-container {
+  width: 100%;
+  min-height: 400px;
+  overflow: hidden;
 }
 
 .image-container img {
-  max-width: 400px;
   width: 100%;
-  border-radius: 10px;
+  height: 700px; /* alto tipo banner */
+  object-fit: cover;
+  display: block;
 }
 
 .text-container {
-  flex: 1;
+  padding: 30px;
 }
 
 .text-container h2 {
   color: #004080;
+  margin-top: 0;
 }
-
-
