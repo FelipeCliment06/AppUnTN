@@ -8,6 +8,8 @@ import { authGuard } from './guards/auth-guard';
 import { Profile } from './pages/profile/profile';
 import { Documents } from './pages/documents/documents';
 import { AboutUs } from './pages/about-us/about-us';
+import { AdminAdmins } from './pages/admin-admins/admin-admins';
+import { AdminUsuarios } from './pages/admin-usuarios/admin-usuarios';
 
 export const routes: Routes = [
   // Página principal pública
@@ -20,6 +22,8 @@ export const routes: Routes = [
   { path: 'documents', component: Documents, canActivate: [authGuard] },
   { path: 'profile', component: Profile, canActivate: [authGuard] },
   { path: 'document-preview/:id', component: DocumentPreview, canActivate: [authGuard] },
+  { path: 'admin-admins', component: AdminAdmins, canActivate: [authGuard] },
+  { path: 'admin-usuarios', component: AdminUsuarios, canActivate: [authGuard] },
   
 
   // Rutas públicas

@@ -71,3 +71,9 @@ input {
   text-decoration: none;
   font-weight: 600;
 }
+
+.register-link a:hover{
+  transition: 0.2s ease;
+  color: #0a2540;
+  text-decoration: underline;
+}

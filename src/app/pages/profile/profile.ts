@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, afterNextRender, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
@@ -62,26 +62,32 @@ export class Profile implements OnInit {
 
   ngOnInit(): void {
     const token = this.auth.getToken();
-
     if (!token) {
       this.router.navigate(['/login']);
       return;
     }
 
     this.cargarPerfil();
+
+    // 👇 Esto asegura que se ejecuta DESPUÉS de renderizar
+    afterNextRender(() => {
+      if (this.isProfessor) {
+        this.cargarMateriasProfesor();
+      }
+    });
   }
 
   goToAdmins(): void {
-    this.router.navigate(['/admin/admins']);
+    this.router.navigate(['/admin-admins']);
   }
 
   goToUsers(): void {
-    this.router.navigate(['/admin/usuarios']);
+    this.router.navigate(['/admin-usuarios']);
   }
 
   logout(): void {
     this.auth.logout();
-    this.router.navigate(['/home']);
+    this.router.navigate(['/home']);  //creo que es innecesario
   }
 
   private get headers(): HttpHeaders {

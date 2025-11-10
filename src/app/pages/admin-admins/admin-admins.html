@@ -1,1 +1,84 @@
-<p>admin-admins works!</p>
+<div class="container">
+  <h2 class="mb-4 text-center">Gestión de Administradores</h2>
+
+  <div class="d-flex justify-content-between flex-wrap align-items-end gap-2 mb-3 filtros">
+    <div>
+      <a routerLink="/register" [queryParams]="{ role: 'ADMIN' }" class="btn btn-primary mb-2">
+        Agregar nuevo administrador
+      </a>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 filtros">
+      <div class="d-flex flex-column">
+        <label class="mb-1">Usuario</label>
+        <input
+  type="text"
+  class="form-control form-control-sm"
+  placeholder="Filtrar por usuario"
+  [value]="filtroUsername()"
+  (input)="onFiltroChange('username', $event)"
+/>
+
+<input
+  type="text"
+  class="form-control form-control-sm"
+  placeholder="Filtrar por nombre"
+  [value]="filtroNombre()"
+  (input)="onFiltroChange('nombre', $event)"
+/>
+
+<input
+  type="text"
+  class="form-control form-control-sm"
+  placeholder="Filtrar por email"
+  [value]="filtroEmail()"
+  (input)="onFiltroChange('email', $event)"
+/>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover text-center">
+      <thead class="table-light">
+        <tr>
+          <th>Usuario</th>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (admin of filteredAdmins(); track admin.username) {
+          <tr>
+            <td>{{ admin.username }}</td>
+            <td>{{ admin.name }} {{ admin.lastname }}</td>
+            <td>{{ admin.mail }}</td>
+            <td class="actions-btn">
+              @if (
+                admin.username.toLowerCase() !== usernameActual &&
+                admin.username.toLowerCase() !== 'admin0'
+              ) {
+                <button class="btn btn-danger btn-sm" (click)="deleteUser(admin.username)">
+                  Eliminar
+                </button>
+              } @else {
+                <span class="text-muted">No disponible</span>
+              }
+            </td>
+          </tr>
+        }
+        @empty {
+          <tr><td colspan="4" class="text-muted">No hay administradores para mostrar.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-4 text-center">
+    <button class="btn btn-secondary" (click)="volverPerfil()">
+      Volver al perfil
+    </button>
+  </div>
+</div>
