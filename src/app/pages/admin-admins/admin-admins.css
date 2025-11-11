@@ -1,4 +1,4 @@
-/* ======== ESTILO GENERAL ======== */
+/* ESTILO GENERAL */
 body {
   background-color: #f9f9f9;
   font-family: 'Inter', sans-serif;
@@ -6,8 +6,8 @@ body {
   margin: 0;
 }
 
-/* ======== CONTENEDOR PRINCIPAL ======== */
-.container {
+/* CONTENEDOR PRINCIPAL */
+.contenedor {
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -16,25 +16,30 @@ body {
   max-width: 1000px;
 }
 
-h2 {
+.titulo {
   font-size: 1.8rem;
   text-align: center;
   color: #333;
-  margin-bottom: 30px;
+  /* Reemplaza h2 + clases de margen */
+  margin-bottom: 30px; 
 }
 
-/* ======== CABECERA: BOTÓN + FILTROS ======== */
-.header-row {
+/* CABECERA: BOTÓN + FILTROS */
+.controles {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-direction: column; 
+  /* Usamos column para que el botón y los filtros se apilen por defecto (móvil) */
+  gap: 20px;
   margin-bottom: 25px;
 }
 
-/* ======== BOTÓN AGREGAR ======== */
-.btn-primary {
+/* BOTÓN AGREGAR */
+.btn-agregar {
+  /* Estilos para <a> */
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -46,80 +51,94 @@ h2 {
   transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
-.btn-primary:hover {
+.btn-agregar:hover {
   background-color: #0056b3;
   transform: scale(1.02);
 }
 
-/* ======== FILTROS ======== */
+/* FILTROS */
 .filtros {
   display: flex;
-  gap: 10px;
+  gap: 15px;
   flex-wrap: wrap;
   padding: 5px;
 }
 
-.filtro {
+.filtro-grupo {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row; /* CAMBIO CLAVE: Pone los filtros en línea (horizontal) */
+  align-items: center; 
+  gap: 15px; 
+  flex-wrap: wrap; /* Permite que los inputs bajen a la siguiente línea si no caben */
 }
 
-.filtro label {
+.filtro-label {
   font-size: 0.8rem;
   color: #555;
   margin-bottom: 3px;
   padding: 5px;
 }
 
-.filtro input {
+.filtro-input {
   border: 1px solid #ccc;
   border-radius: 6px;
   padding: 6px 8px;
   font-size: 0.9rem;
   width: 150px;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  max-width: 100%;
 }
 
-.filtro input:focus {
+.filtro-input:focus {
   border-color: #007bff;
   box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
   outline: none;
 }
 
-/* ======== TABLA ======== */
-.table {
+/* TABLA */
+.tabla-wrap {
+  overflow-x: auto;
+}
+
+.tabla {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
 }
 
-.table thead {
+.tabla-cabecera {
   background-color: #f1f3f5;
   color: #0a2540;
 }
 
-.table th,
-.table td {
+.tabla th,
+.tabla td {
   padding: 12px 10px;
-  border: 1px solid #e0e0e0;
+  /* Reemplaza border-bordered */
+  border: 1px solid #e0e0e0; 
   text-align: center;
   vertical-align: middle;
   font-size: 0.95rem;
 }
 
-.table tbody tr:hover {
+.tabla-cuerpo tr:hover {
   background-color: #f8f9fa;
 }
 
-.actions-btn {
+.tabla-acciones {
   display: flex;
   justify-content: center;
   gap: 8px;
 }
 
-/* ======== BOTONES DE ACCIÓN ======== */
-.btn-danger {
+.tabla-vacia {
+    color: #6c757d;
+    font-style: italic;
+}
+
+
+/* BOTONES DE ACCIÓN */
+.btn-eliminar {
   background-color: #dc3545;
   color: #fff;
   border: none;
@@ -131,12 +150,20 @@ h2 {
   transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
-.btn-danger:hover {
+.btn-eliminar:hover {
   background-color: #b02a37;
   transform: scale(1.03);
 }
 
-.btn-secondary {
+.accion-nodisp {
+  color: #6c757d;
+  font-size: 0.85rem;
+  /* Para alineación vertical */
+  line-height: 2; 
+}
+
+/* BOTÓN VOLVER */
+.btn-volver {
   background-color: #6c757d;
   color: #fff;
   border: none;
@@ -147,52 +174,66 @@ h2 {
   transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
-.btn-secondary:hover {
+.btn-volver:hover {
   background-color: #5a6268;
   transform: scale(1.02);
 }
 
-/* ======== BOTÓN VOLVER ======== */
-.mt-4.text-center {
+/* ÁREA DE VOLVER */
+.volver-area {
   margin-top: 35px;
+  text-align: center;
 }
 
-/* ======== RESPONSIVE ======== */
+
+/* RESPONSIVE */
 @media (max-width: 768px) {
-  .container {
+  .contenedor {
     padding: 25px;
     max-width: 95%;
   }
 
-  .header-row {
-    flex-direction: column;
+  .controles {
     align-items: stretch;
   }
 
   .filtros {
-    justify-content: space-between;
+    /* Forzamos que el contenedor de filtros se apile en columna en móvil */
+    flex-direction: column; 
+    width: 100%;
   }
-
-  .filtro input {
+  
+  .filtro-grupo {
+    /* En móvil, volvemos a la disposición vertical para que los inputs se apilen. */
+    flex-direction: column; 
+    align-items: stretch;
     width: 100%;
   }
 
-  .btn-primary {
+  .filtro-input {
+    width: 100%;
+  }
+  
+  .agregar-area {
+    width: 100%;
+  }
+
+  .btn-agregar {
     width: 100%;
   }
 }
 
 @media (max-width: 480px) {
-  .container {
+  .contenedor {
     padding: 20px 18px;
   }
 
-  .filtro input {
+  .filtro-input {
     font-size: 0.85rem;
     padding: 5px 8px;
   }
 
-  .btn {
+  .btn-agregar, .btn-volver {
     padding: 8px;
     font-size: 0.9rem;
   }

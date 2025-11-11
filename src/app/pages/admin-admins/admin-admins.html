@@ -1,47 +1,45 @@
-<div class="container">
-  <h2 class="mb-4 text-center">Gestión de Administradores</h2>
+<div class="contenedor">
+  <h2 class="titulo">Gestión de Administradores</h2>
 
-  <div class="d-flex justify-content-between flex-wrap align-items-end gap-2 mb-3 filtros">
-    <div>
-      <a routerLink="/register" [queryParams]="{ role: 'ADMIN' }" class="btn btn-primary mb-2">
+  <div class="controles">
+    <div class="agregar-area">
+      <a routerLink="/register" [queryParams]="{ role: 'ADMIN' }" class="btn-agregar">
         Agregar nuevo administrador
       </a>
     </div>
 
-    <div class="d-flex flex-wrap gap-2 filtros">
-      <div class="d-flex flex-column">
-        <label class="mb-1">Usuario</label>
+    <div class="filtros">
+      <div class="filtro-grupo">
         <input
-  type="text"
-  class="form-control form-control-sm"
-  placeholder="Filtrar por usuario"
-  [value]="filtroUsername()"
-  (input)="onFiltroChange('username', $event)"
-/>
+          type="text"
+          class="filtro-input"
+          placeholder="Filtrar por usuario"
+          [value]="filtroUsername()"
+          (input)="onFiltroChange('username', $event)"
+        />
 
-<input
-  type="text"
-  class="form-control form-control-sm"
-  placeholder="Filtrar por nombre"
-  [value]="filtroNombre()"
-  (input)="onFiltroChange('nombre', $event)"
-/>
+        <input
+          type="text"
+          class="filtro-input"
+          placeholder="Filtrar por nombre"
+          [value]="filtroNombre()"
+          (input)="onFiltroChange('nombre', $event)"
+        />
 
-<input
-  type="text"
-  class="form-control form-control-sm"
-  placeholder="Filtrar por email"
-  [value]="filtroEmail()"
-  (input)="onFiltroChange('email', $event)"
-/>
-
+        <input
+          type="text"
+          class="filtro-input"
+          placeholder="Filtrar por email"
+          [value]="filtroEmail()"
+          (input)="onFiltroChange('email', $event)"
+        />
       </div>
     </div>
   </div>
 
-  <div class="table-responsive">
-    <table class="table table-bordered table-hover text-center">
-      <thead class="table-light">
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead class="tabla-cabecera">
         <tr>
           <th>Usuario</th>
           <th>Nombre</th>
@@ -49,35 +47,35 @@
           <th>Acciones</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="tabla-cuerpo">
         @for (admin of filteredAdmins(); track admin.username) {
           <tr>
             <td>{{ admin.username }}</td>
             <td>{{ admin.name }} {{ admin.lastname }}</td>
             <td>{{ admin.mail }}</td>
-            <td class="actions-btn">
+            <td class="tabla-acciones">
               @if (
                 admin.username.toLowerCase() !== usernameActual &&
                 admin.username.toLowerCase() !== 'admin0'
               ) {
-                <button class="btn btn-danger btn-sm" (click)="deleteUser(admin.username)">
+                <button class="btn-eliminar" (click)="deleteUser(admin.username)">
                   Eliminar
                 </button>
               } @else {
-                <span class="text-muted">No disponible</span>
+                <span class="accion-nodisp">No disponible</span>
               }
             </td>
           </tr>
         }
         @empty {
-          <tr><td colspan="4" class="text-muted">No hay administradores para mostrar.</td></tr>
+          <tr><td colspan="4" class="tabla-vacia">No hay administradores para mostrar.</td></tr>
         }
       </tbody>
     </table>
   </div>
 
-  <div class="mt-4 text-center">
-    <button class="btn btn-secondary" (click)="volverPerfil()">
+  <div class="volver-area">
+    <button class="btn-volver" (click)="volverPerfil()">
       Volver al perfil
     </button>
   </div>
