@@ -14,8 +14,16 @@ export class Register {
   registerForm: FormGroup;
   message = '';
   error = false;
+  currentRole: string | null = null;
 
   constructor(private fb: FormBuilder, private userService: UserService, private router: Router) {
+    this.currentRole = localStorage.getItem('role');
+
+    const roleControlConfig =
+      this.currentRole === 'ADMIN'
+        ? { value: 'ADMIN', disabled: true }
+        : 'STUDENT';
+
     this.registerForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       lastname: ['', [Validators.required, Validators.minLength(2)]],
@@ -24,11 +32,10 @@ export class Register {
       password: ['', [Validators.required, Validators.minLength(6)]],
       city: [''],
       about: [''],
-      role: ['STUDENT', Validators.required]
+      role: [roleControlConfig, Validators.required]
     });
   }
 
-  // === VALIDADORES ===
   mailExistsValidator(): AsyncValidatorFn {
     return (control: AbstractControl) => {
       if (!control.value) return of(null);
@@ -63,11 +70,20 @@ export class Register {
       return;
     }
 
-    this.userService.register(this.registerForm.value).subscribe({
+    const payload = this.registerForm.getRawValue(); // incluye 'role' aunque esté deshabilitado
+
+    this.userService.register(payload).subscribe({
       next: () => {
-        this.message = 'Registro exitoso. Redirigiendo...';
+        this.message = 'Registro exitoso.';
         this.error = false;
-        setTimeout(() => this.router.navigate(['/login']), 2000);
+
+        // 🔹 Si el actual usuario es ADMIN, vuelve al panel de admins
+        if (this.currentRole === 'ADMIN') {
+          setTimeout(() => this.router.navigate(['/admin-admins']), 1500);
+        } else {
+          // 🔹 Si es registro normal, va al login
+          setTimeout(() => this.router.navigate(['/login']), 1500);
+        }
       },
       error: (err) => {
         this.message = err.status === 409 ? 'El usuario o email ya existen.' : 'Error al registrarse.';

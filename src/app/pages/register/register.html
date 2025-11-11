@@ -9,28 +9,26 @@
     }
 
     <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
-      <!-- Nombre -->
+      
       <div class="form-group">
-        <label>Nombre</label>
-        <input type="text" formControlName="name" />
+        <label for="name">Nombre</label>
+        <input id="name" name="name" type="text" formControlName="name" autocomplete="given-name" />
         @if (f['name'].touched && f['name'].invalid) {
           <small class="error-text">El nombre es obligatorio (mínimo 2 letras).</small>
         }
       </div>
-
-      <!-- Apellido -->
+      
       <div class="form-group">
-        <label>Apellido</label>
-        <input type="text" formControlName="lastname" />
+        <label for="lastname">Apellido</label>
+        <input id="lastname" name="lastname" type="text" formControlName="lastname" autocomplete="family-name" />
         @if (f['lastname'].touched && f['lastname'].invalid) {
           <small class="error-text">El apellido es obligatorio (mínimo 2 letras).</small>
         }
       </div>
-
-      <!-- Email -->
+      
       <div class="form-group">
-        <label>Email</label>
-        <input type="email" formControlName="mail" />
+        <label for="mail">Email</label>
+        <input id="mail" name="mail" type="email" formControlName="mail" autocomplete="email" />
         @if (f['mail'].touched && f['mail'].errors?.['required']) {
           <small class="error-text">El email es obligatorio.</small>
         }
@@ -45,10 +43,10 @@
         }
       </div>
 
-      <!-- Usuario -->
+      
       <div class="form-group">
-        <label>Usuario</label>
-        <input type="text" formControlName="username" />
+        <label for="username">Usuario</label>
+        <input id="username" name="username" type="text" formControlName="username" autocomplete="username" />
         @if (f['username'].touched && f['username'].errors?.['required']) {
           <small class="error-text">El usuario es obligatorio.</small>
         }
@@ -63,33 +61,37 @@
         }
       </div>
 
-      <!-- Contraseña -->
+      
       <div class="form-group">
-        <label>Contraseña</label>
-        <input type="password" formControlName="password" />
+        <label for="password">Contraseña</label>
+        <input id="password" name="password" type="password" formControlName="password" autocomplete="new-password" />
         @if (f['password'].touched && f['password'].invalid) {
           <small class="error-text">Debe tener al menos 6 caracteres.</small>
         }
       </div>
 
-      <!-- Ciudad -->
+
       <div class="form-group">
-        <label>Ciudad</label>
-        <input type="text" formControlName="city" />
+        <label for="city">Ciudad</label>
+        <input id="city" name="city" type="text" formControlName="city" autocomplete="address-level2" />
       </div>
 
-      <!-- Sobre vos -->
+
       <div class="form-group">
-        <label>Sobre vos</label>
-        <textarea formControlName="about" rows="3"></textarea>
+        <label for="about">Sobre vos</label>
+        <textarea id="about" name="about" formControlName="about" rows="3" autocomplete="off"></textarea>
       </div>
 
-      <!-- Rol -->
+      
       <div class="form-group">
-        <label>Rol</label>
-        <select formControlName="role">
-          <option value="STUDENT">Alumno</option>
-          <option value="PROFESSOR">Profesor</option>
+        <label for="role">Rol</label>
+        <select id="role" name="role" formControlName="role">
+          @if (currentRole === 'ADMIN') {
+            <option value="ADMIN">ADMIN</option>
+          } @else {
+            <option value="STUDENT">Alumno</option>
+            <option value="PROFESSOR">Profesor</option>
+          }
         </select>
       </div>
 
