@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { UserService } from '../../services/user-service';
 import { Auth } from '../../services/auth';
 
 @Component({
@@ -15,18 +15,27 @@ export class Login {
   password = '';
   error = false;
 
-  constructor(private http: HttpClient, private router: Router, private auth: Auth) {}
+  constructor(private userService: UserService, private auth: Auth, private router: Router) {}
 
   onLogin() {
     const credentials = { username: this.username, password: this.password };
 
-    this.http.post('http://localhost:8080/api/auth/login', credentials).subscribe({
+    this.userService.login(credentials).subscribe({
       next: (data: any) => {
-        // ✅ usar el servicio Auth
+        // ✅ Guardar token con el servicio Auth
         this.auth.login(data.token);
 
-        // Redirigir al home
-        this.router.navigate(['/home']);
+        // ✅ Guardar también el rol si viene en la respuesta
+        if (data.role) {
+          localStorage.setItem('role', data.role);
+        }
+
+        // ✅ Redirigir según el rol
+        if (data.role === 'ADMIN') {
+          this.router.navigate(['/admin-dashboard']); // o la ruta que uses para admin
+        } else {
+          this.router.navigate(['/home']);
+        }
       },
       error: () => {
         this.error = true;

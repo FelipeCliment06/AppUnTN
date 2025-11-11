@@ -23,4 +23,9 @@ export class UserService {
     const params = new HttpParams().set('username', username);
     return this.http.get<boolean>(`${this.baseUrl}/exists/username`, { params });
   }
+
+  login(credentials: { username: string; password: string }) {
+  return this.http.post('http://localhost:8080/api/auth/login', credentials);
+}
+
 }
