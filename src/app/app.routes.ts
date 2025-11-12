@@ -3,13 +3,13 @@ import { Home } from './pages/home/home';
 import { ResumeUpload } from './pages/resume-upload/resume-upload';
 import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
-import { DocumentPreview } from './pages/document-preview/document-preview';
 import { authGuard } from './guards/auth-guard';
 import { Profile } from './pages/profile/profile';
 import { Documents } from './pages/documents/documents';
 import { AboutUs } from './pages/about-us/about-us';
 import { AdminAdmins } from './pages/admin-admins/admin-admins';
 import { AdminUsuarios } from './pages/admin-usuarios/admin-usuarios';
+import { DocumentPreview } from './pages/document-preview/document-preview';
 
 export const routes: Routes = [
   // Página principal pública

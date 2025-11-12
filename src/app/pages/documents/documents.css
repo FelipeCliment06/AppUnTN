@@ -1,0 +1,28 @@
+.container {
+  font-family: 'Inter', sans-serif;
+  color: #0a2540;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: flex-end;
+}
+
+.form-control, .form-select {
+  min-width: 200px;
+}
+
+.list-group-item {
+  background-color: #ffffff;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.list-group-item:hover {
+  background-color: #e8f0fe;
+  transform: scale(1.01);
+}
