@@ -111,7 +111,4 @@ isProfessorRole(role: string): boolean {
   const r = (role || '').toUpperCase();
   return r === 'PROFESSOR' || r === 'ROLE_PROFESSOR';
 }
-
-
-
 }
