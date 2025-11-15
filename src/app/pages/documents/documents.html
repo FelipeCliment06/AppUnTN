@@ -1,63 +1,39 @@
-<div class="container py-4">
-  <h2 class="fw-bold mb-4 text-primary">Explorar resúmenes</h2>
+<div class="list-group text-center text-muted">
 
-  <!-- Filtros -->
-  <div class="filter-row mb-4">
-    <div>
-      <label for="filterSubject" class="form-label mb-1">Materia:</label>
-      <select id="filterSubject" [(ngModel)]="filterSubject" (change)="filterDocuments()" class="form-select">
-        <option value="">Seleccionar materia...</option>
-        @for (subject of subjects; track subject) {
-          <option [value]="subject">{{ subject.replaceAll('_', ' ') }}</option>
-        }
-      </select>
-    </div>
-
-    <div>
-      <label for="filterName" class="form-label mb-1">Nombre del resumen:</label>
-      <input id="filterName" type="text" [(ngModel)]="filterName" (input)="filterDocuments()" class="form-control" placeholder="Ej: Base de datos...">
-    </div>
-
-    <div>
-      <label for="filterAuthor" class="form-label mb-1">Autor:</label>
-      <input id="filterAuthor" type="text" [(ngModel)]="filterAuthor" (input)="filterDocuments()" class="form-control" placeholder="Ej: Juan Pérez">
-    </div>
-
-    <button class="btn btn-outline-secondary mt-3 mt-md-4" (click)="clearFilters()">Limpiar</button>
-  </div>
-
-  <!-- Loading -->
-  @if (isLoading) {
-    <div class="text-center my-4">
-      <div class="spinner-border text-primary" role="status"></div>
-      <p class="text-muted mt-2">Cargando documentos...</p>
-    </div>
-  }
-
-  <!-- Sin resultados -->
-  @if (!isLoading && filteredDocs.length === 0) {
-    <div class="text-center text-muted">
-      <p>No hay resúmenes que coincidan con los filtros.</p>
-    </div>
-  }
-
-  <!-- Lista de documentos -->
-  @if (!isLoading && filteredDocs.length > 0) {
-    <div class="list-group">
-      @for (doc of filteredDocs; track doc.id) {
-          <a [routerLink]="['/document-preview',doc.id]">
-        <div class="list-group-item list-group-item-action">
-          <h5 class="mb-1 fw-bold">{{ doc.title }}</h5>
-          <p class="mb-1">{{ doc.description }}</p>
-          <small class="text-muted">{{ doc.subject }}</small><br>
-          <small><em>Autor: {{ doc.authorUsername || 'Desconocido' }}</em></small>
-        </div>
-    </a>
+  <!-- SI NO HAY FILTROS → mostrar todo -->
+  @if (!materia && !nombre && !autor) {
+    
+    @if (allDocs.length === 0) {
+      <p>Cargando resúmenes...</p>
+    } @else {
+      @for (doc of allDocs; track doc.id) {
+        <a class="list-group-item list-group-item-action"
+           (click)="seleccionarDocumento(doc.id)">
+          <strong>{{ doc.title }}</strong><br>
+          <small><em>{{ doc.authorUsername || 'Autor desconocido' }}</em></small><br>
+          {{ doc.description }}<br>
+          <small class="text-muted">{{ doc.subject }}</small>
+        </a>
       }
-    </div>
+    }
+
+  } @else {
+
+    <!-- SI HAY FILTROS -->
+    @if (filtrados.length === 0) {
+      <p class="text-muted">No hay resúmenes que coincidan con los filtros.</p>
+    } @else {
+      @for (doc of filtrados; track doc.id) {
+        <a class="list-group-item list-group-item-action"
+           (click)="seleccionarDocumento(doc.id)">
+          <strong>{{ doc.title }}</strong><br>
+          <small><em>{{ doc.authorUsername || 'Autor desconocido' }}</em></small><br>
+          {{ doc.description }}<br>
+          <small class="text-muted">{{ doc.subject }}</small>
+        </a>
+      }
+    }
+
   }
 
-  @if (message) {
-    <div class="alert alert-warning mt-4 text-center">{{ message }}</div>
-  }
 </div>

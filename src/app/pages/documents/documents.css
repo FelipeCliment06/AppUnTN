@@ -1,25 +1,66 @@
-.container {
+body {
   font-family: 'Inter', sans-serif;
+  background-color: #f8f9fa;
   color: #0a2540;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+}
+
+.logo img {
+  height: 60px;
+}
+
+.nav-links a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: #0a2540;
+  font-weight: 500;
+}
+
+.auth-buttons a {
+  margin-left: 10px;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  border: 2px solid #1f6feb;
+  color: #1f6feb;
+  transition: 0.3s;
+}
+
+.auth-buttons a:hover {
+  background-color: #1f6feb;
+  color: white;
 }
 
 .filter-row {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
-  align-items: flex-end;
+  align-items: center;
+  margin-bottom: 25px;
 }
 
-.form-control, .form-select {
+.filter-row .form-control,
+.filter-row .form-select {
   min-width: 200px;
 }
 
 .list-group-item {
-  background-color: #ffffff;
+  background-color: white;
   border-radius: 8px;
   margin-bottom: 10px;
   transition: all 0.2s ease;
-  cursor: pointer;
+  text-align: left !important;
 }
 
 .list-group-item:hover {

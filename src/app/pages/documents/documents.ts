@@ -1,76 +1,94 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DocumentService } from '../../services/document.service';
-import { Auth } from '../../services/auth';
-import { RouterLink } from "@angular/router";
+import { Router } from '@angular/router';
+
+interface Documento {
+  id: number;
+  title: string;
+  description: string;
+  subject: string;
+  authorUsername: string;
+}
 
 @Component({
-  selector: 'app-documents',
+  selector: 'app-explorar',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './documents.html',
-  styleUrl: './documents.css',
+  styleUrl: './documents.css'
 })
 export class Documents implements OnInit {
-  documents: any[] = [];
-  filteredDocs: any[] = [];
-  subjects: string[] = [
-    'PROGRAMACION_I', 'ARQUITECTURA_Y_SISTEMAS_OPERATIVOS', 'MATEMATICA',
-    'ORGANIZACION_EMPRESARIAL', 'PROGRAMACION_II', 'PROBABILIDAD_Y_ESTADISTICA',
-    'BASE_DE_DATOS_I', 'BASE_DE_DATOS_II', 'INGLES_I', 'PROGRAMACION_III',
-    'METODOLOGIA_DE_SISTEMAS_I', 'INGLES_II', 'PROGRAMACION_IV',
-    'METODOLOGIA_DE_SISTEMAS_II', 'INTRODUCCION_AL_ANALISIS_DE_DATOS',
-    'LEGISLACION', 'GESTION_DE_DESARROLLO_DE_SOFTWARE'
-  ];
 
-  filterSubject = '';
-  filterName = '';
-  filterAuthor = '';
-  message = '';
-  isLoading = false;
+  constructor(private router: Router) {}
 
-  constructor(private documentService: DocumentService, private auth: Auth) {}
+  token: string | null = null;
+
+  // filtros
+  materia: string = '';
+  nombre: string = '';
+  autor: string = '';
+
+  // data
+  allDocs: Documento[] = [];
+  filtrados: Documento[] = [];
 
   ngOnInit(): void {
-    this.loadDocuments();
-  }
+    this.token = localStorage.getItem('token');
 
-  loadDocuments(): void {
-    const token = this.auth.getToken();
-    if (!token) {
-      this.message = 'Debe iniciar sesión para ver los documentos.';
+    if (!this.token) {
+      alert("Token no encontrado. Redirigiendo al login...");
+      window.location.href = "/login.html";
       return;
     }
 
-    this.isLoading = true;
-    this.documentService.getAllDocuments(token).subscribe({
-      next: (docs) => {
-        this.documents = docs;
-        this.filteredDocs = docs;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error al obtener documentos:', err);
-        this.message = 'Error al cargar los documentos.';
-        this.isLoading = false;
-      },
-    });
+    this.cargarDocumentos();
   }
 
-  filterDocuments(): void {
-    this.filteredDocs = this.documents.filter(doc => {
-      const bySubject = !this.filterSubject || doc.subject === this.filterSubject;
-      const byName = !this.filterName || doc.title.toLowerCase().includes(this.filterName.toLowerCase());
-      const byAuthor = !this.filterAuthor || (doc.authorUsername && doc.authorUsername.toLowerCase().includes(this.filterAuthor.toLowerCase()));
-      return bySubject && byName && byAuthor;
-    });
+  async cargarDocumentos() {
+  // si todavía no cargó la data → cargar SIEMPRE
+  if (this.allDocs.length === 0) {
+    try {
+      const res = await fetch("http://localhost:8080/api/documents/getAll", {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer " + this.token,
+          "Content-Type": "application/json"
+        }
+      });
+
+      this.allDocs = await res.json();
+    } catch (err) {
+      console.error("Error fetching docs:", err);
+      this.filtrados = [];
+      return;
+    }
   }
 
-  clearFilters(): void {
-    this.filterSubject = '';
-    this.filterName = '';
-    this.filterAuthor = '';
-    this.filteredDocs = [...this.documents];
+  // si NO hay filtros → mostrar TODO
+  if (!this.materia && !this.nombre && !this.autor) {
+    this.filtrados = [...this.allDocs];
+    return;
   }
+
+  // aplicar filtros
+  const nombreLower = this.nombre.toLowerCase();
+  const autorLower = this.autor.toLowerCase();
+
+  this.filtrados = this.allDocs.filter(doc => {
+    const coincideMateria = !this.materia || doc.subject === this.materia;
+    const coincideNombre =
+      !this.nombre || doc.title.toLowerCase().includes(nombreLower);
+    const coincideAutor =
+      !this.autor || doc.authorUsername?.toLowerCase().includes(autorLower);
+
+    return coincideMateria && coincideNombre && coincideAutor;
+  });
+}
+
+
+  seleccionarDocumento(id: number) {
+  this.router.navigate(['/document-preview', id]);
+}
+
 }

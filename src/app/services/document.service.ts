@@ -27,10 +27,12 @@ export class DocumentService {
   }
 
   // === 🔹 Obtener documento por ID ===
-  getDocumentById(id: string, token: string): Observable<any> {
-    const headers = this.createHeaders(token);
-    return this.http.get<any>(`${this.apiUrl}/get/${id}`, { headers });
-  }
+  getDocumentById(id: number, token: string): Observable<any> {
+  const headers = this.createHeaders(token);
+  return this.http.post<any>(`${this.apiUrl}/getById`, { id }, { headers });
+}
+
+
 
   // === 🔹 Descargar documento ===
   downloadDocument(id: string, token: string): Observable<Blob> {

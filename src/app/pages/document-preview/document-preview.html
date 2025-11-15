@@ -1,68 +1,21 @@
-<div class="container py-4">
-  @if (isLoading) {
-    <div class="text-center my-5">
-      <div class="spinner-border text-primary mb-3" role="status"></div>
-      <p class="text-muted">Cargando documento...</p>
-    </div>
-  }
+<div class="preview-container">
+  <h2>Vista previa</h2>
 
-  @if (!isLoading && document) {
-    <h2 class="fw-bold mb-4 text-primary">Vista previa del resumen</h2>
+  <!-- Estado de carga -->
+  <p *ngIf="cargando">Cargando documento...</p>
 
-    <div class="card shadow-sm p-4 mb-4">
-      <h3>{{ document.title }}</h3>
-      <p><strong>Descripción:</strong> {{ document.description }}</p>
-      <p><strong>Materia:</strong> {{ document.subject }}</p>
-      <p><strong>Autor:</strong> {{ document.authorUsername }}</p>
-      <p><strong>Fecha de subida:</strong> {{ document.uploadDate }}</p>
-      <button class="btn btn-success mt-3" (click)="descargarResumen()">Descargar</button>
-    </div>
+  <!-- Error -->
+  <p *ngIf="error" class="error">{{ error }}</p>
 
-    <div class="mb-5">
-      <h4>Puntuaciones</h4>
-      <ul class="list-group mb-3">
-        @for (p of document.punctuations; track p.id) {
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <span>
-              <strong>{{ p.authorUsername }}</strong>: {{ p.value }}
-              <span class="star-destacada">★</span>
-            </span>
-            @if (p.authorUsername === username) {
-              <button class="btn btn-danger btn-sm" (click)="eliminarPuntuacion(p.id)">Eliminar</button>
-            }
-          </li>
-        }
-      </ul>
+  <!-- Metadata -->
+  <div *ngIf="documento && !cargando" class="document-card">
+    <h3>{{ documento.title }}</h3>
+    <p><strong>Descripción:</strong> {{ documento.description }}</p>
+    <p><strong>Materia:</strong> {{ documento.subject }}</p>
+    <p><strong>Fecha de subida:</strong> {{ documento.uploadDate }}</p>
+    <p><strong>Autor:</strong> {{ documento.authorUsername }}</p>
 
-      <div class="mb-3">
-        <label class="form-label">Tu puntuación:</label><br>
-        @for (n of [1,2,3,4,5]; track n) {
-          <span class="star" [class.selected]="puntuacionSeleccionada >= n" (click)="selectStar(n)">★</span>
-        }
-        <button class="btn btn-primary btn-sm ms-2" (click)="enviarPuntuacion()">Enviar</button>
-      </div>
-    </div>
-
-    <div class="mb-5">
-      <h4>Comentarios</h4>
-      <ul class="list-group mb-3">
-        @for (c of document.commentaries; track c.id) {
-          <li class="list-group-item d-flex justify-content-between align-items-start">
-            <div>
-              <strong>{{ c.authorUsername }}</strong> ({{ c.creationDate }}):<br>{{ c.content }}
-            </div>
-            @if (c.authorUsername === username) {
-              <button class="btn btn-danger btn-sm ms-2" (click)="eliminarComentario(c.id)">Eliminar</button>
-            }
-          </li>
-        }
-      </ul>
-
-      <div class="mb-3">
-        <label for="comentario" class="form-label">Agregar comentario:</label>
-        <textarea #comentario class="form-control" id="comentario" rows="3"></textarea>
-      </div>
-      <button class="btn btn-primary" (click)="enviarComentario(comentario.value)">Comentar</button>
-    </div>
-  }
+    <!-- Opcional: debug de todo el objeto -->
+    <pre>{{ documento | json }}</pre>
+  </div>
 </div>
