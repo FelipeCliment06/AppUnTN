@@ -6,57 +6,79 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class DocumentService {
+
   private apiUrl = 'http://localhost:8080/api/documents';
 
   constructor(private http: HttpClient) {}
 
   private createHeaders(token: string): HttpHeaders {
-    return new HttpHeaders({ Authorization: `Bearer ${token}` });
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
   }
 
-  // === 🔹 Subir documento ===
-  uploadDocument(formData: FormData, token: string): Observable<any> {
-    const headers = this.createHeaders(token);
-    return this.http.post(`${this.apiUrl}/add`, formData, { headers });
-  }
-
-  // === 🔹 Obtener todos los documentos ===
+  // 📌 Traer TODOS los documentos
   getAllDocuments(token: string): Observable<any[]> {
-    const headers = this.createHeaders(token);
-    return this.http.get<any[]>(`${this.apiUrl}/getAll`, { headers });
+    return this.http.get<any[]>(`${this.apiUrl}/getAll`, {
+      headers: this.createHeaders(token)
+    });
   }
 
-  // === 🔹 Obtener documento por ID ===
+  // 📌 Traer documento por ID
   getDocumentById(id: string, token: string): Observable<any> {
-    const headers = this.createHeaders(token);
-    return this.http.get<any>(`${this.apiUrl}/get/${id}`, { headers });
+    return this.http.get<any>(`${this.apiUrl}/get/${id}`, {
+      headers: this.createHeaders(token)
+    });
   }
 
-  // === 🔹 Descargar documento ===
-  downloadDocument(id: string, token: string): Observable<Blob> {
-    const headers = this.createHeaders(token);
-    return this.http.post(`${this.apiUrl}/download`, { id }, { headers, responseType: 'blob' });
+  // 📌 Descargar archivo
+  download(id: number, token: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/download/${id}`, {
+      headers: this.createHeaders(token),
+      responseType: 'blob'
+    });
   }
 
-  // === 🔹 Comentarios ===
-  addComment(documentId: string, content: string, token: string): Observable<any> {
-    const headers = this.createHeaders(token);
-    return this.http.post(`http://localhost:8080/api/commentaries/add`, { documentId, content }, { headers });
+  // 📌 GET puntuaciones
+  getPuntuaciones(id: string, token: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/ratings/${id}`, {
+      headers: this.createHeaders(token)
+    });
   }
 
-  deleteComment(id: number, token: string): Observable<any> {
-    const headers = this.createHeaders(token);
-    return this.http.post(`http://localhost:8080/api/commentaries/delete`, { id }, { headers });
+  // 📌 POST puntuación
+  enviarPuntuacion(id: string, value: number, token: string) {
+    return this.http.post(`${this.apiUrl}/ratings/${id}`, { value }, {
+      headers: this.createHeaders(token)
+    });
   }
 
-  // === 🔹 Puntuaciones ===
-  addPunctuation(documentId: string, value: number, token: string): Observable<any> {
-    const headers = this.createHeaders(token);
-    return this.http.post(`http://localhost:8080/api/punctuations/add`, { documentId, value }, { headers });
+  // 📌 DELETE puntuación
+  eliminarPuntuacion(puntuacionId: number, token: string) {
+    return this.http.delete(`${this.apiUrl}/ratings/delete/${puntuacionId}`, {
+      headers: this.createHeaders(token)
+    });
   }
 
-  deletePunctuation(id: number, token: string): Observable<any> {
-    const headers = this.createHeaders(token);
-    return this.http.post(`http://localhost:8080/api/punctuations/delete`, { id }, { headers });
+  // 📌 GET comentarios
+  getComentarios(id: string, token: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/comments/${id}`, {
+      headers: this.createHeaders(token)
+    });
+  }
+
+  // 📌 POST comentario
+  enviarComentario(id: string, content: string, token: string) {
+    return this.http.post(`${this.apiUrl}/comments/${id}`, { content }, {
+      headers: this.createHeaders(token)
+    });
+  }
+
+  // 📌 DELETE comentario
+  eliminarComentario(comentarioId: number, token: string) {
+    return this.http.delete(`${this.apiUrl}/comments/delete/${comentarioId}`, {
+      headers: this.createHeaders(token)
+    });
   }
 }
+
