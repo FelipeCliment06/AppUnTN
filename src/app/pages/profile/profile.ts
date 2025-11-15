@@ -1,18 +1,10 @@
+// src/app/pages/profile/profile.ts
 import { ChangeDetectorRef, Component, OnInit, afterNextRender, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Auth } from '../../services/auth';
 import { FormsModule } from '@angular/forms';
 
-interface UserProfile {
-  name: string;
-  lastname: string;
-  mail: string;
-  city: string;
-  about: string;
-  role: string;
-  password?: string;
-}
+import { Auth } from '../../services/auth';
+import { UserService, UserProfile } from '../../services/user-service';
 
 @Component({
   selector: 'app-profile',
@@ -23,13 +15,11 @@ interface UserProfile {
 })
 export class Profile implements OnInit {
 
-  constructor(
-    private readonly cdr: ChangeDetectorRef
-  ) {}
-
-  private readonly http = inject(HttpClient);
-  private readonly router = inject(Router);
-  public readonly auth = inject(Auth);
+  // inyección “estilo Angular moderno”
+  private readonly router      = inject(Router);
+  private readonly cdr         = inject(ChangeDetectorRef);
+  public  readonly auth        = inject(Auth);
+  private readonly userService = inject(UserService);
 
   userData: UserProfile | null = null;
   subjects: string[] = [];
@@ -69,7 +59,7 @@ export class Profile implements OnInit {
 
     this.cargarPerfil();
 
-    // 👇 Esto asegura que se ejecuta DESPUÉS de renderizar
+    // Igual que en la rama que funciona:
     afterNextRender(() => {
       if (this.isProfessor) {
         this.cargarMateriasProfesor();
@@ -77,6 +67,7 @@ export class Profile implements OnInit {
     });
   }
 
+  // Navegación paneles admin
   goToAdmins(): void {
     this.router.navigate(['/admin-admins']);
   }
@@ -87,27 +78,17 @@ export class Profile implements OnInit {
 
   logout(): void {
     this.auth.logout();
-    this.router.navigate(['/home']);  //creo que es innecesario
+    this.router.navigate(['/home']);
   }
 
-  private get headers(): HttpHeaders {
-    return new HttpHeaders({
-      Authorization: `Bearer ${this.auth.getToken()}`,
-      'Content-Type': 'application/json',
-    });
-  }
-
+  // ===== Perfil =====
   cargarPerfil(): void {
     const username = this.auth.getUsername();
     if (!username) return;
 
     this.loading = true;
 
-    this.http.post<UserProfile>(
-      'http://localhost:8080/api/users/profile',
-      { username },
-      { headers: this.headers }
-    ).subscribe({
+    this.userService.getProfile(username).subscribe({
       next: (data) => {
         this.userData = data;
         this.loading = false;
@@ -115,15 +96,14 @@ export class Profile implements OnInit {
         const role = (data.role || '').toUpperCase();
         console.log('Rol recibido:', role);
 
-        this.isAdmin = role === 'ADMIN' || role === 'ROLE_ADMIN';
-        this.isProfessor = role === 'PROFESSOR' || role === 'ROLE_PROFESSOR';
+        this.isAdmin     = this.userService.isAdminRole(role);
+        this.isProfessor = this.userService.isProfessorRole(role);
 
+        // Igual que en la versión que anda:
         if (this.isProfessor) {
-          if (this.isProfessor) {
           setTimeout(() => {
             this.cargarMateriasProfesor();
           }, 1000);
-      }
         }
 
         this.cdr.detectChanges();
@@ -137,26 +117,23 @@ export class Profile implements OnInit {
     });
   }
 
+  // ===== Materias (profesor) =====
   cargarMateriasProfesor(): void {
-     console.log('Cargando materias del profesor...');
+    console.log('Cargando materias del profesor...');
 
-    this.http
-      .get<any[]>('http://localhost:8080/api/users/subjects/get', { headers: this.headers })
-      .subscribe({
-        next: (subjects) => {
-          console.log('Materias recibidas desde el backend:', subjects);
-
-          this.subjects = subjects.map((s: any) => s.name || s);
-          console.log('Materias procesadas para mostrar:', this.subjects)
-
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('Error al obtener materias:', err);
-          this.subjects = [];
-          this.cdr.detectChanges();
-        },
-      });
+    this.userService.getSubjects().subscribe({
+      next: (subjects) => {
+        console.log('Materias recibidas desde el backend:', subjects);
+        this.subjects = subjects.map((s: any) => s.name || s);
+        console.log('Materias procesadas para mostrar:', this.subjects);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al obtener materias:', err);
+        this.subjects = [];
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   agregarMateria(): void {
@@ -165,11 +142,7 @@ export class Profile implements OnInit {
       return;
     }
 
-    this.http.put(
-      'http://localhost:8080/api/users/subjects/update',
-      { subjects: [this.nuevaMateria] },
-      { headers: this.headers, responseType: 'text' }
-    ).subscribe({
+    this.userService.addSubject(this.nuevaMateria).subscribe({
       next: (msg) => {
         alert(msg);
         this.cargarMateriasProfesor();
@@ -182,11 +155,7 @@ export class Profile implements OnInit {
   eliminarMateria(materia: string): void {
     if (!confirm('¿Seguro que querés eliminar esta materia?')) return;
 
-    this.http.delete('http://localhost:8080/api/users/subjects/delete', {
-      headers: this.headers,
-      body: { subject: materia },
-      responseType: 'text',
-    }).subscribe({
+    this.userService.deleteSubject(materia).subscribe({
       next: (msg) => {
         alert(msg);
         this.cargarMateriasProfesor();
@@ -195,14 +164,11 @@ export class Profile implements OnInit {
     });
   }
 
+  // ===== Actualizar perfil =====
   actualizarPerfil(): void {
     if (!this.userData) return;
 
-    this.http.put(
-      'http://localhost:8080/api/users/updateUser',
-      this.userData,
-      { headers: this.headers, responseType: 'text' }
-    ).subscribe({
+    this.userService.updateProfile(this.userData).subscribe({
       next: (msg) => (this.updateMessage = msg),
       error: () => (this.updateMessage = 'Error actualizando el perfil.'),
     });
