@@ -68,28 +68,88 @@
 }
 
   <!-- Seccion para editar el perfil -->
-  <div class="box5" >
+  @if (userData) {
+  <div class="box5">
     <h3 class="box3">Editar perfil</h3>
     <form id="updateForm" class="form-updateForm">
       <div class="box3">
         <label for="nameInput" class="form-label">Nombre</label>
-        <input type="text" class="form-control" id="nameInput" name="name" required>
+        <input
+          type="text"
+          class="form-control"
+          id="nameInput"
+          name="name"
+          [(ngModel)]="userData.name"
+          required
+        />
       </div>
       <div class="box3">
         <label for="lastnameInput" class="form-label">Apellido</label>
-        <input type="text" class="form-control" id="lastnameInput" name="lastname" required>
+        <input
+          type="text"
+          class="form-control"
+          id="lastnameInput"
+          name="lastname"
+          [(ngModel)]="userData.lastname"
+          required
+        />
       </div>
       <div class="box3">
         <label for="mailInput" class="form-label">Email</label>
-        <input type="email" class="form-control" id="mailInput" name="mail" required>
+        <input
+          type="email"
+          class="form-control"
+          id="mailInput"
+          name="mail"
+          [(ngModel)]="userData.mail"
+          required
+        />
       </div>
       <div class="box3">
-        <label for="passwordInput" class="form-label">Nueva Contraseña (opcional)</label>
-        <input type="password" class="form-control" id="passwordInput" name="password">
+        <label for="cityInput" class="form-label">Ciudad</label>
+        <input
+          type="text"
+          class="form-control"
+          id="cityInput"
+          name="city"
+          [(ngModel)]="userData.city"
+        />
       </div>
-      <button type="submit" class="button-saveUpdate">Guardar cambios</button>
+      <div class="box3">
+        <label for="aboutInput" class="form-label">Sobre vos</label>
+        <textarea
+          id="aboutInput"
+          class="form-control"
+          rows="3"
+          name="about"
+          [(ngModel)]="userData.about"
+        ></textarea>
+      </div>
+      <div class="box3">
+        <label for="passwordInput" class="form-label">
+          Nueva Contraseña (opcional)
+        </label>
+        <input
+          type="password"
+          class="form-control"
+          id="passwordInput"
+          name="password"
+          [(ngModel)]="userData.password"
+        />
+      </div>
+      <button
+        type="button"
+        class="button-saveUpdate"
+        (click)="actualizarPerfil()"
+      >
+        Guardar cambios
+      </button>
     </form>
-    <div id="updateMessage" class="box3"></div>
+
+    <div id="updateMessage" class="box3">
+      {{ updateMessage }}
+    </div>
   </div>
+}
 
 </div>
