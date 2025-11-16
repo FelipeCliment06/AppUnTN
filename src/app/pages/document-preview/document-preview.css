@@ -1,0 +1,133 @@
+/* ============================= */
+/*      CONTENEDOR GENERAL       */
+/* ============================= */
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ============================= */
+/*         TARJETA DOCUMENTO     */
+/* ============================= */
+
+.document-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+  border-left: 6px solid #4caf50;
+  transition: 0.2s ease;
+}
+
+.document-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.18);
+}
+
+.document-card h3 {
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+/* ============================= */
+/*         LISTA GENERAL         */
+/* ============================= */
+
+.list-group-item {
+  border-radius: 10px !important;
+  margin-bottom: 8px;
+  border: 1px solid #e4e4e4;
+  padding: 15px;
+}
+
+/* ============================= */
+/*      PUNTUACIONES / ESTRELLAS */
+/* ============================= */
+
+.star {
+  font-size: 28px;
+  cursor: pointer;
+  transition: 0.2s;
+  user-select: none;
+}
+
+.star:hover {
+  transform: scale(1.2);
+}
+
+.star.selected {
+  color: #f7b500;
+}
+
+.star-destacada {
+  color: #ff9800;
+  font-size: 20px;
+  margin-left: 5px;
+}
+
+/* ============================= */
+/*           COMENTARIOS         */
+/* ============================= */
+
+.comment-destacado {
+  border-left: 6px solid #2196f3;
+  background: #eaf4ff;
+}
+
+.list-group-item strong {
+  color: #333;
+}
+
+/* ============================= */
+/*           BOTONES             */
+/* ============================= */
+
+button.btn {
+  border-radius: 10px !important;
+  padding: 6px 14px;
+}
+
+/* ============================= */
+/*       TEXTAREA COMENTARIOS    */
+/* ============================= */
+
+textarea.form-control {
+  border-radius: 10px;
+  resize: none;
+}
+
+/* ============================= */
+/*        TITULOS GENERALES      */
+/* ============================= */
+
+h2, h3, h4 {
+  font-weight: 700;
+  color: #333;
+}
+
+/* ============================= */
+/*           RESPONSIVE          */
+/* ============================= */
+
+@media (max-width: 600px) {
+
+  .document-card {
+    padding: 18px;
+  }
+
+  .star {
+    font-size: 24px;
+  }
+
+  .list-group-item {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  button.btn-sm {
+    width: 100%;
+  }
+}

@@ -13,27 +13,28 @@ export class DocumentService {
 
   private createHeaders(token: string): HttpHeaders {
     return new HttpHeaders({
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
     });
   }
 
-  // 📌 Traer TODOS los documentos
+  // 📌 Traer TODOS los documentos (GET)
   getAllDocuments(token: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/getAll`, {
       headers: this.createHeaders(token)
     });
   }
 
-  // 📌 Traer documento por ID
+  // 📌 Traer documento por ID (POST con body {id})
   getDocumentById(id: string, token: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/get/${id}`, {
+    return this.http.post<any>(`${this.apiUrl}/getById`, { id }, {
       headers: this.createHeaders(token)
     });
   }
 
-  // 📌 Descargar archivo
-  download(id: number, token: string): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/download/${id}`, {
+  // 📌 Descargar archivo (POST con body {id})
+  download(id: string, token: string): Observable<Blob> {
+    return this.http.post(`${this.apiUrl}/download`, { id }, {
       headers: this.createHeaders(token),
       responseType: 'blob'
     });
@@ -41,23 +42,25 @@ export class DocumentService {
 
   // 📌 GET puntuaciones
   getPuntuaciones(id: string, token: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/ratings/${id}`, {
+    return this.http.get<any[]>(`${this.apiUrl}/comments/ratings/${id}`, {
       headers: this.createHeaders(token)
     });
   }
 
   // 📌 POST puntuación
-  enviarPuntuacion(id: string, value: number, token: string) {
-    return this.http.post(`${this.apiUrl}/ratings/${id}`, { value }, {
-      headers: this.createHeaders(token)
-    });
+  enviarPuntuacion(documentId: string, value: number, token: string) {
+    return this.http.post(`${this.apiUrl}/punctuations/add`, 
+      { documentId, value },
+      { headers: this.createHeaders(token) }
+    );
   }
 
   // 📌 DELETE puntuación
   eliminarPuntuacion(puntuacionId: number, token: string) {
-    return this.http.delete(`${this.apiUrl}/ratings/delete/${puntuacionId}`, {
-      headers: this.createHeaders(token)
-    });
+    return this.http.post(`${this.apiUrl}/punctuations/delete`, 
+      { id: puntuacionId}, 
+      { headers: this.createHeaders(token) }
+    );
   }
 
   // 📌 GET comentarios
@@ -68,17 +71,18 @@ export class DocumentService {
   }
 
   // 📌 POST comentario
-  enviarComentario(id: string, content: string, token: string) {
-    return this.http.post(`${this.apiUrl}/comments/${id}`, { content }, {
-      headers: this.createHeaders(token)
-    });
+  enviarComentario(documentId: string, content: string, token: string) {
+    return this.http.post(`${this.apiUrl}/commentaries/add`, 
+      { documentId, content }, 
+      { headers: this.createHeaders(token) }
+    );
   }
 
   // 📌 DELETE comentario
   eliminarComentario(comentarioId: number, token: string) {
-    return this.http.delete(`${this.apiUrl}/comments/delete/${comentarioId}`, {
-      headers: this.createHeaders(token)
-    });
+    return this.http.post(`${this.apiUrl}/commentaries/delete`, 
+      { id: comentarioId }, 
+      { headers: this.createHeaders(token) }
+    );
   }
 }
-
