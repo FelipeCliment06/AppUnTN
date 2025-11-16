@@ -16,6 +16,7 @@ export class DocumentPreview implements OnInit {
   docId = '';
   token = '';
   username: string | null = null;
+  title = '';
 
   document: any = null;
   puntuaciones: any[] = [];
@@ -60,7 +61,7 @@ export class DocumentPreview implements OnInit {
   cargarPreview() {
     this.documentService.getDocumentById(this.docId, this.token).subscribe({
       next: (doc) => {
-
+        this.title = doc.title;
         this.document = doc;
         this.puntuaciones = doc.punctuations || [];
         this.comentarios = doc.commentaries || [];
@@ -137,7 +138,7 @@ export class DocumentPreview implements OnInit {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'resumen';
+        a.download = this.title;
         a.click();
       },
       error: (err) => alert('Error al descargar resumen: ' + err),
