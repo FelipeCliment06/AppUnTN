@@ -1,133 +1,402 @@
-/* ============================= */
-/*      CONTENEDOR GENERAL       */
-/* ============================= */
-
-.container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
+:host {
+  display: block;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: #f5f5f5;
+  min-height: 100%;
+  padding: 40px 0;
 }
 
-/* ============================= */
-/*         TARJETA DOCUMENTO     */
-/* ============================= */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+}
 
+/* Título principal */
+h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 32px;
+}
+
+/* Tarjeta de información del documento con efecto hover */
 .document-card {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 25px;
-  margin-bottom: 25px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
-  border-left: 6px solid #4caf50;
-  transition: 0.2s ease;
+  background-color: #ffffff;
+  padding: 32px;
+  margin-bottom: 40px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .document-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  border-color: #d1d5db;
 }
 
 .document-card h3 {
-  margin-bottom: 15px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 20px;
 }
 
-/* ============================= */
-/*         LISTA GENERAL         */
-/* ============================= */
-
-.list-group-item {
-  border-radius: 10px !important;
-  margin-bottom: 8px;
-  border: 1px solid #e4e4e4;
-  padding: 15px;
+.document-card p {
+  font-size: 15px;
+  color: #4b5563;
+  margin-bottom: 12px;
+  line-height: 1.6;
 }
 
-/* ============================= */
-/*      PUNTUACIONES / ESTRELLAS */
-/* ============================= */
+.document-card strong {
+  font-weight: 600;
+  color: #000;
+}
+
+/* Botón descargar con efecto */
+.btn-success {
+  background-color: #2d7a5f;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 28px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 24px;
+  box-shadow: 0 2px 4px rgba(45, 122, 95, 0.2);
+}
+
+.btn-success:hover {
+  background-color: #245c4a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(45, 122, 95, 0.3);
+}
+
+.btn-success:active {
+  transform: translateY(0);
+}
+
+/* Secciones con tarjetas */
+.mb-5 {
+  background-color: #ffffff;
+  padding: 32px;
+  margin-bottom: 32px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.mb-5:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.mb-5 h4 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+/* Sistema de estrellas */
+.mb-3 {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 12px;
+  display: block;
+}
 
 .star {
-  font-size: 28px;
+  font-size: 32px;
   cursor: pointer;
-  transition: 0.2s;
+  color: #d1d5db;
+  transition: all 0.2s ease;
   user-select: none;
+  margin-right: 6px;
+  display: inline-block;
 }
 
 .star:hover {
-  transform: scale(1.2);
+  color: #fbbf24;
+  transform: scale(1.15);
 }
 
 .star.selected {
-  color: #f7b500;
+  color: #fbbf24;
+  animation: starPop 0.3s ease;
+}
+
+@keyframes starPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Estrellas en la lista de puntuaciones */
+.star-display {
+  font-size: 18px;
+  color: #d1d5db;
+  margin-right: 2px;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.star-display.filled {
+  color: #fbbf24;
 }
 
 .star-destacada {
-  color: #ff9800;
-  font-size: 20px;
-  margin-left: 5px;
+  color: #fbbf24;
+  margin-left: 8px;
+  font-size: 1.2em;
+  animation: pulse 2s infinite;
 }
 
-/* ============================= */
-/*           COMENTARIOS         */
-/* ============================= */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
 
-.comment-destacado {
-  border-left: 6px solid #2196f3;
-  background: #eaf4ff;
+/* Botones principales */
+.btn-primary {
+  background-color: #2563eb;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: 12px;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Lista de puntuaciones y comentarios */
+.list-group {
+  border: none;
+  margin-bottom: 24px;
+}
+
+.list-group-item {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  color: #000;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.list-group-item:hover {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+  transform: translateX(4px);
 }
 
 .list-group-item strong {
-  color: #333;
+  font-weight: 600;
+  color: #1f2937;
 }
 
-/* ============================= */
-/*           BOTONES             */
-/* ============================= */
-
-button.btn {
-  border-radius: 10px !important;
-  padding: 6px 14px;
+/* Comentarios destacados */
+.comment-destacado {
+  font-weight: 600;
+  background-color: #fef3c7;
+  border-color: #fbbf24;
 }
 
-/* ============================= */
-/*       TEXTAREA COMENTARIOS    */
-/* ============================= */
-
-textarea.form-control {
-  border-radius: 10px;
-  resize: none;
+/* Textarea con efectos */
+.form-control {
+  width: 100%;
+  padding: 14px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  resize: vertical;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
 }
 
-/* ============================= */
-/*        TITULOS GENERALES      */
-/* ============================= */
-
-h2, h3, h4 {
-  font-weight: 700;
-  color: #333;
+.form-control:hover {
+  border-color: #d1d5db;
 }
 
-/* ============================= */
-/*           RESPONSIVE          */
-/* ============================= */
+.form-control:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+  background-color: #ffffff;
+}
 
-@media (max-width: 600px) {
+/* Botón eliminar */
+.btn-danger {
+  background-color: #dc2626;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
+}
 
-  .document-card {
-    padding: 18px;
+.btn-danger:hover {
+  background-color: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
+}
+
+.btn-danger:active {
+  transform: translateY(0);
+}
+
+.btn-sm {
+  padding: 6px 16px;
+  font-size: 13px;
+}
+
+/* Mejoras visuales adicionales */
+.d-flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.align-items-start {
+  align-items: flex-start;
+}
+
+.ms-2 {
+  margin-left: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  :host {
+    padding: 20px 0;
   }
 
-  .star {
+  .container {
+    padding: 0 16px;
+  }
+
+  h2 {
     font-size: 24px;
   }
 
-  .list-group-item {
-    flex-direction: column;
-    gap: 10px;
+  .document-card {
+    padding: 24px;
   }
 
-  button.btn-sm {
-    width: 100%;
+  .document-card h3 {
+    font-size: 20px;
   }
+
+  .mb-5 {
+    padding: 24px;
+  }
+
+  .mb-5 h4 {
+    font-size: 18px;
+  }
+
+  .star {
+    font-size: 28px;
+    margin-right: 4px;
+  }
+
+  .list-group-item {
+    padding: 12px;
+  }
+}
+
+/* Animación de entrada para las tarjetas */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.document-card,
+.mb-5 {
+  animation: fadeInUp 0.5s ease;
+}
+/* Lista scrolleable de puntuaciones */
+.puntuaciones-container {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 24px;
+  padding-right: 8px;
+}
+
+/* Lista scrolleable de comentarios */
+.comentarios-container {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 24px;
+  padding-right: 8px;
+}
+
+/* Scrollbar personalizada para las listas */
+.puntuaciones-container::-webkit-scrollbar,
+.comentarios-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.puntuaciones-container::-webkit-scrollbar-track,
+.comentarios-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.puntuaciones-container::-webkit-scrollbar-thumb,
+.comentarios-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.puntuaciones-container::-webkit-scrollbar-thumb:hover,
+.comentarios-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
