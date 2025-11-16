@@ -1,8 +1,16 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  AbstractControl,
+  AsyncValidatorFn
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { map, catchError, debounceTime, switchMap, of } from 'rxjs';
 import { UserService } from '../../services/user-service';
+import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-register',
@@ -16,11 +24,18 @@ export class Register {
   error = false;
   currentRole: string | null = null;
 
-  constructor(private fb: FormBuilder, private userService: UserService, private router: Router) {
-    this.currentRole = localStorage.getItem('role');
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    private router: Router,
+    private auth: Auth
+  ) {
+
+    this.currentRole = this.getRoleFromToken();
+    console.log('[REGISTER] currentRole (from token) =', this.currentRole);
 
     const roleControlConfig =
-      this.currentRole === 'ADMIN'
+      this.currentRole === 'ADMIN' || this.currentRole === 'ROLE_ADMIN'
         ? { value: 'ADMIN', disabled: true }
         : 'STUDENT';
 
@@ -34,6 +49,22 @@ export class Register {
       about: [''],
       role: [roleControlConfig, Validators.required]
     });
+  }
+
+  private getRoleFromToken(): string | null {
+    const token = this.auth.getToken();
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      if (payload?.role) return String(payload.role);
+      if (Array.isArray(payload?.roles) && payload.roles.length > 0) {
+        return String(payload.roles[0]);
+      }
+      return null;
+    } catch (e) {
+      console.error('Error decodificando JWT en Register', e);
+      return null;
+    }
   }
 
   mailExistsValidator(): AsyncValidatorFn {
@@ -70,23 +101,27 @@ export class Register {
       return;
     }
 
-    const payload = this.registerForm.getRawValue(); // incluye 'role' aunque esté deshabilitado
+    const payload = this.registerForm.getRawValue();
 
     this.userService.register(payload).subscribe({
       next: () => {
         this.message = 'Registro exitoso.';
         this.error = false;
 
-        // 🔹 Si el actual usuario es ADMIN, vuelve al panel de admins
-        if (this.currentRole === 'ADMIN') {
+        const esAdminActual =
+          this.currentRole === 'ADMIN' || this.currentRole === 'ROLE_ADMIN';
+
+        if (esAdminActual) {
           setTimeout(() => this.router.navigate(['/admin-admins']), 1500);
         } else {
-          // 🔹 Si es registro normal, va al login
           setTimeout(() => this.router.navigate(['/login']), 1500);
         }
       },
       error: (err) => {
-        this.message = err.status === 409 ? 'El usuario o email ya existen.' : 'Error al registrarse.';
+        this.message =
+          err.status === 409
+            ? 'El usuario o email ya existen.'
+            : 'Error al registrarse.';
         this.error = true;
       }
     });

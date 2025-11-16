@@ -86,7 +86,7 @@
       <div class="form-group">
         <label for="role">Rol</label>
         <select id="role" name="role" formControlName="role">
-          @if (currentRole === 'ADMIN') {
+          @if (currentRole === 'ADMIN' || currentRole === 'ROLE_ADMIN') {
             <option value="ADMIN">ADMIN</option>
           } @else {
             <option value="STUDENT">Alumno</option>
