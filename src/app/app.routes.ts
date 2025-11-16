@@ -21,7 +21,7 @@ export const routes: Routes = [
   { path: 'resumeUpload', component: ResumeUpload, canActivate: [authGuard] },
   { path: 'documents', component: Documents, canActivate: [authGuard] },
   { path: 'profile', component: Profile, canActivate: [authGuard] },
-  { path: 'document-preview/:id', component: DocumentPreview, canActivate: [authGuard] },
+  { path: 'document-preview/:id', component: DocumentPreview, canActivate: [authGuard], runGuardsAndResolvers: 'always' },
   { path: 'admin-admins', component: AdminAdmins, canActivate: [authGuard] },
   { path: 'admin-usuarios', component: AdminUsuarios, canActivate: [authGuard] },
   

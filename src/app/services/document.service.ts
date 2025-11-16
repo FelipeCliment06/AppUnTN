@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Injectable } from "@angular/core";
 
 @Injectable({
   providedIn: 'root'
 })
 export class DocumentService {
 
-  private apiUrl = 'http://localhost:8080/api/documents';
+  private apiDocuments = 'http://localhost:8080/api/documents';
+  private apiPunctuations = 'http://localhost:8080/api/punctuations';
+  private apiCommentaries = 'http://localhost:8080/api/commentaries';
 
   constructor(private http: HttpClient) {}
 
@@ -18,69 +19,63 @@ export class DocumentService {
     });
   }
 
-  // 📌 Traer TODOS los documentos (GET)
-  getAllDocuments(token: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/getAll`, {
+  // DOCUMENTS
+  getAllDocuments(token: string) {
+    return this.http.get<any[]>(`${this.apiDocuments}/getAll`, {
       headers: this.createHeaders(token)
     });
   }
 
-  // 📌 Traer documento por ID (POST con body {id})
-  getDocumentById(id: string, token: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/getById`, { id }, {
+  getDocumentById(id: string, token: string) {
+    return this.http.post<any>(`${this.apiDocuments}/getById`, { id }, {
       headers: this.createHeaders(token)
     });
   }
 
-  // 📌 Descargar archivo (POST con body {id})
-  download(id: string, token: string): Observable<Blob> {
-    return this.http.post(`${this.apiUrl}/download`, { id }, {
+  download(id: string, token: string) {
+    return this.http.post(`${this.apiDocuments}/download`, { id }, {
       headers: this.createHeaders(token),
       responseType: 'blob'
     });
   }
 
-  // 📌 GET puntuaciones
-  getPuntuaciones(id: string, token: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/comments/ratings/${id}`, {
+  // PUNCTUATIONS
+  getPuntuaciones(id: string, token: string) {
+    return this.http.get<any[]>(`${this.apiPunctuations}/document/${id}`, {
       headers: this.createHeaders(token)
     });
   }
 
-  // 📌 POST puntuación
   enviarPuntuacion(documentId: string, value: number, token: string) {
-    return this.http.post(`${this.apiUrl}/punctuations/add`, 
+    return this.http.post(`${this.apiPunctuations}/add`, 
       { documentId, value },
       { headers: this.createHeaders(token) }
     );
   }
 
-  // 📌 DELETE puntuación
   eliminarPuntuacion(puntuacionId: number, token: string) {
-    return this.http.post(`${this.apiUrl}/punctuations/delete`, 
-      { id: puntuacionId}, 
+    return this.http.post(`${this.apiPunctuations}/delete`, 
+      { id: puntuacionId }, 
       { headers: this.createHeaders(token) }
     );
   }
 
-  // 📌 GET comentarios
-  getComentarios(id: string, token: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/comments/${id}`, {
+  // COMMENTARIES
+  getComentarios(id: string, token: string) {
+    return this.http.get<any[]>(`${this.apiCommentaries}/document/${id}`, {
       headers: this.createHeaders(token)
     });
   }
 
-  // 📌 POST comentario
   enviarComentario(documentId: string, content: string, token: string) {
-    return this.http.post(`${this.apiUrl}/commentaries/add`, 
+    return this.http.post(`${this.apiCommentaries}/add`, 
       { documentId, content }, 
       { headers: this.createHeaders(token) }
     );
   }
 
-  // 📌 DELETE comentario
   eliminarComentario(comentarioId: number, token: string) {
-    return this.http.post(`${this.apiUrl}/commentaries/delete`, 
+    return this.http.post(`${this.apiCommentaries}/delete`, 
       { id: comentarioId }, 
       { headers: this.createHeaders(token) }
     );

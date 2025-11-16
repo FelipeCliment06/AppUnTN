@@ -84,7 +84,11 @@ export class DocumentPreview implements OnInit {
     this.documentService.enviarPuntuacion(this.docId, this.puntuacionSeleccionada(), this.token)
       .subscribe({
         next: () => this.cargarPreview(),
-        error: (err) => alert('Error al enviar puntuación: ' + err),
+        error: (err) => {
+  if (err.status === 200) return this.cargarPreview();
+  alert('Error al enviar puntuación');
+},
+
       });
   }
 
@@ -93,7 +97,11 @@ export class DocumentPreview implements OnInit {
 
     this.documentService.eliminarPuntuacion(id, this.token).subscribe({
       next: () => this.cargarPreview(),
-      error: (err) => alert('Error al eliminar puntuación: ' + err),
+      error: (err) => {
+  if (err.status === 200) return this.cargarPreview();
+  alert('Error al eliminar puntuación');
+},
+
     });
   }
 
@@ -115,7 +123,11 @@ export class DocumentPreview implements OnInit {
 
     this.documentService.eliminarComentario(id, this.token).subscribe({
       next: () => this.cargarPreview(),
-      error: (err) => alert('Error al eliminar comentario: ' + err),
+      error: (err) => {
+  if (err.status === 200) return this.cargarPreview();
+  alert('Error al eliminar comentario');
+},
+
     });
   }
 
