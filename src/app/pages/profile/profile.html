@@ -20,6 +20,35 @@
   </div>
 }
 
+<div id="documentsPanel">
+  <h3>Mis Resúmenes Subidos</h3>
+
+  @if (myDocuments.length == 0) {
+    <p class="no-documents">No tenés resúmenes subidos.</p>
+  }
+
+  @if(myDocuments.length > 0) {
+    <ul class="lista-documentos">
+      @for (doc of myDocuments; track $index) {
+        <a [routerLink]="['/document-preview',doc.id]">
+          <li class="item-documento">
+          <div class="doc-info">
+            <span class="doc-title">{{ doc.title }}</span>
+            <span class="doc-subject">({{ doc.subject }})</span>
+          </div>
+
+          <button (click)="eliminarDocumento(doc.id)" class="btn-delete">
+            Eliminar
+          </button>
+        </li>
+        </a>
+        
+      }
+    </ul>
+  }
+</div>
+
+
   @if (isAdmin) {
     <div id="adminPanel" class="box4">
       <h4>Panel de Administración</h4>

@@ -1,6 +1,6 @@
 // src/app/pages/profile/profile.ts
 import { ChangeDetectorRef, Component, OnInit, afterNextRender, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { Auth } from '../../services/auth';
@@ -9,7 +9,7 @@ import { UserService, UserProfile } from '../../services/user-service';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './profile.html',
   styleUrls: ['./profile.css'],
 })
@@ -26,6 +26,7 @@ export class Profile implements OnInit {
   nuevaMateria = '';
   updateMessage = '';
   loading = false;
+  myDocuments: any[] = [];
 
   isAdmin = false;
   isProfessor = false;
@@ -58,14 +59,15 @@ export class Profile implements OnInit {
     }
 
     this.cargarPerfil();
-
-    // Igual que en la rama que funciona:
-    afterNextRender(() => {
-      if (this.isProfessor) {
-        this.cargarMateriasProfesor();
-      }
-    });
+    this.cargarMisDocumentos();
   }
+
+  afterRender = afterNextRender(() => {
+  if (this.isProfessor) {
+    this.cargarMateriasProfesor();
+  }
+});
+
 
   // Navegación paneles admin
   goToAdmins(): void {
@@ -94,7 +96,6 @@ export class Profile implements OnInit {
         this.loading = false;
 
         const role = (data.role || '').toUpperCase();
-        console.log('Rol recibido:', role);
 
         this.isAdmin     = this.userService.isAdminRole(role);
         this.isProfessor = this.userService.isProfessorRole(role);
@@ -173,4 +174,37 @@ export class Profile implements OnInit {
       error: () => (this.updateMessage = 'Error actualizando el perfil.'),
     });
   }
+
+  // ============ Documents ==========
+  cargarMisDocumentos(): void {
+  this.userService.getMyDocuments().subscribe({
+    next: (docs) => {
+      this.myDocuments = docs;
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+  console.error('STATUS:', err.status);
+  console.error('BODY:', err.error);
+  console.error('RAW ERROR:', err);
+}
+  });
+}
+
+eliminarDocumento(id: number): void {
+  if (!confirm('¿Seguro que querés eliminar este documento?')) return;
+
+  this.userService.deleteDocument(id).subscribe({
+    next: (msg) => {
+      alert(msg);
+      this.cargarMisDocumentos();
+    },
+    error: (err) => {
+      alert('Error al eliminar el documento.');
+      console.error(err);
+    }
+  });
+}
+
+
+
 }

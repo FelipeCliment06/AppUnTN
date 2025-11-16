@@ -12,6 +12,14 @@ export interface UserProfile {
   role: string;
   password?: string;
 }
+export interface DocumentResponse {
+  id: number;
+  title: string;
+  description: string;
+  subject: string;
+  fileType: string;
+  uploadDate: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -111,4 +119,27 @@ isProfessorRole(role: string): boolean {
   const r = (role || '').toUpperCase();
   return r === 'PROFESSOR' || r === 'ROLE_PROFESSOR';
 }
+
+
+// =========== Documents =============
+private documentsUrl = 'http://localhost:8080/api/documents';
+
+getMyDocuments() {
+  return this.http.get<DocumentResponse[]>(`${this.documentsUrl}/myDocuments`, {
+    headers: this.authHeaders
+  });
+}
+
+deleteDocument(id: number) {
+  return this.http.delete(`${this.documentsUrl}/delete`, {
+    headers: this.authHeaders,
+    body: { id },
+    responseType: 'text' as 'text'  
+  });
+}
+
+
+
+
+
 }
