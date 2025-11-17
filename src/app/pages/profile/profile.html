@@ -1,1 +1,184 @@
-<p>profile works!</p>
+<div class="container">
+  <h1 class="title">¡Bienvenido/a <span class="username">
+    @if (userData?.name) {
+      {{ userData?.name }}
+    } @else {
+      {{ auth.getUsername() }}
+    }
+  </span>!</h1>
+  <p>Este es tu perfil de AppUnTN</p>
+  @if (userData) {
+  <div id="userDetails" class="user-details-card">
+    <h3 class="details-title">Información de la Cuenta</h3>
+    <ul class="details-list">
+        <li><strong>Nombre:</strong> {{ userData.name }}</li>
+        <li><strong>Apellido:</strong> {{ userData.lastname }}</li>
+        <li><strong>Email:</strong> {{ userData.mail }}</li>
+        <li><strong>Ciudad:</strong> {{ userData.city || 'No especificada' }}</li>
+        <li><strong>Sobre mí:</strong> {{ userData.about || 'Sin descripción' }}</li>
+    </ul>
+  </div>
+}
+
+<div id="documentsPanel">
+  <h3>Mis Resúmenes Subidos</h3>
+
+  @if (myDocuments.length == 0) {
+    <p class="no-documents">No tenés resúmenes subidos.</p>
+  }
+
+  @if(myDocuments.length > 0) {
+    <ul class="lista-documentos">
+      @for (doc of myDocuments; track $index) {
+        <a [routerLink]="['/document-preview',doc.id]">
+          <li class="item-documento">
+          <div class="doc-info">
+            <span class="doc-title">{{ doc.title }}</span>
+            <span class="doc-subject">({{ doc.subject }})</span>
+          </div>
+
+          <button (click)="eliminarDocumento(doc.id)" class="btn-delete">
+            Eliminar
+          </button>
+        </li>
+        </a>
+        
+      }
+    </ul>
+  }
+</div>
+
+
+  @if (isAdmin) {
+    <div id="adminPanel" class="box4">
+      <h4>Panel de Administración</h4>
+      <div class="admin-buttons">
+        <button class="users-button" (click)="goToUsers()">
+          Dar de baja usuarios
+        </button>
+        <button class="admins-button" (click)="goToAdmins()">
+          Administrar administradores
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (isProfessor) {
+  <div id="professorPanel" class="box4">
+    <h4>Materias que dictás</h4>
+
+    <ul class="ul-professor">
+      @for (sub of subjects; track sub) {
+        <li class="li-professor">
+          {{ sub }}
+          <button class="button-professor" (click)="eliminarMateria(sub)">
+            Eliminar
+          </button>
+        </li>
+      }
+      @empty {
+        <li class="no-subjects">No tenés materias asignadas.</li>
+      }
+    </ul>
+
+    <div class="new-subject-container">
+      <select id="subject-select" [(ngModel)]="nuevaMateria" class="form-select">
+        <option value="">Seleccioná una materia</option>
+
+        @for (m of materiasDisponibles; track m.value) {
+          <option [value]="m.value">{{ m.label }}</option>
+        }
+      </select>
+      <button class="button-add-subject" (click)="agregarMateria()">
+        Asignar materia
+      </button>
+    </div>
+  </div>
+}
+
+  <!-- Seccion para editar el perfil -->
+  @if (userData) {
+  <div class="box5">
+    <h3 class="box3">Editar perfil</h3>
+    <form id="updateForm" class="form-updateForm">
+      <div class="box3">
+        <label for="nameInput" class="form-label">Nombre</label>
+        <input
+          type="text"
+          class="form-control"
+          id="nameInput"
+          name="name"
+          [(ngModel)]="userData.name"
+          required
+        />
+      </div>
+      <div class="box3">
+        <label for="lastnameInput" class="form-label">Apellido</label>
+        <input
+          type="text"
+          class="form-control"
+          id="lastnameInput"
+          name="lastname"
+          [(ngModel)]="userData.lastname"
+          required
+        />
+      </div>
+      <div class="box3">
+        <label for="mailInput" class="form-label">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          id="mailInput"
+          name="mail"
+          [(ngModel)]="userData.mail"
+          required
+        />
+      </div>
+      <div class="box3">
+        <label for="cityInput" class="form-label">Ciudad</label>
+        <input
+          type="text"
+          class="form-control"
+          id="cityInput"
+          name="city"
+          [(ngModel)]="userData.city"
+        />
+      </div>
+      <div class="box3">
+        <label for="aboutInput" class="form-label">Sobre vos</label>
+        <textarea
+          id="aboutInput"
+          class="form-control"
+          rows="3"
+          name="about"
+          [(ngModel)]="userData.about"
+        ></textarea>
+      </div>
+      <div class="box3">
+        <label for="passwordInput" class="form-label">
+          Nueva Contraseña (opcional)
+        </label>
+        <input
+          type="password"
+          class="form-control"
+          id="passwordInput"
+          name="password"
+          [(ngModel)]="userData.password"
+        />
+      </div>
+      <button
+        type="button"
+        class="button-saveUpdate"
+        (click)="actualizarPerfil()"
+      >
+        Guardar cambios
+      </button>
+    </form>
+
+    <div id="updateMessage" class="box3">
+      {{ updateMessage }}
+    </div>
+  </div>
+}
+
+</div>

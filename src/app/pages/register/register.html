@@ -1,1 +1,103 @@
-<p>register works!</p>
+<div class="register-container">
+  <div class="register-card">
+    <h2>Registro de Usuario</h2>
+
+    @if (message) {
+      <div class="alert" [class.alert-success]="!error" [class.alert-danger]="error">
+        {{ message }}
+      </div>
+    }
+
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      
+      <div class="form-group">
+        <label for="name">Nombre</label>
+        <input id="name" name="name" type="text" formControlName="name" autocomplete="given-name" />
+        @if (f['name'].touched && f['name'].invalid) {
+          <small class="error-text">El nombre es obligatorio (mínimo 2 letras).</small>
+        }
+      </div>
+      
+      <div class="form-group">
+        <label for="lastname">Apellido</label>
+        <input id="lastname" name="lastname" type="text" formControlName="lastname" autocomplete="family-name" />
+        @if (f['lastname'].touched && f['lastname'].invalid) {
+          <small class="error-text">El apellido es obligatorio (mínimo 2 letras).</small>
+        }
+      </div>
+      
+      <div class="form-group">
+        <label for="mail">Email</label>
+        <input id="mail" name="mail" type="email" formControlName="mail" autocomplete="email" />
+        @if (f['mail'].touched && f['mail'].errors?.['required']) {
+          <small class="error-text">El email es obligatorio.</small>
+        }
+        @if (f['mail'].errors?.['email']) {
+          <small class="error-text">Formato de email inválido.</small>
+        }
+        @if (f['mail'].pending) {
+          <small class="info-text">Verificando disponibilidad...</small>
+        }
+        @if (f['mail'].errors?.['emailTaken']) {
+          <small class="error-text">Este email ya está registrado.</small>
+        }
+      </div>
+
+      
+      <div class="form-group">
+        <label for="username">Usuario</label>
+        <input id="username" name="username" type="text" formControlName="username" autocomplete="username" />
+        @if (f['username'].touched && f['username'].errors?.['required']) {
+          <small class="error-text">El usuario es obligatorio.</small>
+        }
+        @if (f['username'].errors?.['minlength']) {
+          <small class="error-text">Debe tener al menos 4 caracteres.</small>
+        }
+        @if (f['username'].pending) {
+          <small class="info-text">Verificando disponibilidad...</small>
+        }
+        @if (f['username'].errors?.['usernameTaken']) {
+          <small class="error-text">Este nombre de usuario ya existe.</small>
+        }
+      </div>
+
+      
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input id="password" name="password" type="password" formControlName="password" autocomplete="new-password" />
+        @if (f['password'].touched && f['password'].invalid) {
+          <small class="error-text">Debe tener al menos 6 caracteres.</small>
+        }
+      </div>
+
+
+      <div class="form-group">
+        <label for="city">Ciudad</label>
+        <input id="city" name="city" type="text" formControlName="city" autocomplete="address-level2" />
+      </div>
+
+
+      <div class="form-group">
+        <label for="about">Sobre vos</label>
+        <textarea id="about" name="about" formControlName="about" rows="3" autocomplete="off"></textarea>
+      </div>
+
+      
+      <div class="form-group">
+        <label for="role">Rol</label>
+        <select id="role" name="role" formControlName="role">
+          @if (currentRole === 'ADMIN' || currentRole === 'ROLE_ADMIN') {
+            <option value="ADMIN">ADMIN</option>
+          } @else {
+            <option value="STUDENT">Alumno</option>
+            <option value="PROFESSOR">Profesor</option>
+          }
+        </select>
+      </div>
+
+      <button type="submit" [disabled]="registerForm.invalid" class="btn-primary">
+        Registrarse
+      </button>
+    </form>
+  </div>
+</div>

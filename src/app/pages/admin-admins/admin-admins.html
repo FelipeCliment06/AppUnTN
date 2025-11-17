@@ -1,0 +1,82 @@
+<div class="contenedor">
+  <h2 class="titulo">Gestión de Administradores</h2>
+
+  <div class="controles">
+    <div class="agregar-area">
+      <a routerLink="/register" [queryParams]="{ role: 'ADMIN' }" class="btn-agregar">
+        Agregar nuevo administrador
+      </a>
+    </div>
+
+    <div class="filtros">
+      <div class="filtro-grupo">
+        <input
+          type="text"
+          class="filtro-input"
+          placeholder="Filtrar por usuario"
+          [value]="filtroUsername()"
+          (input)="onFiltroChange('username', $event)"
+        />
+
+        <input
+          type="text"
+          class="filtro-input"
+          placeholder="Filtrar por nombre"
+          [value]="filtroNombre()"
+          (input)="onFiltroChange('nombre', $event)"
+        />
+
+        <input
+          type="text"
+          class="filtro-input"
+          placeholder="Filtrar por email"
+          [value]="filtroEmail()"
+          (input)="onFiltroChange('email', $event)"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead class="tabla-cabecera">
+        <tr>
+          <th>Usuario</th>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="tabla-cuerpo">
+        @for (admin of filteredAdmins(); track admin.username) {
+          <tr>
+            <td>{{ admin.username }}</td>
+            <td>{{ admin.name }} {{ admin.lastname }}</td>
+            <td>{{ admin.mail }}</td>
+            <td class="tabla-acciones">
+              @if (
+                admin.username.toLowerCase() !== usernameActual &&
+                admin.username.toLowerCase() !== 'admin0'
+              ) {
+                <button class="btn-eliminar" (click)="deleteUser(admin.username)">
+                  Eliminar
+                </button>
+              } @else {
+                <span class="accion-nodisp">No disponible</span>
+              }
+            </td>
+          </tr>
+        }
+        @empty {
+          <tr><td colspan="4" class="tabla-vacia">No hay administradores para mostrar.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="volver-area">
+    <button class="btn-volver" (click)="volverPerfil()">
+      Volver al perfil
+    </button>
+  </div>
+</div>
