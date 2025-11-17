@@ -1,17 +1,5 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow-x: hidden;
-}
-
 #appContainer {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  height: 100vh;
-}
-
-main {
-  overflow-y: auto;
-  min-height: 0; /* Esto es importante para que el grid funcione */
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
 }
