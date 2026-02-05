@@ -14,6 +14,11 @@
       </div>
 
       <button class="btn btn-success mb-4" (click)="descargarResumen()">Descargar</button>
+      @if (isAdmin) {
+        <button class="btn btn-outline-danger" (click)="eliminarResumenCompleto()">
+          🗑️ Eliminar Resumen
+        </button>
+      }
     </div>
 
     <!-- Puntuaciones -->
@@ -67,9 +72,14 @@
               <div>
                 <strong>{{c.authorUsername}}</strong> ({{c.creationDate}}):<br />{{c.content}}
               </div>
-              @if (c.authorUsername === username) {
-                <button class="btn btn-danger btn-sm ms-2" (click)="eliminarComentario(c.id)">Eliminar</button>
-              }
+              <div>
+                @if (c.authorUsername === username) {
+                  <button class="btn btn-danger btn-sm ms-2" (click)="eliminarComentario(c.id)">Eliminar</button>
+                } 
+                @else if (isAdmin) {
+                  <button class="btn btn-dark btn-sm ms-2" (click)="eliminarComentario(c.id)">Moderar</button>
+                }
+              </div>
             </li>
           }
         </ul>

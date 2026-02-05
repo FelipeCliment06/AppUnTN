@@ -42,4 +42,7 @@ export class Auth {
       return null;
     }
   }
+  getRole(): string | null {
+  return localStorage.getItem('role'); 
+}
 }

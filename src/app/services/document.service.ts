@@ -38,6 +38,12 @@ export class DocumentService {
       responseType: 'blob'
     });
   }
+  deleteDocument(id: string, token: string) {
+  return this.http.delete(`${this.apiDocuments}/delete`, {
+    headers: this.createHeaders(token),
+    body: { id: id }
+  });
+}
 
   // PUNCTUATIONS
   getPuntuaciones(id: string, token: string) {
