@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { DocumentService } from '../../services/document.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-documents',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './documents.html',
   styleUrls: ['./documents.css']
 })

@@ -10,6 +10,7 @@ import { AboutUs } from './pages/about-us/about-us';
 import { AdminAdmins } from './pages/admin-admins/admin-admins';
 import { AdminUsuarios } from './pages/admin-usuarios/admin-usuarios';
 import { DocumentPreview } from './pages/document-preview/document-preview';
+import { UserProfile } from './pages/user-profile/user-profile';
 
 export const routes: Routes = [
   // Página principal pública
@@ -22,6 +23,7 @@ export const routes: Routes = [
   { path: 'documents', component: Documents, canActivate: [authGuard] },
   { path: 'profile', component: Profile, canActivate: [authGuard] },
   { path: 'document-preview/:id', component: DocumentPreview, canActivate: [authGuard], runGuardsAndResolvers: 'always' },
+  { path: 'user-profile/:username', component: UserProfile, canActivate: [authGuard] },
   { path: 'admin-admins', component: AdminAdmins, canActivate: [authGuard] },
   { path: 'admin-usuarios', component: AdminUsuarios, canActivate: [authGuard] },
   

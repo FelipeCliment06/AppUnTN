@@ -30,11 +30,18 @@
   }
 
   @for (doc of filtrados; track doc.id) {
-    <a class="doc-card" (click)="seleccionarDocumento(doc.id)">
-      <strong>{{ doc.title }}</strong><br>
-      <em>{{ doc.authorUsername || 'Autor desconocido' }}</em>
-      <p>{{ doc.description }}</p>
-      <div class="subject">{{ doc.subject }}</div>
-    </a>
+    <div class="doc-card">
+      <a class="doc-card-link" (click)="seleccionarDocumento(doc.id)">
+        <strong>{{ doc.title }}</strong>
+        <p>{{ doc.description }}</p>
+        <div class="subject">{{ doc.subject }}</div>
+      </a>
+      <div class="doc-card-author">
+        <a [routerLink]="['/user-profile', doc.authorUsername]" class="author-link" (click)="$event.stopPropagation()">
+          <span class="author-avatar-sm">{{ (doc.authorUsername || '?').charAt(0).toUpperCase() }}</span>
+          {{ doc.authorUsername || 'Autor desconocido' }}
+        </a>
+      </div>
+    </div>
   }
 </div>

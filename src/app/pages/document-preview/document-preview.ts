@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, ChangeDetectorRef, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DocumentService } from '../../services/document.service';
@@ -9,7 +9,7 @@ import { Auth } from '../../services/auth';
 @Component({
   selector: 'app-document-preview',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './document-preview.html',
   styleUrls: ['./document-preview.css'],
 })
@@ -34,6 +34,7 @@ export class DocumentPreview implements OnInit {
   document: any = null;
   puntuaciones: any[] = [];
   comentarios: any[] = [];
+  promedioRating: number = 0;
 
   puntuacionSeleccionada = signal(0);
   nuevoComentario = '';
@@ -87,6 +88,9 @@ export class DocumentPreview implements OnInit {
         this.document = doc;
         this.puntuaciones = doc.punctuations || [];
         this.comentarios = doc.commentaries || [];
+        this.promedioRating = this.puntuaciones.length > 0
+          ? this.puntuaciones.reduce((sum: number, p: any) => sum + p.value, 0) / this.puntuaciones.length
+          : 0;
         this.cd.detectChanges();
       },
       error: (err) => {

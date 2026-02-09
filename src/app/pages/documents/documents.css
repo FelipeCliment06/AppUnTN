@@ -105,6 +105,52 @@
 }
 
 /* ==========================
+   LINK DEL CARD Y AUTOR
+========================== */
+.doc-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.doc-card-author {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.author-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #1f6feb;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.author-link:hover {
+  color: #0d4fad;
+  text-decoration: underline;
+}
+
+.author-avatar-sm {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #1f6feb;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+/* ==========================
    MENSAJE SIN RESULTADOS
 ========================== */
 .no-results {
