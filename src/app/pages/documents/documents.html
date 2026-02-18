@@ -21,6 +21,15 @@
       <label class="form-label mb-1">Autor:</label>
       <input class="form-control" placeholder="Ej: Juan Pérez" [(ngModel)]="autor" (input)="filtrar()">
     </div>
+
+    <div>
+      <label class="form-label mb-1">Ordenar por:</label>
+      <select class="form-select" [(ngModel)]="orden" (change)="cambiarOrden()">
+        <option value="recientes">Más recientes</option>
+        <option value="puntuados">Mejor puntuados</option>
+        <option value="descargados">Más descargados</option>
+      </select>
+    </div>
   </div>
 
   @if (!materia && !nombre && !autor) {
@@ -34,7 +43,10 @@
       <a class="doc-card-link" (click)="seleccionarDocumento(doc.id)">
         <strong>{{ doc.title }}</strong>
         <p>{{ doc.description }}</p>
-        <div class="subject">{{ doc.subject }}</div>
+        <div class="doc-card-meta">
+          <span class="subject">{{ doc.subject }}</span>
+          <span class="download-count">{{ doc.downloadCount || 0 }} descargas</span>
+        </div>
       </a>
       <div class="doc-card-author">
         <a [routerLink]="['/user-profile', doc.authorUsername]" class="author-link" (click)="$event.stopPropagation()">

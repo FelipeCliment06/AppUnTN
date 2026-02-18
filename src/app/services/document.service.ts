@@ -20,8 +20,8 @@ export class DocumentService {
   }
 
   // DOCUMENTS
-  getAllDocuments(token: string) {
-    return this.http.get<any[]>(`${this.apiDocuments}/getAll`, {
+  getAllDocuments(token: string, orden: string = 'recientes') {
+    return this.http.get<any[]>(`${this.apiDocuments}/getAll?orden=${orden}`, {
       headers: this.createHeaders(token)
     });
   }

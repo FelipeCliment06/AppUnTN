@@ -20,6 +20,7 @@ export class Documents implements OnInit {
   materia: string = '';
   nombre: string = '';
   autor: string = '';
+  orden: string = 'recientes';
   materias: string[] = [
   "PROGRAMACION_I",
   "ARQUITECTURA_Y_SISTEMAS_OPERATIVOS",
@@ -50,11 +51,21 @@ export class Documents implements OnInit {
   ngOnInit(): void {
     this.token = localStorage.getItem('token') ?? '';
 
-    // 🔥 cargar documentos al iniciar
-    this.documentService.getAllDocuments(this.token).subscribe({
-      next: (data) => this.allDocs = data,
+    this.cargarDocumentos();
+  }
+
+  cargarDocumentos(): void {
+    this.documentService.getAllDocuments(this.token, this.orden).subscribe({
+      next: (data) => {
+        this.allDocs = data;
+        this.filtrar();
+      },
       error: () => alert('Error al cargar documentos')
     });
+  }
+
+  cambiarOrden(): void {
+    this.cargarDocumentos();
   }
 
   filtrar(): void {

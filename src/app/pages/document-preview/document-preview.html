@@ -26,6 +26,8 @@
           </a>
           <span class="meta-separator">·</span>
           <span class="doc-date">📅 {{ document.uploadDate }}</span>
+          <span class="meta-separator">·</span>
+          <span class="doc-downloads">📥 {{ document.downloadCount || 0 }} descargas</span>
         </div>
         <div class="doc-actions">
           <button class="btn-download" (click)="descargarResumen()">
