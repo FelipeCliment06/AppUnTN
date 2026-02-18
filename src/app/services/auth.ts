@@ -43,6 +43,17 @@ export class Auth {
     }
   }
   getRole(): string | null {
-  return localStorage.getItem('role'); 
-}
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const roles = payload.roles;
+      if (roles && roles.length > 0) {
+        return roles[0];
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
 }
