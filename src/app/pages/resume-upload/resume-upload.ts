@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-resume-upload',
@@ -19,7 +20,7 @@ export class ResumeUpload {
   subject = '';
   successMessage = '';
   errorMessage = '';
-  apiUrl = 'http://localhost:8080/api/documents/add';
+  apiUrl = `${environment.apiUrl}/documents/add`;
 
   private http = inject(HttpClient);
   private router = inject(Router);

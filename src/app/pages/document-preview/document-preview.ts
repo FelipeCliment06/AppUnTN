@@ -94,8 +94,8 @@ export class DocumentPreview implements OnInit {
         this.cd.detectChanges();
       },
       error: (err) => {
-        console.error(err);
-        alert('Error al cargar la vista previa');
+        console.error('Error al cargar documento:', err);
+        this.router.navigate(['/documents']);
       },
     });
   }
