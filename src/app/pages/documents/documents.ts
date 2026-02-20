@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { DocumentService } from '../../services/document.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-documents',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './documents.html',
   styleUrls: ['./documents.css']
 })
@@ -20,6 +20,7 @@ export class Documents implements OnInit {
   materia: string = '';
   nombre: string = '';
   autor: string = '';
+  orden: string = 'recientes';
   materias: string[] = [
   "PROGRAMACION_I",
   "ARQUITECTURA_Y_SISTEMAS_OPERATIVOS",
@@ -41,6 +42,8 @@ export class Documents implements OnInit {
 ];
 
 
+  private readonly cd = inject(ChangeDetectorRef);
+
   constructor(
     private documentService: DocumentService,
     private router: Router,
@@ -50,11 +53,22 @@ export class Documents implements OnInit {
   ngOnInit(): void {
     this.token = localStorage.getItem('token') ?? '';
 
-    // 🔥 cargar documentos al iniciar
-    this.documentService.getAllDocuments(this.token).subscribe({
-      next: (data) => this.allDocs = data,
+    this.cargarDocumentos();
+  }
+
+  cargarDocumentos(): void {
+    this.documentService.getAllDocuments(this.token, this.orden).subscribe({
+      next: (data) => {
+        this.allDocs = data;
+        this.filtrar();
+        this.cd.detectChanges();
+      },
       error: () => alert('Error al cargar documentos')
     });
+  }
+
+  cambiarOrden(): void {
+    this.cargarDocumentos();
   }
 
   filtrar(): void {

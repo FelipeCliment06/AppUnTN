@@ -21,6 +21,15 @@
       <label class="form-label mb-1">Autor:</label>
       <input class="form-control" placeholder="Ej: Juan Pérez" [(ngModel)]="autor" (input)="filtrar()">
     </div>
+
+    <div>
+      <label class="form-label mb-1">Ordenar por:</label>
+      <select class="form-select" [(ngModel)]="orden" (change)="cambiarOrden()">
+        <option value="recientes">Más recientes</option>
+        <option value="puntuados">Mejor puntuados</option>
+        <option value="descargados">Más descargados</option>
+      </select>
+    </div>
   </div>
 
   @if (!materia && !nombre && !autor) {
@@ -30,11 +39,21 @@
   }
 
   @for (doc of filtrados; track doc.id) {
-    <a class="doc-card" (click)="seleccionarDocumento(doc.id)">
-      <strong>{{ doc.title }}</strong><br>
-      <em>{{ doc.authorUsername || 'Autor desconocido' }}</em>
-      <p>{{ doc.description }}</p>
-      <div class="subject">{{ doc.subject }}</div>
-    </a>
+    <div class="doc-card">
+      <a class="doc-card-link" (click)="seleccionarDocumento(doc.id)">
+        <strong>{{ doc.title }}</strong>
+        <p>{{ doc.description }}</p>
+        <div class="doc-card-meta">
+          <span class="subject">{{ doc.subject }}</span>
+          <span class="download-count">{{ doc.downloadCount || 0 }} descargas</span>
+        </div>
+      </a>
+      <div class="doc-card-author">
+        <a [routerLink]="['/user-profile', doc.authorUsername]" class="author-link" (click)="$event.stopPropagation()">
+          <span class="author-avatar-sm">{{ (doc.authorUsername || '?').charAt(0).toUpperCase() }}</span>
+          {{ doc.authorUsername || 'Autor desconocido' }}
+        </a>
+      </div>
+    </div>
   }
 </div>

@@ -1,0 +1,86 @@
+<div class="container">
+
+  @if (loading) {
+    <div class="loading-state">
+      <p>Cargando perfil...</p>
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert-error">{{ errorMessage }}</div>
+  }
+
+  @if (profile && !loading) {
+    <!-- ========== HEADER DEL PERFIL ========== -->
+    <div class="profile-header">
+      <div class="profile-avatar">{{ username.charAt(0).toUpperCase() }}</div>
+      <div class="profile-info">
+        <h2 class="profile-name">{{ profile.name }} {{ profile.lastname }}</h2>
+        <span class="profile-username">@{{ username }}</span>
+        <span class="profile-role-badge">{{ getRoleLabel(profile.role) }}</span>
+      </div>
+    </div>
+
+    <!-- ========== DATOS DEL USUARIO ========== -->
+    <div class="profile-details">
+      <div class="details-grid">
+        <div class="detail-item">
+          <span class="detail-icon">📧</span>
+          <div>
+            <span class="detail-label">Email</span>
+            <span class="detail-value">{{ profile.mail }}</span>
+          </div>
+        </div>
+        <div class="detail-item">
+          <span class="detail-icon">📍</span>
+          <div>
+            <span class="detail-label">Ciudad</span>
+            <span class="detail-value">{{ profile.city || 'No especificada' }}</span>
+          </div>
+        </div>
+      </div>
+
+      @if (profile.about) {
+        <div class="about-section">
+          <h4 class="about-title">Acerca de</h4>
+          <p class="about-text">{{ profile.about }}</p>
+        </div>
+      }
+
+      @if (subjects.length > 0) {
+        <div class="subjects-section">
+          <h4 class="subjects-title">Materias</h4>
+          <div class="subjects-list">
+            @for (subject of subjects; track $index) {
+              <span class="subject-badge">{{ formatSubject(subject) }}</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- ========== RESÚMENES ========== -->
+    <div class="documents-section">
+      <h3 class="section-title">📄 Resúmenes subidos ({{ documents.length }})</h3>
+
+      @if (documents.length === 0) {
+        <div class="empty-state">
+          <p>Este usuario todavía no subió resúmenes.</p>
+        </div>
+      }
+
+      @for (doc of documents; track doc.id) {
+        <a class="doc-card" [routerLink]="['/document-preview', doc.id]">
+          <div class="doc-card-header">
+            <h4 class="doc-card-title">{{ doc.title }}</h4>
+            <span class="doc-card-badge">{{ formatSubject(doc.subject) }}</span>
+          </div>
+          <p class="doc-card-description">{{ doc.description }}</p>
+          @if (doc.uploadDate) {
+            <span class="doc-card-date">📅 {{ doc.uploadDate }}</span>
+          }
+        </a>
+      }
+    </div>
+  }
+</div>

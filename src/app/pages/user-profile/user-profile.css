@@ -1,0 +1,296 @@
+/* ============================= */
+/*      CONTENEDOR GENERAL       */
+/* ============================= */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ============================= */
+/*      LOADING & ERROR          */
+/* ============================= */
+.loading-state {
+  text-align: center;
+  padding: 60px 0;
+  color: #888;
+  font-size: 1rem;
+}
+
+.alert-error {
+  background: #fee;
+  color: #cc3333;
+  padding: 14px 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+/* ============================= */
+/*      HEADER DEL PERFIL        */
+/* ============================= */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 28px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+  border-top: 4px solid #1f6feb;
+}
+
+.profile-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #1f6feb;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0a2540;
+  margin: 0;
+}
+
+.profile-username {
+  color: #888;
+  font-size: 0.95rem;
+}
+
+.profile-role-badge {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1f6feb;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+  margin-top: 4px;
+}
+
+/* ============================= */
+/*      DETALLES DEL PERFIL      */
+/* ============================= */
+.profile-details {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  margin-bottom: 20px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.detail-icon {
+  font-size: 1.3rem;
+}
+
+.detail-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.detail-value {
+  display: block;
+  font-size: 0.9rem;
+  color: #333;
+  font-weight: 500;
+}
+
+/* ============================= */
+/*      ACERCA DE                */
+/* ============================= */
+.about-section {
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+.about-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0a2540;
+  margin: 0 0 8px 0;
+}
+
+.about-text {
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ============================= */
+/*      MATERIAS                 */
+/* ============================= */
+.subjects-section {
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+  margin-top: 16px;
+}
+
+.subjects-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0a2540;
+  margin: 0 0 10px 0;
+}
+
+.subjects-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.subject-badge {
+  background: #f0f7ff;
+  color: #1f6feb;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* ============================= */
+/*      SECCION DOCUMENTOS       */
+/* ============================= */
+.documents-section {
+  margin-top: 4px;
+}
+
+.section-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0a2540;
+  margin-bottom: 16px;
+}
+
+.empty-state {
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  color: #999;
+}
+
+/* ============================= */
+/*      CARD DE DOCUMENTO        */
+/* ============================= */
+.doc-card {
+  display: block;
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  text-decoration: none;
+  color: inherit;
+  transition: 0.2s ease;
+  border-left: 4px solid transparent;
+}
+
+.doc-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+  border-left-color: #1f6feb;
+}
+
+.doc-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.doc-card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0a2540;
+  margin: 0;
+}
+
+.doc-card-badge {
+  background: #e8f0fe;
+  color: #1f6feb;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.doc-card-description {
+  color: #666;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0 0 8px 0;
+}
+
+.doc-card-date {
+  color: #aaa;
+  font-size: 0.78rem;
+}
+
+/* ============================= */
+/*      RESPONSIVE               */
+/* ============================= */
+@media (max-width: 600px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .profile-info {
+    align-items: center;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .doc-card-header {
+    flex-direction: column;
+  }
+}

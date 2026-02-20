@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../services/auth';
+import { environment } from '../../../environments/environment';
 
 interface AppUser {
   username: string;
@@ -93,7 +94,7 @@ export class AdminUsuarios implements OnInit {
 
   cargarUsuarios(): void {
     this.http
-      .get<AppUser[]>('http://localhost:8080/api/users/getAllUsers', {
+      .get<AppUser[]>(`${environment.apiUrl}/users/getAllUsers`, {
         headers: this.headers,
       })
       .subscribe({
@@ -128,7 +129,7 @@ export class AdminUsuarios implements OnInit {
     }
 
     this.http
-      .delete('http://localhost:8080/api/users/deleteUser', {
+      .delete(`${environment.apiUrl}/users/deleteUser`, {
         headers: this.headers,
         body: { username: usernameToDeleteRaw },
         responseType: 'text',

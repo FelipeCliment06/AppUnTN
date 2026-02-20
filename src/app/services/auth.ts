@@ -42,4 +42,18 @@ export class Auth {
       return null;
     }
   }
+  getRole(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const roles = payload.roles;
+      if (roles && roles.length > 0) {
+        return roles[0];
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
 }
