@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { DocumentService } from '../../services/document.service';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -42,6 +42,8 @@ export class Documents implements OnInit {
 ];
 
 
+  private readonly cd = inject(ChangeDetectorRef);
+
   constructor(
     private documentService: DocumentService,
     private router: Router,
@@ -59,6 +61,7 @@ export class Documents implements OnInit {
       next: (data) => {
         this.allDocs = data;
         this.filtrar();
+        this.cd.detectChanges();
       },
       error: () => alert('Error al cargar documentos')
     });

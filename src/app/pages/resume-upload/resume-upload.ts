@@ -71,9 +71,9 @@ export class ResumeUpload {
       },
       error: (err) => {
         console.error(err);
-        this.errorMessage = '❌ Ocurrió un error al subir el resumen.';
+        this.errorMessage = err.error || 'Ocurrió un error al subir el resumen.';
         this.successMessage = '';
-        this.cdr.detectChanges(); // 👈 fuerza refresco inmediato
+        this.cdr.detectChanges();
       }
     });
   }
