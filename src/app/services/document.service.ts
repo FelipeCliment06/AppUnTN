@@ -1,14 +1,15 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DocumentService {
 
-  private apiDocuments = 'http://localhost:8080/api/documents';
-  private apiPunctuations = 'http://localhost:8080/api/punctuations';
-  private apiCommentaries = 'http://localhost:8080/api/commentaries';
+  private apiDocuments = `${environment.apiUrl}/documents`;
+  private apiPunctuations = `${environment.apiUrl}/punctuations`;
+  private apiCommentaries = `${environment.apiUrl}/commentaries`;
 
   constructor(private http: HttpClient) {}
 
