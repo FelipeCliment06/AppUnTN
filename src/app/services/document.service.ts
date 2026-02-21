@@ -10,6 +10,9 @@ export class DocumentService {
   private apiDocuments = `${environment.apiUrl}/documents`;
   private apiPunctuations = `${environment.apiUrl}/punctuations`;
   private apiCommentaries = `${environment.apiUrl}/commentaries`;
+  private apiUniversities = `${environment.apiUrl}/admin/universities`;
+  private apiCareers = `${environment.apiUrl}/admin/careers`;
+  private apiSubjects = `${environment.apiUrl}/admin/subjects`;
 
   constructor(private http: HttpClient) {}
 
@@ -84,6 +87,31 @@ export class DocumentService {
   eliminarComentario(comentarioId: number, token: string) {
     return this.http.post(`${this.apiCommentaries}/delete`, 
       { id: comentarioId }, 
+      { headers: this.createHeaders(token) }
+    );
+  }
+
+  getUniversities(token: string) {
+    return this.http.get<any[]>(`${this.apiUniversities}/getAll`, {
+      headers: this.createHeaders(token)
+    });
+  }
+
+  getCareers(token: string) {
+    return this.http.get<any[]>(`${this.apiCareers}/getAll`, {
+      headers: this.createHeaders(token)
+    });
+  }
+
+  getSubjects(token: string) {
+    return this.http.get<any[]>(`${this.apiSubjects}/getAll`, {
+      headers: this.createHeaders(token)
+    });
+  }
+
+  filterDocumentsBySubject(subjectName: string, token: string) {
+    return this.http.post<any[]>(`${this.apiDocuments}/filterBySubject`, 
+      { subject: subjectName }, 
       { headers: this.createHeaders(token) }
     );
   }
