@@ -64,7 +64,7 @@
         <strong>{{ doc.title }}</strong>
         <p>{{ doc.description }}</p>
         <div class="doc-card-meta">
-          <span class="subject">{{ doc.subject }}</span>
+          <span class="subject">{{ doc.subject?.name || doc.subject }}</span>
           <span class="download-count">{{ doc.downloadCount || 0 }} descargas</span>
         </div>
       </a>

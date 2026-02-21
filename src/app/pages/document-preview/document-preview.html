@@ -4,7 +4,7 @@
     <!-- ========== CARD PRINCIPAL ========== -->
     <div class="doc-header">
       <div class="doc-header-top">
-        <span class="badge-materia">{{ document.subject.replaceAll('_', ' ') }}</span>
+        <span class="badge-materia">{{ (document.subject?.name || document.subject || '').replaceAll('_', ' ') }}</span>
         <div class="doc-rating-summary">
           <span class="stars-display">
             @for (i of estrellas; track $index) {

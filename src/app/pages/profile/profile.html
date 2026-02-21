@@ -34,7 +34,7 @@
           <li class="item-documento">
           <div class="doc-info">
             <span class="doc-title">{{ doc.title }}</span>
-            <span class="doc-subject">({{ doc.subject }})</span>
+            <span class="doc-subject">({{ doc.subject?.name || doc.subject }})</span>
           </div>
 
           <button (click)="eliminarDocumento(doc.id)" class="btn-delete">

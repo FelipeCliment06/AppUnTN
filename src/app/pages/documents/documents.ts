@@ -30,10 +30,9 @@ export class Documents implements OnInit {
 
   selectedUniversityId: number | null = null;
   selectedCareerId: number | null = null;
+  orden: string = 'recientes';
 
   private cdr = inject(ChangeDetectorRef);
-
-  private readonly cd = inject(ChangeDetectorRef);
 
   constructor(
     private documentService: DocumentService,
@@ -111,6 +110,17 @@ export class Documents implements OnInit {
     });
 
     console.log("Resultados después de filtrar:", this.filtrados);
+  }
+
+  cambiarOrden(): void {
+    this.documentService.getAllDocuments(this.token, this.orden).subscribe({
+      next: (data) => {
+        this.allDocs = data;
+        this.filtrar();
+        this.cdr.detectChanges();
+      },
+      error: () => console.error('Error al cargar documentos')
+    });
   }
 
   seleccionarDocumento(id: number) {
