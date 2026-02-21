@@ -3,11 +3,31 @@
 
   <div class="filter-row">
     <div>
+      <label class="form-label mb-1">Universidad:</label>
+      <select class="form-select" [(ngModel)]="selectedUniversityId" (change)="onUniversityChange()">
+        <option [ngValue]="null">Seleccionar universidad...</option>
+        @for (u of allUniversities; track u.id) {
+          <option [value]="u.id">{{ u.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div>
+      <label class="form-label mb-1">Carrera:</label>
+      <select class="form-select" [(ngModel)]="selectedCareerId" (change)="onCareerChange()" [disabled]="!selectedUniversityId">
+        <option [ngValue]="null">Seleccionar carrera...</option>
+        @for (c of filteredCareers; track c.id) {
+          <option [value]="c.id">{{ c.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div>
       <label class="form-label mb-1">Materia:</label>
-      <select class="form-select" [(ngModel)]="materia" (change)="filtrar()">
+      <select class="form-select" [(ngModel)]="materia" (change)="filtrar()" [disabled]="!selectedCareerId">
         <option value="">Seleccionar materia...</option>
-        @for (m of materias; track m) {
-          <option [value]="m">{{ m }}</option>
+        @for (m of filteredSubjects; track m.id) {
+          <option [value]="m.name">{{ m.name }}</option>
         }
       </select>
     </div>
@@ -34,7 +54,7 @@
       <strong>{{ doc.title }}</strong><br>
       <em>{{ doc.authorUsername || 'Autor desconocido' }}</em>
       <p>{{ doc.description }}</p>
-      <div class="subject">{{ doc.subject }}</div>
+      <div class="subject">{{ doc.subject?.name }}</div>
     </a>
   }
 </div>

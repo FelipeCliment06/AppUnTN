@@ -9,6 +9,9 @@ export class DocumentService {
   private apiDocuments = 'http://localhost:8080/api/documents';
   private apiPunctuations = 'http://localhost:8080/api/punctuations';
   private apiCommentaries = 'http://localhost:8080/api/commentaries';
+  private apiUniversities = 'http://localhost:8080/api/admin/universities';
+  private apiCareers = 'http://localhost:8080/api/admin/careers';
+  private apiSubjects = 'http://localhost:8080/api/admin/subjects';
 
   constructor(private http: HttpClient) {}
 
@@ -77,6 +80,31 @@ export class DocumentService {
   eliminarComentario(comentarioId: number, token: string) {
     return this.http.post(`${this.apiCommentaries}/delete`, 
       { id: comentarioId }, 
+      { headers: this.createHeaders(token) }
+    );
+  }
+
+  getUniversities(token: string) {
+    return this.http.get<any[]>(`${this.apiUniversities}/getAll`, {
+      headers: this.createHeaders(token)
+    });
+  }
+
+  getCareers(token: string) {
+    return this.http.get<any[]>(`${this.apiCareers}/getAll`, {
+      headers: this.createHeaders(token)
+    });
+  }
+
+  getSubjects(token: string) {
+    return this.http.get<any[]>(`${this.apiSubjects}/getAll`, {
+      headers: this.createHeaders(token)
+    });
+  }
+
+  filterDocumentsBySubject(subjectName: string, token: string) {
+    return this.http.post<any[]>(`${this.apiDocuments}/filterBySubject`, 
+      { subject: subjectName }, 
       { headers: this.createHeaders(token) }
     );
   }
