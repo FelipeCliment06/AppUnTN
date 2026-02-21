@@ -1,77 +1,125 @@
 <div class="container">
-  <h2 class="mb-4">Vista previa del resumen</h2>
 
   @if (document) {
-    <!-- Info del documento -->
-    <div class="document-card">
-        <div>
-            <h3>{{document.title}}</h3>
-            <p><strong>Descripción:</strong> {{document.description}}</p>
-            <p><strong>Materia:</strong> {{document.subject}}</p>
-            <p><strong>Autor:</strong> {{document.authorUsername}}</p>
-            <p><strong>Fecha de subida:</strong> {{document.uploadDate}}</p>
-        </div>
-
-        <button class="btn btn-success mb-4" (click)="descargarResumen()">Descargar</button>
-
-    </div>
-
-
-    <!-- Puntuaciones -->
-    <div class="mb-5">
-      <h4>Puntuaciones</h4>
-      <ul class="list-group mb-3">
-        @for (p of puntuaciones; track $index) {
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <span>
-              <strong>{{p.authorUsername}}</strong>: {{p.value}}
-              @if (p.destacado) {
-                <span class="star-destacada">⭐</span>
-              }
-            </span>
-            <div>
-                @if (p.authorUsername === username) {
-                  <button class="btn btn-danger btn-sm" (click)="eliminarPuntuacion(p.id)">Eliminar</button>
-                }
-            </div>
-          </li>
-        }
-      </ul>
-
-      <!-- Selección de estrellas -->
-      <div class="mb-3">
-        <label class="form-label">Tu puntuación:</label><br />
-        @for (i of estrellas; track $index) {
-          <span class="star" [class.selected]="puntuacionSeleccionada() >= i" (click)="selectStar(i)">★</span>
-        }
-        <button class="btn btn-primary btn-sm ms-2" (click)="enviarPuntuacion()">Enviar</button>
-      </div>
-    </div>
-
-    <!-- Comentarios -->
-    <div class="mb-5">
-      <h4>Comentarios</h4>
-      <ul class="list-group mb-3">
-        @for (c of comentarios; track $index) {
-          <li class="list-group-item d-flex justify-content-between align-items-start" [ngClass]="{'comment-destacado': c.destacado}">
-            <div>
-              <strong>{{c.authorUsername}}</strong> ({{c.creationDate}}):<br />{{c.content}}
-            </div>
-            @if (c.authorUsername === username) {
-              <button class="btn btn-danger btn-sm ms-2" (click)="eliminarComentario(c.id)">Eliminar</button>
+    <!-- ========== CARD PRINCIPAL ========== -->
+    <div class="doc-header">
+      <div class="doc-header-top">
+        <span class="badge-materia">{{ document.subject.replaceAll('_', ' ') }}</span>
+        <div class="doc-rating-summary">
+          <span class="stars-display">
+            @for (i of estrellas; track $index) {
+              <span class="star-sm" [class.filled]="i <= promedioRating">★</span>
             }
-          </li>
-        }
-      </ul>
-
-      <!-- Nuevo comentario -->
-      <div class="mb-3">
-        <div>
-            <label for="comentario" class="form-label">Agregar comentario:</label>
+          </span>
+          <span class="rating-text">{{ promedioRating.toFixed(1) }} ({{ puntuaciones.length }})</span>
         </div>
-        <textarea class="form-control" id="comentario" name="comentario" rows="3" [(ngModel)]="nuevoComentario"></textarea>
       </div>
-      <button class="btn btn-primary" (click)="enviarComentario()">Comentar</button>
+
+      <h2 class="doc-title">{{ document.title }}</h2>
+      <p class="doc-description">{{ document.description }}</p>
+
+      <div class="doc-meta">
+        <div class="doc-meta-left">
+          <a class="doc-author" [routerLink]="['/user-profile', document.authorUsername]">
+            <span class="author-avatar">{{ document.authorUsername.charAt(0).toUpperCase() }}</span>
+            {{ document.authorUsername }}
+          </a>
+          <span class="meta-separator">·</span>
+          <span class="doc-date">📅 {{ document.uploadDate }}</span>
+          <span class="meta-separator">·</span>
+          <span class="doc-downloads">📥 {{ document.downloadCount || 0 }} descargas</span>
+        </div>
+        <div class="doc-actions">
+          <button class="btn-download" (click)="descargarResumen()">
+            📥 Descargar
+          </button>
+          @if (isAdmin) {
+            <button class="btn-danger-action" (click)="eliminarResumenCompleto()">
+              🗑️ Eliminar
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== CONTENIDO: 2 COLUMNAS ========== -->
+    <div class="content-grid">
+
+      <!-- COLUMNA IZQUIERDA: COMENTARIOS -->
+      <div class="section-comments">
+        <h3 class="section-title">💬 Comentarios ({{ comentarios.length }})</h3>
+
+        @for (c of comentarios; track $index) {
+          <div class="comment-card" [class.comment-destacado]="c.destacado">
+            <div class="comment-header">
+              <div class="comment-author-info">
+                <span class="author-avatar small">{{ c.authorUsername.charAt(0).toUpperCase() }}</span>
+                <strong>{{ c.authorUsername }}</strong>
+                <span class="comment-date">{{ c.creationDate }}</span>
+              </div>
+              @if (c.authorUsername === username) {
+                <button class="btn-delete" (click)="eliminarComentario(c.id)">✕</button>
+              } @else if (isAdmin) {
+                <button class="btn-moderate" (click)="eliminarComentario(c.id)">Moderar</button>
+              }
+            </div>
+            <p class="comment-content">{{ c.content }}</p>
+          </div>
+        } @empty {
+          <p class="empty-message">Todavía no hay comentarios. ¡Sé el primero!</p>
+        }
+
+        <!-- Nuevo comentario -->
+        <div class="new-comment">
+          <textarea
+            class="comment-textarea"
+            placeholder="Escribí tu comentario..."
+            rows="3"
+            [(ngModel)]="nuevoComentario"></textarea>
+          <button class="btn-primary" (click)="enviarComentario()">Comentar</button>
+        </div>
+      </div>
+
+      <!-- COLUMNA DERECHA: PUNTUACIONES -->
+      <div class="section-ratings">
+        <h3 class="section-title">⭐ Puntuaciones</h3>
+
+        <!-- Tu puntuación -->
+        <div class="rate-box">
+          <label class="rate-label">Tu puntuación:</label>
+          <div class="stars-input">
+            @for (i of estrellas; track $index) {
+              <span
+                class="star"
+                [class.selected]="puntuacionSeleccionada() >= i"
+                (click)="selectStar(i)">★</span>
+            }
+          </div>
+          <button class="btn-primary btn-sm" (click)="enviarPuntuacion()">Enviar</button>
+        </div>
+
+        <!-- Lista de puntuaciones -->
+        @for (p of puntuaciones; track $index) {
+          <div class="rating-item">
+            <div class="rating-item-left">
+              <strong>{{ p.authorUsername }}</strong>
+              <span class="stars-display small">
+                @for (i of estrellas; track $index) {
+                  <span class="star-sm" [class.filled]="i <= p.value">★</span>
+                }
+              </span>
+              @if (p.destacado) {
+                <span class="badge-destacado">Destacado</span>
+              }
+            </div>
+            @if (p.authorUsername === username) {
+              <button class="btn-delete" (click)="eliminarPuntuacion(p.id)">✕</button>
+            }
+          </div>
+        } @empty {
+          <p class="empty-message">Sin puntuaciones aún.</p>
+        }
+      </div>
     </div>
   }
 </div>

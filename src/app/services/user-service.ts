@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Auth } from './auth';
+import { environment } from '../../environments/environment';
 
 export interface UserProfile {
   name: string;
@@ -25,7 +26,7 @@ export interface DocumentResponse {
   providedIn: 'root'
 })
 export class UserService {
-  private baseUrl = 'http://localhost:8080/api/users';
+  private baseUrl = `${environment.apiUrl}/users`;
 
   constructor(private http: HttpClient, private auth: Auth) {}
 
@@ -53,7 +54,7 @@ export class UserService {
   }
 
   login(credentials: { username: string; password: string }) {
-  return this.http.post('http://localhost:8080/api/auth/login', credentials);
+  return this.http.post(`${environment.apiUrl}/auth/login`, credentials);
 }
 
   // ========= PERFIL =========
@@ -122,7 +123,7 @@ isProfessorRole(role: string): boolean {
 
 
 // =========== Documents =============
-private documentsUrl = 'http://localhost:8080/api/documents';
+private documentsUrl = `${environment.apiUrl}/documents`;
 
 getMyDocuments() {
   return this.http.get<DocumentResponse[]>(`${this.documentsUrl}/myDocuments`, {

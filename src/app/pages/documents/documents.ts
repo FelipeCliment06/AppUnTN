@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { DocumentService } from '../../services/document.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Auth } from '../../services/auth';
@@ -8,7 +8,7 @@ import { Auth } from '../../services/auth';
 @Component({
   selector: 'app-documents',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './documents.html',
   styleUrls: ['./documents.css']
 })
@@ -32,6 +32,8 @@ export class Documents implements OnInit {
   selectedCareerId: number | null = null;
 
   private cdr = inject(ChangeDetectorRef);
+
+  private readonly cd = inject(ChangeDetectorRef);
 
   constructor(
     private documentService: DocumentService,

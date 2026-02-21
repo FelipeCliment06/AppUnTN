@@ -1,17 +1,18 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DocumentService {
 
-  private apiDocuments = 'http://localhost:8080/api/documents';
-  private apiPunctuations = 'http://localhost:8080/api/punctuations';
-  private apiCommentaries = 'http://localhost:8080/api/commentaries';
-  private apiUniversities = 'http://localhost:8080/api/admin/universities';
-  private apiCareers = 'http://localhost:8080/api/admin/careers';
-  private apiSubjects = 'http://localhost:8080/api/admin/subjects';
+  private apiDocuments = `${environment.apiUrl}/documents`;
+  private apiPunctuations = `${environment.apiUrl}/punctuations`;
+  private apiCommentaries = `${environment.apiUrl}/commentaries`;
+  private apiUniversities = `${environment.apiUrl}/admin/universities`;
+  private apiCareers = `${environment.apiUrl}/admin/careers`;
+  private apiSubjects = `${environment.apiUrl}/admin/subjects`;
 
   constructor(private http: HttpClient) {}
 
@@ -23,8 +24,8 @@ export class DocumentService {
   }
 
   // DOCUMENTS
-  getAllDocuments(token: string) {
-    return this.http.get<any[]>(`${this.apiDocuments}/getAll`, {
+  getAllDocuments(token: string, orden: string = 'recientes') {
+    return this.http.get<any[]>(`${this.apiDocuments}/getAll?orden=${orden}`, {
       headers: this.createHeaders(token)
     });
   }
@@ -41,6 +42,12 @@ export class DocumentService {
       responseType: 'blob'
     });
   }
+  deleteDocument(id: string, token: string) {
+  return this.http.delete(`${this.apiDocuments}/delete`, {
+    headers: this.createHeaders(token),
+    body: { id: id }
+  });
+}
 
   // PUNCTUATIONS
   getPuntuaciones(id: string, token: string) {

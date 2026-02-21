@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { DocumentService } from '../../services/document.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-resume-upload',
@@ -20,7 +21,7 @@ export class ResumeUpload implements OnInit {
   subject = '';
   successMessage = '';
   errorMessage = '';
-  apiUrl = 'http://localhost:8080/api/documents/add';
+  apiUrl = `${environment.apiUrl}/documents/add`;
 
   allUniversities: any[] = [];
   allCareers: any[] = [];
@@ -104,7 +105,7 @@ export class ResumeUpload implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        this.errorMessage = '❌ Ocurrió un error al subir el resumen.';
+        this.errorMessage = err.error || 'Ocurrió un error al subir el resumen.';
         this.successMessage = '';
         this.cdr.detectChanges(); 
       }
