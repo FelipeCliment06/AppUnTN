@@ -78,7 +78,7 @@
     </div>
   }
 
-  @if (isProfessor) {
+ @if (isProfessor) {
   <div id="professorPanel" class="box4">
     <h4>Materias que dictás</h4>
 
@@ -92,20 +92,56 @@
         </li>
       }
       @empty {
-        <li class="no-subjects">No tenés materias asignadas.</li>
+        <li class="no-subjects">No tenés materias asignadas aún.</li>
       }
     </ul>
 
-    <div class="new-subject-container">
-      <select id="subject-select" [(ngModel)]="nuevaMateria" class="form-select">
-        <option value="">Seleccioná una materia</option>
+    <hr class="separator" />
 
-        @for (m of materiasDisponibles; track m.value) {
-          <option [value]="m.value">{{ m.label }}</option>
-        }
-      </select>
-      <button class="button-add-subject" (click)="agregarMateria()">
-        Asignar materia
+    <h4>Asignar nueva materia</h4>
+    <div class="new-subject-container cascada-layout">
+      
+      <div class="box3">
+        <label class="form-label">Universidad</label>
+        <select class="form-select" (change)="onUniversityChange($any($event.target).value)">
+          <option value="">Seleccioná Universidad</option>
+          @for (u of universidades(); track u.id) {
+            <option [value]="u.id">{{ u.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="box3">
+        <label class="form-label">Carrera</label>
+        <select 
+          class="form-select" 
+          [disabled]="!selectedUniId" 
+          (change)="onCareerChange($any($event.target).value)">
+          <option value="">Seleccioná Carrera</option>
+          @for (c of carreras(); track c.id) {
+            <option [value]="c.id">{{ c.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="box3">
+        <label class="form-label">Materia</label>
+        <select 
+          class="form-select" 
+          [disabled]="!selectedCareerId" 
+          [(ngModel)]="selectedSubjectId">
+          <option [value]="null">Seleccioná Materia</option>
+          @for (m of materiasFiltradas(); track m.id) {
+            <option [value]="m.id">{{ m.name }}</option>
+          }
+        </select>
+      </div>
+
+      <button 
+        class="button-add-subject" 
+        [disabled]="!selectedSubjectId" 
+        (click)="agregarMateria()">
+        Vincular Materia
       </button>
     </div>
   </div>

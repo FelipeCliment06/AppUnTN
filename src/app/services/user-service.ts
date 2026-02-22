@@ -86,10 +86,10 @@ getSubjects(): Observable<any[]> {
   );
 }
 
-addSubject(subject: string): Observable<string> {
+addSubjectById(subjectId: number): Observable<string> {
   return this.http.put(
-    `${this.baseUrl}/subjects/update`,
-    { subjects: [subject] },
+    `${this.baseUrl}/subjects/update`, 
+    { subjectId: subjectId }, 
     {
       headers: this.authHeaders,
       responseType: 'text' as 'text'
@@ -139,7 +139,26 @@ deleteDocument(id: number) {
   });
 }
 
+getUniversities(): Observable<any[]> {
+  return this.http.get<any[]>(
+    `${environment.apiUrl}/admin/universities/getAll`,
+    { headers: this.authHeaders }
+  );
+}
 
+getCareersByUniversity(univId: number): Observable<any[]> {
+  return this.http.get<any[]>(
+    `${environment.apiUrl}/admin/careers/by-university/${univId}`, 
+    { headers: this.authHeaders }
+  );
+}
+
+getSubjectsByCareer(careerId: number): Observable<any[]> {
+  return this.http.get<any[]>(
+    `${environment.apiUrl}/admin/subjects/by-career/${careerId}`, 
+    { headers: this.authHeaders }
+  );
+}
 
 
 

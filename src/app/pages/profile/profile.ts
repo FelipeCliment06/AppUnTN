@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 import { Auth } from '../../services/auth';
 import { UserService, UserProfile } from '../../services/user-service';
+import { signal } from '@angular/core';
 
 @Component({
   selector: 'app-profile',
@@ -28,28 +29,17 @@ export class Profile implements OnInit {
   loading = false;
   myDocuments: any[] = [];
 
+  universidades = signal<any[]>([]);
+  carreras = signal<any[]>([]);
+  materiasFiltradas = signal<any[]>([]);
+
+  selectedUniId: number | null = null;
+  selectedCareerId: number | null = null;
+  selectedSubjectId: number | null = null;
+
   isAdmin = false;
   isProfessor = false;
 
-  materiasDisponibles = [
-    { value: 'PROGRAMACION_I', label: 'Programación I' },
-    { value: 'ARQUITECTURA_Y_SISTEMAS_OPERATIVOS', label: 'Arquitectura y Sistemas Operativos' },
-    { value: 'MATEMATICA', label: 'Matemática' },
-    { value: 'ORGANIZACION_EMPRESARIAL', label: 'Organización Empresarial' },
-    { value: 'PROGRAMACION_II', label: 'Programación II' },
-    { value: 'PROBABILIDAD_Y_ESTADISTICA', label: 'Probabilidad y Estadística' },
-    { value: 'BASE_DE_DATOS_II', label: 'Base de Datos II' },
-    { value: 'INGLES_I', label: 'Inglés I' },
-    { value: 'PROGRAMACION_III', label: 'Programación III' },
-    { value: 'BASE_DE_DATOS_I', label: 'Base de Datos I' },
-    { value: 'METODOLOGIA_DE_SISTEMAS_I', label: 'Metodología de Sistemas I' },
-    { value: 'INGLES_II', label: 'Inglés II' },
-    { value: 'PROGRAMACION_IV', label: 'Programación IV' },
-    { value: 'METODOLOGIA_DE_SISTEMAS_II', label: 'Metodología de Sistemas II' },
-    { value: 'INTRODUCCION_AL_ANALISIS_DE_DATOS', label: 'Introducción al Análisis de Datos' },
-    { value: 'LEGISLACION', label: 'Legislación' },
-    { value: 'GESTION_DE_DESARROLLO_DE_SOFTWARE', label: 'Gestión de Desarrollo de Software' },
-  ];
 
   ngOnInit(): void {
     const token = this.auth.getToken();
@@ -60,13 +50,9 @@ export class Profile implements OnInit {
 
     this.cargarPerfil();
     this.cargarMisDocumentos();
+    this.cargarUniversidades();
   }
 
-  afterRender = afterNextRender(() => {
-  if (this.isProfessor) {
-    this.cargarMateriasProfesor();
-  }
-});
 
 
   // Navegación paneles admin
@@ -104,11 +90,8 @@ export class Profile implements OnInit {
         this.isAdmin     = this.userService.isAdminRole(role);
         this.isProfessor = this.userService.isProfessorRole(role);
 
-        // Igual que en la versión que anda:
         if (this.isProfessor) {
-          setTimeout(() => {
-            this.cargarMateriasProfesor();
-          }, 1000);
+          this.cargarMateriasProfesor();
         }
 
         this.cdr.detectChanges();
@@ -123,18 +106,52 @@ export class Profile implements OnInit {
   }
 
   // ===== Materias (profesor) =====
-  cargarMateriasProfesor(): void {
-    console.log('Cargando materias del profesor...');
+  cargarUniversidades(): void {
+    // Asumo que agregaste este método a tu userService o creaste uno académico
+    this.userService.getUniversities().subscribe({
+      next: (unis) => this.universidades.set(unis),
+      error: (err) => console.error('Error cargando universidades', err)
+    });
+  }
 
+  onUniversityChange(id: string): void {
+    this.selectedUniId = id ? Number(id) : null;
+    this.selectedCareerId = null;
+    this.selectedSubjectId = null;
+    this.carreras.set([]);
+    this.materiasFiltradas.set([]);
+
+    if (this.selectedUniId) {
+      this.userService.getCareersByUniversity(this.selectedUniId).subscribe({
+        next: (data) => this.carreras.set(data),
+        error: (err) => console.error('Error cargando carreras', err)
+      });
+    }
+  }
+
+  onCareerChange(id: string): void {
+    this.selectedCareerId = id ? Number(id) : null;
+    this.selectedSubjectId = null;
+    this.materiasFiltradas.set([]);
+
+    if (this.selectedCareerId) {
+      this.userService.getSubjectsByCareer(this.selectedCareerId).subscribe({
+        next: (data) => this.materiasFiltradas.set(data),
+        error: (err) => console.error('Error cargando materias', err)
+      });
+    }
+  }
+
+  cargarMateriasProfesor(): void {
     this.userService.getSubjects().subscribe({
-      next: (subjects) => {
-        console.log('Materias recibidas desde el backend:', subjects);
-        this.subjects = subjects.map((s: any) => s.name || s);
-        console.log('Materias procesadas para mostrar:', this.subjects);
+      next: (res) => {
+        // Mapeamos para obtener solo los nombres si es que vienen como objetos, 
+        // o los dejamos igual si ya vienen como strings.
+        this.subjects = res.map((s: any) => s.name || s);
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Error al obtener materias:', err);
+        console.error('Error al obtener materias del profesor:', err);
         this.subjects = [];
         this.cdr.detectChanges();
       },
@@ -142,16 +159,16 @@ export class Profile implements OnInit {
   }
 
   agregarMateria(): void {
-    if (!this.nuevaMateria) {
-      alert('Seleccioná una materia.');
+    if (!this.selectedSubjectId) {
+      alert('Por favor, selecciona una materia del listado escalonado.');
       return;
     }
 
-    this.userService.addSubject(this.nuevaMateria).subscribe({
+    this.userService.addSubjectById(this.selectedSubjectId).subscribe({
       next: (msg) => {
         alert(msg);
-        this.cargarMateriasProfesor();
-        this.nuevaMateria = '';
+        this.cargarMateriasProfesor(); 
+        this.selectedSubjectId = null;
       },
       error: () => alert('Error al asignar la materia.'),
     });
