@@ -1,20 +1,21 @@
 <div class="upload-wrapper">
   <div class="upload-container">
-    <h2 class="text-center mb-4">¡Subí tu resumen!</h2>
+    <h2>Subir resumen</h2>
+    <p class="upload-subtitle">Compartí tu material con la comunidad universitaria</p>
 
-    <form 
-      (ngSubmit)="uploadResume()" 
-      enctype="multipart/form-data" 
+    <form
+      (ngSubmit)="uploadResume()"
+      enctype="multipart/form-data"
       class="upload-form"
     >
       <div class="form-group">
         <label for="titulo" class="form-label">Título</label>
-        <input type="text" class="form-control" id="titulo" name="title" [(ngModel)]="title" required />
+        <input type="text" class="form-control" id="titulo" name="title" [(ngModel)]="title" placeholder="Ej: Resumen de Matemática I - Parcial 1" required />
       </div>
 
       <div class="form-group">
         <label for="descripcion" class="form-label">Descripción</label>
-        <textarea class="form-control" id="descripcion" name="description" rows="3" [(ngModel)]="description" required></textarea>
+        <textarea class="form-control" id="descripcion" name="description" rows="3" [(ngModel)]="description" placeholder="Describí brevemente el contenido del resumen..." required></textarea>
       </div>
 
       <div class="form-group">
@@ -47,24 +48,48 @@
         </select>
       </div>
 
-      <div class="form-group mt-3">
-        <label for="archivo" class="form-label">Archivo (.pdf, .docx, .txt)</label>
-        <input class="form-control" type="file" id="archivo" name="file" accept=".pdf,.docx,.doc,.txt" (change)="onFileSelected($event)" required />
+      <hr class="form-separator" />
+
+      <div class="file-upload-area">
+        <label class="form-label">Archivo (.pdf, .docx, .txt)</label>
+        <div
+          class="file-drop-zone"
+          [class.has-file]="selectedFile"
+          (click)="fileInput.click()"
+        >
+          <span class="file-drop-icon">📄</span>
+          <span class="file-drop-text">
+            <strong>Hacé click</strong> para seleccionar un archivo
+          </span>
+          @if (selectedFile) {
+            <span class="file-name">{{ selectedFile.name }}</span>
+          }
+        </div>
+        <input
+          #fileInput
+          class="file-hidden-input"
+          type="file"
+          id="archivo"
+          name="file"
+          accept=".pdf,.docx,.doc,.txt"
+          (change)="onFileSelected($event)"
+          required
+        />
       </div>
 
-      <div class="btn-container text-center mt-4">
-        <button type="submit" class="btn btn-primary">Subir resumen</button>
+      <div class="btn-container">
+        <button type="submit" class="btn-submit">Subir resumen</button>
       </div>
     </form>
 
     @if (successMessage) {
-      <div class="alert alert-success mt-3">
+      <div class="alert alert-success">
         {{ successMessage }}
       </div>
     }
 
     @if (errorMessage) {
-      <div class="alert alert-danger mt-3">
+      <div class="alert alert-danger">
         {{ errorMessage }}
       </div>
     }
