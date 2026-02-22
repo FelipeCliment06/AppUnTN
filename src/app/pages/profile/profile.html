@@ -7,6 +7,18 @@
     }
   </span>!</h1>
   <p>Este es tu perfil de AppUnTN</p>
+
+  @if (userData?.role === 'STUDENT') {
+    <div class="role-request-banner">
+      <p>
+        <strong>¿Sos docente?</strong> Para solicitar el cambio de rol a <b>Profesor</b>, 
+        por favor enviá un correo a <a href="mailto:admin@appuntn.com.ar">admin@appuntn.com.ar</a> 
+        adjuntando tu documentación respaldatoria.
+      </p>
+    </div>
+  }
+
+
   @if (userData) {
   <div id="userDetails" class="user-details-card">
     <h3 class="details-title">Información de la Cuenta</h3>
@@ -34,7 +46,7 @@
           <li class="item-documento">
           <div class="doc-info">
             <span class="doc-title">{{ doc.title }}</span>
-            <span class="doc-subject">({{ doc.subject }})</span>
+            <span class="doc-subject">({{ doc.subject?.name || doc.subject }})</span>
           </div>
 
           <button (click)="eliminarDocumento(doc.id)" class="btn-delete">
@@ -54,7 +66,7 @@
       <h4>Panel de Administración</h4>
       <div class="admin-buttons">
         <button class="users-button" (click)="goToUsers()">
-          Dar de baja usuarios
+          Administrar Usuarios
         </button>
         <button class="admins-button" (click)="goToAdmins()">
           Administrar administradores

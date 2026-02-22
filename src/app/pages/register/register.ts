@@ -32,12 +32,8 @@ export class Register {
   ) {
 
     this.currentRole = this.getRoleFromToken();
-    console.log('[REGISTER] currentRole (from token) =', this.currentRole);
-
-    const roleControlConfig =
-      this.currentRole === 'ADMIN' || this.currentRole === 'ROLE_ADMIN'
-        ? { value: 'ADMIN', disabled: true }
-        : 'STUDENT';
+    const isAdmin = this.currentRole === 'ADMIN' || this.currentRole === 'ROLE_ADMIN';
+    const defaultRole = isAdmin ? 'ADMIN' : 'STUDENT';
 
     this.registerForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
@@ -47,7 +43,7 @@ export class Register {
       password: ['', [Validators.required, Validators.minLength(6)]],
       city: [''],
       about: [''],
-      role: [roleControlConfig, Validators.required]
+      role: [defaultRole, Validators.required]
     });
   }
 

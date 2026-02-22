@@ -82,19 +82,6 @@
         <textarea id="about" name="about" formControlName="about" rows="3" autocomplete="off"></textarea>
       </div>
 
-      
-      <div class="form-group">
-        <label for="role">Rol</label>
-        <select id="role" name="role" formControlName="role">
-          @if (currentRole === 'ADMIN' || currentRole === 'ROLE_ADMIN') {
-            <option value="ADMIN">ADMIN</option>
-          } @else {
-            <option value="STUDENT">Alumno</option>
-            <option value="PROFESSOR">Profesor</option>
-          }
-        </select>
-      </div>
-
       <button type="submit" [disabled]="registerForm.invalid" class="btn-primary">
         Registrarse
       </button>
