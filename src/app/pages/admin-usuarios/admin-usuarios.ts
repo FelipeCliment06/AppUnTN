@@ -6,6 +6,7 @@ import { Auth } from '../../services/auth';
 import { environment } from '../../../environments/environment';
 
 interface AppUser {
+  id?: number;
   username: string;
   name: string;
   lastname: string;
@@ -25,18 +26,19 @@ export class AdminUsuarios implements OnInit {
   private readonly auth = inject(Auth);
   private readonly router = inject(Router);
 
-  // ✅ signals modernas
+  
   users = signal<AppUser[]>([]);
   filtroUsername = signal('');
   filtroNombre = signal('');
   filtroEmail = signal('');
+  filtroRol = signal('');
 
-  // ✅ computed para filtrado
+  
   filteredUsers = computed(() => {
   const username = this.filtroUsername().toLowerCase();
   const nombre   = this.filtroNombre().toLowerCase();
   const email    = this.filtroEmail().toLowerCase();
-  const rol      = this.filtroRol().toUpperCase(); // PROF / STUD / ''
+  const rol      = this.filtroRol().toUpperCase(); 
 
   return this.users().filter((u) => {
     const fullName = `${u.name || ''} ${u.lastname || ''}`.toLowerCase();
@@ -58,8 +60,6 @@ export class AdminUsuarios implements OnInit {
 
 
   usernameActual = '';
-  roleActual = '';
-  filtroRol = signal('');
 
 
   ngOnInit(): void {
@@ -72,9 +72,39 @@ export class AdminUsuarios implements OnInit {
 
     const payload = this.decodeToken(token);
     this.usernameActual = (payload?.sub || '').toLowerCase();
-    this.roleActual = payload?.role || '';
-
     this.cargarUsuarios();
+  }
+
+  changeRole(user: AppUser, newRole: string): void {
+    const label = newRole === 'PROFESSOR' ? 'Profesor' : 'Alumno';
+    if (!confirm(`¿Seguro que querés cambiar el rol de ${user.username} a ${label}?`)) {
+      return;
+    }
+
+    // El backend espera el username y el nuevo rol
+    this.http
+      .patch(`${environment.apiUrl}/users/updateRole`, { 
+        username: user.username, 
+        newRole: newRole 
+      }, {
+        headers: this.headers,
+        responseType: 'text',
+      })
+      .subscribe({
+        next: () => {
+          // Actualizamos el signal localmente para que el cambio sea instantáneo
+          this.users.update((prevUsers) =>
+            prevUsers.map((u) =>
+              u.username === user.username ? { ...u, role: newRole } : u
+            )
+          );
+          alert(`El usuario ahora es ${label}`);
+        },
+        error: (err) => {
+          console.error('Error al cambiar rol:', err);
+          alert('No se pudo cambiar el rol.');
+        },
+      });
   }
 
   private get headers(): HttpHeaders {
@@ -150,17 +180,13 @@ export class AdminUsuarios implements OnInit {
       });
   }
 
-  onFiltroChange(
-  tipo: 'username' | 'nombre' | 'email' | 'rol',
-  event: Event
-): void {
-  const valor = (event.target as HTMLInputElement).value;
-
-  if (tipo === 'username') this.filtroUsername.set(valor);
-  if (tipo === 'nombre') this.filtroNombre.set(valor);
-  if (tipo === 'email') this.filtroEmail.set(valor);
-  if (tipo === 'rol') this.filtroRol.set(valor);
-}
+ onFiltroChange(tipo: string, event: Event): void {
+    const valor = (event.target as HTMLInputElement).value;
+    if (tipo === 'username') this.filtroUsername.set(valor);
+    if (tipo === 'nombre') this.filtroNombre.set(valor);
+    if (tipo === 'email') this.filtroEmail.set(valor);
+    if (tipo === 'rol') this.filtroRol.set(valor);
+  }
 
 
   volverPerfil(): void {
@@ -168,14 +194,11 @@ export class AdminUsuarios implements OnInit {
   }
 
   getRolLegible(role: string): string {
-  if (!role) return 'Desconocido';
-
-  const r = role.toUpperCase();
-
-  if (r === 'PROFESSOR' || r === 'ROLE_PROFESSOR') return 'Profesor';
-  if (r === 'STUDENT'  || r === 'ROLE_STUDENT')  return 'Alumno';
-
-  return role;
-}
+    if (!role) return 'Desconocido';
+    const r = role.toUpperCase();
+    if (r === 'PROFESSOR' || r === 'ROLE_PROFESSOR') return 'Profesor';
+    if (r === 'STUDENT' || r === 'ROLE_STUDENT') return 'Alumno';
+    return role;
+  }
 
 }

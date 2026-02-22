@@ -2,7 +2,7 @@
   <h2 class="titulo">Gestión de Usuarios</h2>
 
   <div class="controles">
-    <!-- SIN botón de agregar: solo filtros -->
+    
     <div class="filtros">
       <div class="filtro-grupo">
         <input
@@ -34,7 +34,7 @@
         [value]="filtroRol()"
         (change)="onFiltroChange('rol', $event)"
         >
-            <option value="">Todos</option>
+            <option value="">Todos los roles</option>
             <option value="PROFESSOR">Profesor</option>
             <option value="STUDENT">Alumno</option>
         </select>
@@ -47,7 +47,7 @@
       <thead class="tabla-cabecera">
         <tr>
             <th>Usuario</th>
-            <th>Nombre</th>
+            <th>Nombre Completo</th>
             <th>Email</th>
             <th>Rol</th>
             <th>Acciones</th>
@@ -61,27 +61,39 @@
             <td>{{ user.name }} {{ user.lastname }}</td>
             <td>{{ user.mail }}</td>
             <td>
+                <span class="badge" [class.badge-prof]="user.role.includes('PROFESSOR')" [class.badge-stud]="user.role.includes('STUDENT')">
                 {{ getRolLegible(user.role) }}
+              </span>
             </td>
 
             <td class="tabla-acciones">
-                @if (
-                user.username.toLowerCase() !== usernameActual &&
-                user.username.toLowerCase() !== 'admin0'
-                ) {
-                <button class="btn-eliminar" (click)="deleteUser(user.username)">
+              @if (user.username.toLowerCase() !== usernameActual && user.username.toLowerCase() !== 'admin0') {
+                
+                <div class="btn-group">
+                  @if (user.role.includes('STUDENT')) {
+                    <button class="btn-cambio prof" (click)="changeRole(user, 'PROFESSOR')">
+                      Hacer Profesor
+                    </button>
+                  } @else {
+                    <button class="btn-cambio stud" (click)="changeRole(user, 'STUDENT')">
+                      Hacer Alumno
+                    </button>
+                  }
+
+                  <button class="btn-eliminar" (click)="deleteUser(user.username)">
                     Eliminar
-                </button>
-                } @else {
-                <span class="accion-nodisp">No disponible</span>
-                }
+                  </button>
+                </div>
+
+              } @else {
+                <span class="accion-nodisp">Sistema</span>
+              }
             </td>
-            </tr>
+          </tr>
+        } @empty {
+          <tr><td colspan="5" class="tabla-vacia">No se encontraron usuarios.</td></tr>
         }
-        @empty {
-            <tr><td colspan="5" class="tabla-vacia">No hay usuarios para mostrar.</td></tr>
-        }
-        </tbody>
+      </tbody>
     </table>
   </div>
 

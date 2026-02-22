@@ -7,6 +7,18 @@
     }
   </span>!</h1>
   <p>Este es tu perfil de AppUnTN</p>
+
+  @if (userData?.role === 'STUDENT') {
+    <div class="role-request-banner">
+      <p>
+        <strong>¿Sos docente?</strong> Para solicitar el cambio de rol a <b>Profesor</b>, 
+        por favor enviá un correo a <a href="mailto:admin@appuntn.com.ar">admin@appuntn.com.ar</a> 
+        adjuntando tu documentación respaldatoria.
+      </p>
+    </div>
+  }
+
+
   @if (userData) {
   <div id="userDetails" class="user-details-card">
     <h3 class="details-title">Información de la Cuenta</h3>
