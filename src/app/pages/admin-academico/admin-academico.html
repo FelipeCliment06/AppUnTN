@@ -1,0 +1,212 @@
+<div class="contenedor">
+  <h2 class="titulo">Gestionar Universidades / Carreras / Materias</h2>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!--  UNIVERSIDADES                          -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="seccion">
+    <h3 class="seccion-titulo">Universidades</h3>
+
+    <!-- Formulario agregar -->
+    <div class="form-inline">
+      <input
+        type="text"
+        class="filtro-input"
+        placeholder="Nombre"
+        [(ngModel)]="newUniName"
+      />
+      <input
+        type="text"
+        class="filtro-input"
+        placeholder="Ubicación"
+        [(ngModel)]="newUniLocation"
+      />
+      <button class="btn-agregar" (click)="agregarUniversidad()">+ Agregar</button>
+    </div>
+
+    <!-- Tabla -->
+    <div class="tabla-wrap">
+      <table class="tabla">
+        <thead class="tabla-cabecera">
+          <tr>
+            <th>Nombre</th>
+            <th>Ubicación</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="tabla-cuerpo">
+          @for (uni of universities(); track uni.id) {
+            <tr
+              [class.fila-seleccionada]="selectedUniversity()?.id === uni.id"
+              (click)="selectUniversity(uni)"
+            >
+              @if (editingUniId === uni.id) {
+                <td (click)="$event.stopPropagation()">
+                  <input type="text" class="edit-input" [(ngModel)]="editUniName" />
+                </td>
+                <td (click)="$event.stopPropagation()">
+                  <input type="text" class="edit-input" [(ngModel)]="editUniLocation" />
+                </td>
+                <td (click)="$event.stopPropagation()">
+                  <div class="tabla-acciones">
+                    <button class="btn-guardar" (click)="saveEditUni(uni)">Guardar</button>
+                    <button class="btn-cancelar" (click)="cancelEditUni()">Cancelar</button>
+                  </div>
+                </td>
+              } @else {
+                <td>{{ uni.name }}</td>
+                <td>{{ uni.location || '-' }}</td>
+                <td (click)="$event.stopPropagation()">
+                  <div class="tabla-acciones">
+                    <button class="btn-editar" (click)="startEditUni(uni)">Editar</button>
+                    <button class="btn-eliminar" (click)="eliminarUniversidad(uni)">Eliminar</button>
+                  </div>
+                </td>
+              }
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="3" class="tabla-vacia">No hay universidades cargadas.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!--  CARRERAS (aparece al seleccionar uni)  -->
+  <!-- ═══════════════════════════════════════ -->
+  @if (selectedUniversity()) {
+    <div class="seccion">
+      <h3 class="seccion-titulo">
+        Carreras de
+        <span class="entidad-nombre">{{ selectedUniversity()!.name }}</span>
+      </h3>
+
+      <!-- Formulario agregar -->
+      <div class="form-inline">
+        <input
+          type="text"
+          class="filtro-input"
+          placeholder="Nombre de la carrera"
+          [(ngModel)]="newCareerName"
+        />
+        <button class="btn-agregar" (click)="agregarCarrera()">+ Agregar</button>
+      </div>
+
+      <!-- Tabla -->
+      <div class="tabla-wrap">
+        <table class="tabla">
+          <thead class="tabla-cabecera">
+            <tr>
+              <th>Nombre</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="tabla-cuerpo">
+            @for (career of filteredCareers(); track career.id) {
+              <tr
+                [class.fila-seleccionada]="selectedCareer()?.id === career.id"
+                (click)="selectCareer(career)"
+              >
+                @if (editingCareerId === career.id) {
+                  <td (click)="$event.stopPropagation()">
+                    <input type="text" class="edit-input" [(ngModel)]="editCareerName" />
+                  </td>
+                  <td (click)="$event.stopPropagation()">
+                    <div class="tabla-acciones">
+                      <button class="btn-guardar" (click)="saveEditCareer(career)">Guardar</button>
+                      <button class="btn-cancelar" (click)="cancelEditCareer()">Cancelar</button>
+                    </div>
+                  </td>
+                } @else {
+                  <td>{{ career.name }}</td>
+                  <td (click)="$event.stopPropagation()">
+                    <div class="tabla-acciones">
+                      <button class="btn-editar" (click)="startEditCareer(career)">Editar</button>
+                      <button class="btn-eliminar" (click)="eliminarCarrera(career)">Eliminar</button>
+                    </div>
+                  </td>
+                }
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="2" class="tabla-vacia">No hay carreras para esta universidad.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+  <!-- ═══════════════════════════════════════ -->
+  <!--  MATERIAS (aparece al seleccionar carrera) -->
+  <!-- ═══════════════════════════════════════ -->
+  @if (selectedCareer()) {
+    <div class="seccion">
+      <h3 class="seccion-titulo">
+        Materias de
+        <span class="entidad-nombre">{{ selectedCareer()!.name }}</span>
+      </h3>
+
+      <!-- Formulario agregar -->
+      <div class="form-inline">
+        <input
+          type="text"
+          class="filtro-input"
+          placeholder="Nombre de la materia"
+          [(ngModel)]="newSubjectName"
+        />
+        <button class="btn-agregar" (click)="agregarMateria()">+ Agregar</button>
+      </div>
+
+      <!-- Tabla -->
+      <div class="tabla-wrap">
+        <table class="tabla">
+          <thead class="tabla-cabecera">
+            <tr>
+              <th>Nombre</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="tabla-cuerpo">
+            @for (subject of filteredSubjects(); track subject.id) {
+              <tr>
+                @if (editingSubjectId === subject.id) {
+                  <td>
+                    <input type="text" class="edit-input" [(ngModel)]="editSubjectName" />
+                  </td>
+                  <td>
+                    <div class="tabla-acciones">
+                      <button class="btn-guardar" (click)="saveEditSubject(subject)">Guardar</button>
+                      <button class="btn-cancelar" (click)="cancelEditSubject()">Cancelar</button>
+                    </div>
+                  </td>
+                } @else {
+                  <td>{{ subject.name }}</td>
+                  <td>
+                    <div class="tabla-acciones">
+                      <button class="btn-editar" (click)="startEditSubject(subject)">Editar</button>
+                      <button class="btn-eliminar" (click)="eliminarMateria(subject)">Eliminar</button>
+                    </div>
+                  </td>
+                }
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="2" class="tabla-vacia">No hay materias para esta carrera.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+  <!-- Volver -->
+  <div class="volver-area">
+    <button class="btn-volver" (click)="volverPerfil()">Volver al perfil</button>
+  </div>
+</div>

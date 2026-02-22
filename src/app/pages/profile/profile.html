@@ -49,7 +49,7 @@
             <span class="doc-subject">({{ doc.subject?.name || doc.subject }})</span>
           </div>
 
-          <button (click)="eliminarDocumento(doc.id)" class="btn-delete">
+          <button (click)="$event.stopPropagation(); $event.preventDefault(); eliminarDocumento(doc.id)" class="btn-delete">
             Eliminar
           </button>
         </li>
@@ -70,6 +70,9 @@
         </button>
         <button class="admins-button" (click)="goToAdmins()">
           Administrar administradores
+        </button>
+        <button class="academico-button" (click)="goToAcademico()">
+          Gestionar Universidades / Carreras / Materias
         </button>
       </div>
     </div>
