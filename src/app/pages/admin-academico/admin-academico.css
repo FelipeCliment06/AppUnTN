@@ -1,0 +1,286 @@
+/* ESTILO GENERAL */
+body {
+  background-color: #f9f9f9;
+  font-family: 'Inter', sans-serif;
+  color: #0a2540;
+  margin: 0;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.contenedor {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 35px 40px;
+  margin: 40px auto;
+  max-width: 1000px;
+}
+
+.titulo {
+  font-size: 1.8rem;
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+/* SECCIONES CASCADING */
+.seccion {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px 25px;
+  margin-bottom: 25px;
+  background-color: #fdfdfd;
+}
+
+.seccion-titulo {
+  font-size: 1.2rem;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.entidad-nombre {
+  color: #007bff;
+  font-weight: 700;
+}
+
+/* FORMULARIO INLINE PARA AGREGAR */
+.form-inline {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.filtro-input {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  min-width: 150px;
+  flex: 1;
+  max-width: 250px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filtro-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+  outline: none;
+}
+
+/* TABLA */
+.tabla-wrap {
+  overflow-x: auto;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-cabecera {
+  background-color: #f1f3f5;
+  color: #0a2540;
+}
+
+.tabla th,
+.tabla td {
+  padding: 12px 10px;
+  border: 1px solid #e0e0e0;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 0.95rem;
+}
+
+.tabla-cuerpo tr {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.tabla-cuerpo tr:hover {
+  background-color: #f0f4ff;
+}
+
+.fila-seleccionada {
+  background-color: #dbeafe !important;
+  font-weight: 600;
+}
+
+.tabla-vacia {
+  color: #6c757d;
+  font-style: italic;
+  cursor: default;
+}
+
+.tabla-acciones {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* INPUT DE EDICION INLINE */
+.edit-input {
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  padding: 5px 8px;
+  font-size: 0.9rem;
+  width: 90%;
+}
+
+/* BOTONES */
+.btn-agregar {
+  display: inline-block;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.btn-agregar:hover {
+  background-color: #0056b3;
+  transform: scale(1.02);
+}
+
+.btn-editar {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.btn-editar:hover {
+  background-color: #0056b3;
+  transform: scale(1.03);
+}
+
+.btn-eliminar {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.btn-eliminar:hover {
+  background-color: #b02a37;
+  transform: scale(1.03);
+}
+
+.btn-guardar {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-guardar:hover {
+  background-color: #218838;
+}
+
+.btn-cancelar {
+  background-color: #6c757d;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-cancelar:hover {
+  background-color: #5a6268;
+}
+
+/* BOTON VOLVER */
+.btn-volver {
+  background-color: #6c757d;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.btn-volver:hover {
+  background-color: #5a6268;
+  transform: scale(1.02);
+}
+
+.volver-area {
+  margin-top: 35px;
+  text-align: center;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .contenedor {
+    padding: 25px;
+    max-width: 95%;
+  }
+
+  .form-inline {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filtro-input {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .btn-agregar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .contenedor {
+    padding: 20px 18px;
+  }
+
+  .seccion {
+    padding: 15px;
+  }
+
+  .filtro-input {
+    font-size: 0.85rem;
+    padding: 6px 8px;
+  }
+
+  .btn-agregar, .btn-volver {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  .tabla th,
+  .tabla td {
+    padding: 8px 6px;
+    font-size: 0.85rem;
+  }
+}

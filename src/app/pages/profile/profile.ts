@@ -78,6 +78,10 @@ export class Profile implements OnInit {
     this.router.navigate(['/admin-usuarios']);
   }
 
+  goToAcademico(): void {
+    this.router.navigate(['/admin-academico']);
+  }
+
   logout(): void {
     this.auth.logout();
     this.router.navigate(['/home']);

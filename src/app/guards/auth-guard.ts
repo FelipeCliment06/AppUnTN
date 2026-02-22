@@ -6,14 +6,13 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const auth = inject(Auth);
 
-  // ✅ Validamos directamente el token del localStorage
-  const token = auth.getToken();
-
-  if (token && token.trim() !== '') {
-    return true; // el usuario está autenticado
+  // ✅ Validamos token + expiración
+  if (auth.isLoggedIn()) {
+    return true;
   }
 
-  // ❌ No hay token → redirigir al login
+  // ❌ No hay token o está expirado → limpiar y redirigir al login
+  auth.logout();
   router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
   return false;
 };
