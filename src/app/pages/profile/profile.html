@@ -1,235 +1,271 @@
-<div class="container">
-  <h1 class="title">¡Bienvenido/a <span class="username">
-    @if (userData?.name) {
-      {{ userData?.name }}
-    } @else {
-      {{ auth.getUsername() }}
+<div class="profile-wrapper">
+  <div class="profile-container">
+
+    <h2 class="profile-title">Bienvenido/a <span class="username">
+      @if (userData?.name) {
+        {{ userData?.name }}
+      } @else {
+        {{ auth.getUsername() }}
+      }
+    </span>!</h2>
+    <p class="profile-subtitle">Este es tu perfil de AppUnTN</p>
+
+    @if (userData?.role === 'STUDENT') {
+      <div class="role-request-banner">
+        <p>
+          <strong>Sos docente?</strong> Para solicitar el cambio de rol a <b>Profesor</b>,
+          por favor envia un correo a <a href="mailto:admin@appuntn.com.ar">admin&#64;appuntn.com.ar</a>
+          adjuntando tu documentacion respaldatoria.
+        </p>
+      </div>
     }
-  </span>!</h1>
-  <p>Este es tu perfil de AppUnTN</p>
 
-  @if (userData?.role === 'STUDENT') {
-    <div class="role-request-banner">
-      <p>
-        <strong>¿Sos docente?</strong> Para solicitar el cambio de rol a <b>Profesor</b>, 
-        por favor enviá un correo a <a href="mailto:admin@appuntn.com.ar">admin@appuntn.com.ar</a> 
-        adjuntando tu documentación respaldatoria.
-      </p>
+    @if (userData) {
+      <div id="userDetails" class="user-details-card">
+        <h3 class="section-title">Informacion de la Cuenta</h3>
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="detail-icon">👤</span>
+            <div>
+              <span class="detail-label">Nombre</span>
+              <span class="detail-value">{{ userData.name }}</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <span class="detail-icon">👤</span>
+            <div>
+              <span class="detail-label">Apellido</span>
+              <span class="detail-value">{{ userData.lastname }}</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <span class="detail-icon">📧</span>
+            <div>
+              <span class="detail-label">Email</span>
+              <span class="detail-value">{{ userData.mail }}</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <span class="detail-icon">📍</span>
+            <div>
+              <span class="detail-label">Ciudad</span>
+              <span class="detail-value">{{ userData.city || 'No especificada' }}</span>
+            </div>
+          </div>
+        </div>
+        @if (userData.about) {
+          <div class="about-section">
+            <h4 class="about-title">Sobre mi</h4>
+            <p class="about-text">{{ userData.about }}</p>
+          </div>
+        }
+      </div>
+    }
+
+    <div id="documentsPanel" class="profile-section">
+      <h3 class="section-title">Mis Resumenes Subidos</h3>
+
+      @if (myDocuments.length == 0) {
+        <div class="empty-state">
+          <p>No tenes resumenes subidos.</p>
+        </div>
+      }
+
+      @if (myDocuments.length > 0) {
+        <div class="documents-list">
+          @for (doc of myDocuments; track $index) {
+            <a [routerLink]="['/document-preview', doc.id]" class="doc-card-link">
+              <div class="doc-item-card">
+                <div class="doc-info">
+                  <span class="doc-title">{{ doc.title }}</span>
+                  <span class="doc-subject-badge">{{ doc.subject?.name || doc.subject }}</span>
+                </div>
+                <button (click)="$event.stopPropagation(); $event.preventDefault(); eliminarDocumento(doc.id)" class="btn-delete">
+                  Eliminar
+                </button>
+              </div>
+            </a>
+          }
+        </div>
+      }
     </div>
-  }
 
+    @if (isAdmin) {
+      <div id="adminPanel" class="profile-section">
+        <h3 class="section-title">Panel de Administracion</h3>
+        <div class="admin-buttons">
+          <button class="btn-admin btn-admin--users" (click)="goToUsers()">
+            <span class="btn-admin-icon">👥</span>
+            Administrar Usuarios
+          </button>
+          <button class="btn-admin btn-admin--admins" (click)="goToAdmins()">
+            <span class="btn-admin-icon">🛡️</span>
+            Administrar administradores
+          </button>
+          <button class="btn-admin btn-admin--academic" (click)="goToAcademico()">
+            <span class="btn-admin-icon">🎓</span>
+            Gestionar Universidades / Carreras / Materias
+          </button>
+        </div>
+      </div>
+    }
 
-  @if (userData) {
-  <div id="userDetails" class="user-details-card">
-    <h3 class="details-title">Información de la Cuenta</h3>
-    <ul class="details-list">
-        <li><strong>Nombre:</strong> {{ userData.name }}</li>
-        <li><strong>Apellido:</strong> {{ userData.lastname }}</li>
-        <li><strong>Email:</strong> {{ userData.mail }}</li>
-        <li><strong>Ciudad:</strong> {{ userData.city || 'No especificada' }}</li>
-        <li><strong>Sobre mí:</strong> {{ userData.about || 'Sin descripción' }}</li>
-    </ul>
-  </div>
-}
+    @if (isProfessor) {
+      <div id="professorPanel" class="profile-section">
+        <h3 class="section-title">Materias que dictas</h3>
 
-<div id="documentsPanel">
-  <h3>Mis Resúmenes Subidos</h3>
+        <div class="subjects-list-container">
+          @for (sub of subjects; track sub) {
+            <div class="subject-item">
+              <span class="subject-badge">{{ sub }}</span>
+              <button class="btn-delete-sm" (click)="eliminarMateria(sub)">
+                Eliminar
+              </button>
+            </div>
+          }
+          @empty {
+            <div class="empty-state">
+              <p>No tenes materias asignadas aun.</p>
+            </div>
+          }
+        </div>
 
-  @if (myDocuments.length == 0) {
-    <p class="no-documents">No tenés resúmenes subidos.</p>
-  }
+        <hr class="form-separator" />
 
-  @if(myDocuments.length > 0) {
-    <ul class="lista-documentos">
-      @for (doc of myDocuments; track $index) {
-        <a [routerLink]="['/document-preview',doc.id]">
-          <li class="item-documento">
-          <div class="doc-info">
-            <span class="doc-title">{{ doc.title }}</span>
-            <span class="doc-subject">({{ doc.subject?.name || doc.subject }})</span>
+        <h4 class="subsection-title">Asignar nueva materia</h4>
+        <div class="cascading-selects">
+
+          <div class="form-group">
+            <label class="form-label">Universidad</label>
+            <select class="form-select" (change)="onUniversityChange($any($event.target).value)">
+              <option value="">Selecciona Universidad</option>
+              @for (u of universidades(); track u.id) {
+                <option [value]="u.id">{{ u.name }}</option>
+              }
+            </select>
           </div>
 
-          <button (click)="$event.stopPropagation(); $event.preventDefault(); eliminarDocumento(doc.id)" class="btn-delete">
-            Eliminar
+          <div class="form-group">
+            <label class="form-label">Carrera</label>
+            <select
+              class="form-select"
+              [disabled]="!selectedUniId"
+              (change)="onCareerChange($any($event.target).value)">
+              <option value="">Selecciona Carrera</option>
+              @for (c of carreras(); track c.id) {
+                <option [value]="c.id">{{ c.name }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Materia</label>
+            <select
+              class="form-select"
+              [disabled]="!selectedCareerId"
+              [(ngModel)]="selectedSubjectId">
+              <option [value]="null">Selecciona Materia</option>
+              @for (m of materiasFiltradas(); track m.id) {
+                <option [value]="m.id">{{ m.name }}</option>
+              }
+            </select>
+          </div>
+
+          <button
+            class="btn-add-subject"
+            [disabled]="!selectedSubjectId"
+            (click)="agregarMateria()">
+            Vincular Materia
           </button>
-        </li>
-        </a>
-        
-      }
-    </ul>
-  }
-</div>
-
-
-  @if (isAdmin) {
-    <div id="adminPanel" class="box4">
-      <h4>Panel de Administración</h4>
-      <div class="admin-buttons">
-        <button class="users-button" (click)="goToUsers()">
-          Administrar Usuarios
-        </button>
-        <button class="admins-button" (click)="goToAdmins()">
-          Administrar administradores
-        </button>
-        <button class="academico-button" (click)="goToAcademico()">
-          Gestionar Universidades / Carreras / Materias
-        </button>
+        </div>
       </div>
-    </div>
-  }
+    }
 
- @if (isProfessor) {
-  <div id="professorPanel" class="box4">
-    <h4>Materias que dictás</h4>
-
-    <ul class="ul-professor">
-      @for (sub of subjects; track sub) {
-        <li class="li-professor">
-          {{ sub }}
-          <button class="button-professor" (click)="eliminarMateria(sub)">
-            Eliminar
+    @if (userData) {
+      <div class="profile-section edit-section">
+        <h3 class="section-title">Editar perfil</h3>
+        <form id="updateForm" class="edit-form">
+          <div class="form-group">
+            <label for="nameInput" class="form-label">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nameInput"
+              name="name"
+              [(ngModel)]="userData.name"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="lastnameInput" class="form-label">Apellido</label>
+            <input
+              type="text"
+              class="form-control"
+              id="lastnameInput"
+              name="lastname"
+              [(ngModel)]="userData.lastname"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="mailInput" class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="mailInput"
+              name="mail"
+              [(ngModel)]="userData.mail"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="cityInput" class="form-label">Ciudad</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cityInput"
+              name="city"
+              [(ngModel)]="userData.city"
+            />
+          </div>
+          <div class="form-group">
+            <label for="aboutInput" class="form-label">Sobre vos</label>
+            <textarea
+              id="aboutInput"
+              class="form-control"
+              rows="3"
+              name="about"
+              [(ngModel)]="userData.about"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="passwordInput" class="form-label">
+              Nueva Contrasena (opcional)
+            </label>
+            <input
+              type="password"
+              class="form-control"
+              id="passwordInput"
+              name="password"
+              [(ngModel)]="userData.password"
+            />
+          </div>
+          <button
+            type="button"
+            class="btn-save"
+            (click)="actualizarPerfil()"
+          >
+            Guardar cambios
           </button>
-        </li>
-      }
-      @empty {
-        <li class="no-subjects">No tenés materias asignadas aún.</li>
-      }
-    </ul>
+        </form>
 
-    <hr class="separator" />
-
-    <h4>Asignar nueva materia</h4>
-    <div class="new-subject-container cascada-layout">
-      
-      <div class="box3">
-        <label class="form-label">Universidad</label>
-        <select class="form-select" (change)="onUniversityChange($any($event.target).value)">
-          <option value="">Seleccioná Universidad</option>
-          @for (u of universidades(); track u.id) {
-            <option [value]="u.id">{{ u.name }}</option>
-          }
-        </select>
+        @if (updateMessage) {
+          <div class="update-message">
+            {{ updateMessage }}
+          </div>
+        }
       </div>
+    }
 
-      <div class="box3">
-        <label class="form-label">Carrera</label>
-        <select 
-          class="form-select" 
-          [disabled]="!selectedUniId" 
-          (change)="onCareerChange($any($event.target).value)">
-          <option value="">Seleccioná Carrera</option>
-          @for (c of carreras(); track c.id) {
-            <option [value]="c.id">{{ c.name }}</option>
-          }
-        </select>
-      </div>
-
-      <div class="box3">
-        <label class="form-label">Materia</label>
-        <select 
-          class="form-select" 
-          [disabled]="!selectedCareerId" 
-          [(ngModel)]="selectedSubjectId">
-          <option [value]="null">Seleccioná Materia</option>
-          @for (m of materiasFiltradas(); track m.id) {
-            <option [value]="m.id">{{ m.name }}</option>
-          }
-        </select>
-      </div>
-
-      <button 
-        class="button-add-subject" 
-        [disabled]="!selectedSubjectId" 
-        (click)="agregarMateria()">
-        Vincular Materia
-      </button>
-    </div>
   </div>
-}
-
-  <!-- Seccion para editar el perfil -->
-  @if (userData) {
-  <div class="box5">
-    <h3 class="box3">Editar perfil</h3>
-    <form id="updateForm" class="form-updateForm">
-      <div class="box3">
-        <label for="nameInput" class="form-label">Nombre</label>
-        <input
-          type="text"
-          class="form-control"
-          id="nameInput"
-          name="name"
-          [(ngModel)]="userData.name"
-          required
-        />
-      </div>
-      <div class="box3">
-        <label for="lastnameInput" class="form-label">Apellido</label>
-        <input
-          type="text"
-          class="form-control"
-          id="lastnameInput"
-          name="lastname"
-          [(ngModel)]="userData.lastname"
-          required
-        />
-      </div>
-      <div class="box3">
-        <label for="mailInput" class="form-label">Email</label>
-        <input
-          type="email"
-          class="form-control"
-          id="mailInput"
-          name="mail"
-          [(ngModel)]="userData.mail"
-          required
-        />
-      </div>
-      <div class="box3">
-        <label for="cityInput" class="form-label">Ciudad</label>
-        <input
-          type="text"
-          class="form-control"
-          id="cityInput"
-          name="city"
-          [(ngModel)]="userData.city"
-        />
-      </div>
-      <div class="box3">
-        <label for="aboutInput" class="form-label">Sobre vos</label>
-        <textarea
-          id="aboutInput"
-          class="form-control"
-          rows="3"
-          name="about"
-          [(ngModel)]="userData.about"
-        ></textarea>
-      </div>
-      <div class="box3">
-        <label for="passwordInput" class="form-label">
-          Nueva Contraseña (opcional)
-        </label>
-        <input
-          type="password"
-          class="form-control"
-          id="passwordInput"
-          name="password"
-          [(ngModel)]="userData.password"
-        />
-      </div>
-      <button
-        type="button"
-        class="button-saveUpdate"
-        (click)="actualizarPerfil()"
-      >
-        Guardar cambios
-      </button>
-    </form>
-
-    <div id="updateMessage" class="box3">
-      {{ updateMessage }}
-    </div>
-  </div>
-}
-
 </div>
