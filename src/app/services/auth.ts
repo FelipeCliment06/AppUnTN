@@ -1,6 +1,6 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -9,26 +9,44 @@ import { environment } from '../../environments/environment';
 export class Auth {
   private TOKEN_KEY = 'token';
   private http = inject(HttpClient);
+  private router = inject(Router);
+
   isLoggedInSignal = signal<boolean>(this.hasToken());
 
   constructor() {
     // Al iniciar la app, validar el token contra el backend
     this.validateToken();
+
+    //Escuchador para que si se cierra sesion en una pestaña te cierre sesion en todas las que estan abiertas.
+    window.addEventListener('storage', (event) => {
+      if (event.key === this.TOKEN_KEY) {
+        if (!event.newValue) {
+          console.warn('Sesión cerrada en otra pestaña. Redirigiendo al login...');
+          this.isLoggedInSignal.set(false);
+          this.router.navigate(['/login']);
+        } else {
+          this.isLoggedInSignal.set(true);
+          this.validateToken();
+        }
+      }
+    });
   }
 
   private validateToken(): void {
     const token = this.getToken();
     if (!token) return;
 
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    this.http.get(`${environment.apiUrl}/users/me`, { headers }).subscribe({
+    this.http.get(`${environment.apiUrl}/users/me`).subscribe({
       next: () => {
-        // Token válido, todo bien
         this.isLoggedInSignal.set(true);
       },
-      error: () => {
-        // Backend no responde o token inválido → logout
-        this.logout();
+      error: (err) => {
+        if (err.status === 401 || err.status === 403) {
+          console.warn('Validación fallida: Token rechazado por el servidor.');
+          this.logout();
+        } else {
+          console.warn('Error de red validando token, pero mantenemos la sesión abierta.');
+        }
       },
     });
   }
