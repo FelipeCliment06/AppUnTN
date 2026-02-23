@@ -1,19 +1,34 @@
-/* ======== ESTRUCTURA GENERAL ======== */
-.container {
+/* ======== FONDO DE PAGINA ======== */
+:host {
+  display: block;
+  background: linear-gradient(135deg, #f0f4ff 0%, #f9f9f9 100%);
+  min-height: calc(100vh - 120px);
+}
+
+/* ======== WRAPPER + CONTAINER ======== */
+.profile-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 40px 15px;
+  min-height: calc(100vh - 120px);
+}
+
+.profile-container {
   background: #ffffff;
-  padding: 35px 40px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 40px 44px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   width: 100%;
-  max-width: 550px;
-  margin: 50px auto;
+  max-width: 720px;
+  border-top: 4px solid #007bff;
   font-family: 'Inter', sans-serif;
 }
 
-.title {
+/* ======== HEADER ======== */
+.profile-title {
   font-size: 1.8rem;
-  color: #333;
-  margin-bottom: 15px;
+  color: #1a1a2e;
+  margin-bottom: 6px;
   text-align: center;
   font-weight: 700;
 }
@@ -22,463 +37,512 @@
   color: #007bff;
 }
 
-p {
+.profile-subtitle {
   text-align: center;
-  color: #555;
-  margin-bottom: 25px;
+  color: #888;
+  font-size: 0.95rem;
+  margin-bottom: 28px;
 }
 
-/*Informacion del Usuario*/
-.user-details-card {
-  margin-top: 25px;
-  padding: 25px 30px;
-  border: 1px solid #e3e3e3;
-  border-radius: 10px;
-  background-color: #fafafa;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+/* ======== BANNER SOLICITUD DE ROL ======== */
+.role-request-banner {
+  background-color: #e8f0fe;
+  border-left: 4px solid #007bff;
+  color: #1a73e8;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
-.details-title {
-  font-size: 1.3rem;
+.role-request-banner p {
+  text-align: left;
+  color: inherit;
+  margin-bottom: 0;
+}
+
+.role-request-banner a {
+  color: #0056b3;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.role-request-banner a:hover {
+  color: #003d80;
+}
+
+/* ======== TITULOS DE SECCION (compartido) ======== */
+.section-title {
+  font-size: 1.15rem;
+  font-weight: 700;
   color: #0a2540;
-  font-weight: 600;
-  margin-bottom: 20px;
-  text-align: center;
+  margin-bottom: 18px;
+  margin-top: 0;
 }
 
-.details-list {
-  list-style: none;
-  padding: 0;
+/* ======== SECCION GENERICA (compartido) ======== */
+.profile-section {
+  margin-top: 28px;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* ======== DETALLES DEL USUARIO ======== */
+.user-details-card {
+  margin-top: 28px;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.detail-icon {
+  font-size: 1.3rem;
+}
+
+.detail-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.detail-value {
+  display: block;
+  font-size: 0.9rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.about-section {
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+.about-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0a2540;
+  margin: 0 0 8px 0;
+}
+
+.about-text {
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.6;
   margin: 0;
 }
 
-.details-list li {
-  padding: 10px 0;
-  border-bottom: 1px solid #ddd;
-  color: #333;
-  font-size: 0.95rem;
+/* ======== DOCUMENTOS ======== */
+.documents-list {
   display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.details-list li:last-child {
-  border-bottom: none;
+.doc-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
 }
 
-.details-list strong {
-  color: #007bff;
-  min-width: 130px;
+.doc-item-card {
+  background: #ffffff;
+  border: 1px solid #e2e5eb;
+  border-left: 4px solid #007bff;
+  border-radius: 14px;
+  padding: 18px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/*Panel de Admin*/
-#adminPanel {
-  margin-top: 25px;
-  padding: 20px;
-  border: 1px solid #e3e3e3;
+.doc-item-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-left-color: #0056b3;
+}
+
+.doc-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.doc-title {
+  font-weight: 700;
+  color: #1a1a2e;
+  font-size: 0.95rem;
+}
+
+.doc-subject-badge {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a73e8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  width: fit-content;
+}
+
+.btn-delete {
+  background-color: #fff;
+  color: #dc3545;
+  border: 1.5px solid #dc3545;
   border-radius: 8px;
-  background-color: #fafafa;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
 }
 
-#adminPanel h4 {
-  margin-bottom: 15px;
-  color: #555;
-  font-weight: 200;
+.btn-delete:hover {
+  background-color: #dc3545;
+  color: #fff;
+  transform: scale(1.03);
+}
+
+.empty-state {
+  background: #fafafa;
+  border-radius: 14px;
+  padding: 30px 20px;
   text-align: center;
-  font-size: medium;
+  color: #999;
+  font-size: 0.9rem;
+  border: 1px dashed #ddd;
 }
 
+.empty-state p {
+  text-align: center;
+  color: #999;
+  margin-bottom: 0;
+}
+
+/* ======== PANEL ADMIN ======== */
 .admin-buttons {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.users-button,
-.admins-button,
-.academico-button {
-  padding: 10px;
+.btn-admin {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.users-button {
-  background-color: #dc3545;
   color: #fff;
+  transition: transform 0.2s ease, box-shadow 0.25s ease;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
 }
 
-.users-button:hover {
-  background-color: #b02a37;
+.btn-admin:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
 }
 
-.admins-button {
-  background-color: #ffc107;
+.btn-admin:active {
+  transform: translateY(0);
+}
+
+.btn-admin-icon {
+  font-size: 1.2rem;
+}
+
+.btn-admin--users {
+  background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+}
+
+.btn-admin--admins {
+  background: linear-gradient(135deg, #f0ad4e 0%, #d4950a 100%);
   color: #333;
 }
 
-.admins-button:hover {
-  background-color: #e0a800;
+.btn-admin--academic {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
 }
 
-.academico-button {
-  background-color: #007bff;
-  color: #fff;
-}
-
-.academico-button:hover {
-  background-color: #0056b3;
-}
-
-/*Panel de Profesor*/
-#professorPanel {
-  margin-top: 25px;
-  padding: 20px;
-  border: 1px solid #e3e3e3;
-  border-radius: 8px;
-  background-color: #fafafa;
-}
-
-#professorPanel h4 {
-  margin-bottom: 15px;
-  color: #333;
-  font-weight: 200;
-  text-align: center;
-  font-size: medium;
-}
-
-.ul-professor {
-  list-style: none;
-  padding: 0;
+/* ======== PANEL PROFESOR ======== */
+.subjects-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
-.li-professor {
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 10px 12px;
+.subject-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
-  background-color: #fff;
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
   transition: background-color 0.2s ease;
 }
 
-.li-professor:hover {
-  background-color: #f1f1f1;
+.subject-item:hover {
+  background: #eef2f7;
 }
 
-.button-professor {
+.subject-badge {
+  background: #e8f0fe;
+  color: #1a73e8;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.btn-delete-sm {
   background-color: #fff;
   color: #dc3545;
   border: 1.5px solid #dc3545;
-  border-radius: 6px;
+  border-radius: 8px;
   padding: 5px 12px;
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 }
 
-.button-professor:hover {
+.btn-delete-sm:hover {
   background-color: #dc3545;
   color: #fff;
 }
 
-.new-subject-container {
-  display: flex;
-  gap: 10px;
-  align-items: center;
+.subsection-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0a2540;
+  margin-bottom: 16px;
+  margin-top: 0;
 }
 
-#subject-select {
-  flex: 1;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 10px 12px;
-  font-size: 0.95rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-#subject-select:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
-  outline: none;
-}
-
-.button-add-subject {
-  background-color: #007bff;
-  color: #fff;
+/* ======== SELECTS CASCADING ======== */
+.form-separator {
   border: none;
-  border-radius: 6px;
-  padding: 10px 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.1s ease;
+  border-top: 1px solid #eee;
+  margin: 8px 0 20px 0;
 }
 
-.button-add-subject:hover {
-  background-color: #0056b3;
-  transform: scale(1.02);
-}
-
-.no-subjects {
-  text-align: center;
-  color: #666;
-  font-style: italic;
-}
-
-/* Contenedor principal de la cascada */
-.cascada-layout {
+.cascading-selects {
   display: flex;
-  flex-wrap: wrap; /* Para que en celulares se pongan uno abajo del otro */
-  gap: 15px;       /* Espacio entre los selectores */
-  align-items: flex-end; /* Alinea los selects con el botón */
-  margin-top: 20px;
-  padding: 15px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-top: 12px;
+  padding: 20px;
+  background-color: #f8faff;
+  border-radius: 14px;
+  border: 1px solid #e6e9ef;
 }
 
-/* Estilo para cada bloque (Label + Select) */
-.cascada-layout .box3 {
-  flex: 1;         /* Hace que todos los selects midan lo mismo */
-  min-width: 200px; /* Evita que se achiquen demasiado */
-  margin-bottom: 0; /* Quitamos el margen para que alineen con el botón */
+.cascading-selects .form-group {
+  flex: 1;
+  min-width: 180px;
+  margin-bottom: 0;
 }
 
-/* Estilo del botón de vincular para que destaque */
-.button-add-subject {
-  height: 38px;    /* Misma altura que los selects */
-  padding: 0 20px;
-  background-color: #28a745;
+.btn-add-subject {
+  height: 42px;
+  padding: 0 22px;
+  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: transform 0.15s ease, box-shadow 0.25s ease;
+  box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
+  white-space: nowrap;
 }
 
-.button-add-subject:disabled {
-  background-color: #ccc;
+.btn-add-subject:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(40, 167, 69, 0.4);
+}
+
+.btn-add-subject:disabled {
+  background: #e5e7eb;
+  color: #aaa;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
-.button-add-subject:hover:not(:disabled) {
-  background-color: #218838;
-}
-
-/* Etiquetas de los pasos */
-.form-label {
-  display: block;
-  font-size: 0.85rem;
-  color: #555;
-  margin-bottom: 5px;
-  font-weight: 600;
-}
-
-/* Separador sutil */
-.separator {
-  border: 0;
-  border-top: 1px solid #eee;
-  margin: 25px 0;
-}
-
-
-/*Formulario de Edicion de Perfil*/
-.box5 {
-  margin-top: 35px;
-  padding: 25px;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-}
-
-.box3 {
+/* ======== FORMULARIO ======== */
+.form-group {
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
 }
 
 .form-label {
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 6px;
   color: #333;
+  font-size: 0.9rem;
 }
 
-.form-control {
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 10px 12px;
+.form-control,
+.form-select {
+  border: 1.5px solid #dde1e7;
+  border-radius: 10px;
+  padding: 11px 14px;
   font-size: 0.95rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background: #fff;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-.form-control:focus {
+.form-control:focus,
+.form-select:focus {
   border-color: #007bff;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
   outline: none;
 }
 
-.button-saveUpdate {
+.form-select:disabled {
+  background-color: #f3f4f6;
+  color: #aaa;
+  cursor: not-allowed;
+  border-color: #e5e7eb;
+}
+
+textarea.form-control {
+  resize: vertical;
+}
+
+/* ======== BOTON GUARDAR ======== */
+.btn-save {
   display: inline-block;
   width: 100%;
-  padding: 12px;
+  padding: 13px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
-  background-color: #007bff;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
   color: #fff;
-  transition: background-color 0.3s ease, transform 0.1s ease;
+  box-shadow: 0 4px 14px rgba(0, 123, 255, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.25s ease;
+  letter-spacing: 0.3px;
 }
 
-.button-saveUpdate:hover {
-  background-color: #0056b3;
-  transform: scale(1.02);
+.btn-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
 }
 
-#updateMessage {
-  font-size: 0.95rem;
-  margin-top: 15px;
-  color: #333;
+.btn-save:active {
+  transform: translateY(0);
+}
+
+/* ======== MENSAJE DE ACTUALIZACION ======== */
+.update-message {
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 18px;
   text-align: center;
+  background-color: #ecfdf5;
+  color: #166534;
+  border: 1px solid #a7f3d0;
 }
 
-/*Responsive*/
+/* ======== RESPONSIVE ======== */
 @media (max-width: 768px) {
-  .container {
-    padding: 25px 25px;
+  .profile-container {
+    padding: 28px 24px;
   }
 
-  .title {
+  .profile-title {
     font-size: 1.5rem;
   }
 
-  .button-saveUpdate {
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cascading-selects {
+    flex-direction: column;
+  }
+
+  .cascading-selects .form-group {
+    min-width: 100%;
+  }
+
+  .btn-save {
     font-size: 0.95rem;
   }
 }
 
 @media (max-width: 480px) {
-  .container {
-    padding: 20px 18px;
+  .profile-wrapper {
+    padding: 20px 10px;
+  }
+
+  .profile-container {
+    padding: 22px 18px;
   }
 
   .form-control,
-  #subject-select {
+  .form-select {
     font-size: 0.9rem;
+    padding: 10px 12px;
   }
 
-  .button-saveUpdate {
+  .btn-save {
     font-size: 0.9rem;
-    padding: 10px;
+    padding: 11px;
+  }
+
+  .doc-item-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .btn-delete {
+    align-self: flex-end;
+  }
+
+  .admin-buttons {
+    gap: 10px;
+  }
+
+  .btn-admin {
+    padding: 12px 16px;
+    font-size: 0.9rem;
   }
 }
-
-/* ====== Panel de Mis Documentos ====== */
-#documentsPanel {
-  margin-top: 25px;
-  padding: 20px;
-  border: 1px solid #e3e3e3;
-  border-radius: 8px;
-  background-color: #fafafa;
-}
-
-#documentsPanel h3 {
-  margin-bottom: 15px;
-  color: #333;
-  font-weight: 200;
-  text-align: center;
-  font-size: large;
-}
-
-/* Lista */
-.lista-documentos {
-  list-style: none;
-  padding: 0;
-  margin-bottom: 20px;
-}
-
-.lista-documentos > a{
-  text-decoration: none;
-}
-
-.item-documento {
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 12px 14px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  background-color: #fff;
-  transition: background-color 0.2s ease;
-}
-
-.item-documento:hover {
-  background-color: #f1f1f1;
-}
-
-/* Texto del documento */
-.doc-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.doc-title {
-  font-weight: 600;
-  color: #333;
-}
-
-.doc-subject {
-  font-size: 0.9rem;
-  color: #777;
-}
-
-/* Botón eliminar */
-.btn-delete {
-  background-color: #fff;
-  color: #dc3545;
-  border: 1.5px solid #dc3545;
-  border-radius: 6px;
-  padding: 6px 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-delete:hover {
-  background-color: #dc3545;
-  color: #fff;
-}
-
-/* Mensaje sin documentos */
-.no-documents {
-  text-align: center;
-  color: #666;
-  font-style: italic;
-  margin-top: 10px;
-}
-
-/* Mensaje de solicitud de cambio de rol a profesor*/
-.role-request-banner {
-    background-color: #e3f2fd;
-    border-left: 5px solid #2196f3;
-    color: #0d47a1;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 4px;
-    font-size: 0.95rem;
-}
-
-.role-request-banner a {
-    color: #0d47a1;
-    font-weight: bold;
-    text-decoration: underline;
-}
-
-
-/**/
