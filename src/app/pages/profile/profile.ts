@@ -40,6 +40,7 @@ export class Profile implements OnInit {
 
   isAdmin = false;
   isProfessor = false;
+  originalEmail = '';
 
   ngOnInit(): void {
     const token = this.auth.getToken();
@@ -81,6 +82,7 @@ export class Profile implements OnInit {
     this.userService.getProfile(username).subscribe({
       next: (data) => {
         this.userData = data;
+        this.originalEmail = data.mail || '';
         this.loading = false;
 
         const role = (data.role || '').toUpperCase();
@@ -186,9 +188,49 @@ export class Profile implements OnInit {
   actualizarPerfil(): void {
     if (!this.userData) return;
 
-    this.userService.updateProfile(this.userData).subscribe({
-      next: (msg) => (this.updateMessage = msg),
-      error: () => (this.updateMessage = 'Error actualizando el perfil.'),
+    const name = (this.userData.name || '').trim();
+    const lastname = (this.userData.lastname || '').trim();
+    const mail = (this.userData.mail || '').trim();
+
+    if (!name || !lastname || !mail) {
+      this.modal.alert('Completá los campos obligatorios (nombre, apellido, email).');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(mail)) {
+      this.modal.alert('El formato del email no es válido.');
+      return;
+    }
+
+    if (mail !== this.originalEmail) {
+      this.userService.emailExists(mail).subscribe({
+        next: (exists) => {
+          if (exists) {
+            this.modal.alert('Este email ya está en uso por otro usuario.');
+            this.cdr.detectChanges();
+          } else {
+            this.enviarActualizacion();
+          }
+        },
+        error: () => this.enviarActualizacion(),
+      });
+    } else {
+      this.enviarActualizacion();
+    }
+  }
+
+  private enviarActualizacion(): void {
+    this.userService.updateProfile(this.userData!).subscribe({
+      next: (msg) => {
+        this.updateMessage = msg;
+        this.originalEmail = this.userData!.mail || '';
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.updateMessage = 'Error actualizando el perfil.';
+        this.cdr.detectChanges();
+      },
     });
   }
 
