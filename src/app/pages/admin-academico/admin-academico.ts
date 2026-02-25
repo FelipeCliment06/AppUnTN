@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
+import { ModalService } from '../../services/modal.service';
 import { environment } from '../../../environments/environment';
 
 interface University {
@@ -35,6 +36,7 @@ export class AdminAcademico implements OnInit {
   private readonly auth = inject(Auth);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly modal = inject(ModalService);
 
   // ── Datos ──
   universities = signal<University[]>([]);
@@ -109,7 +111,6 @@ export class AdminAcademico implements OnInit {
   }
 
   selectUniversity(uni: University): void {
-    // Si clickeamos la misma, deseleccionar
     if (this.selectedUniversity()?.id === uni.id) {
       this.selectedUniversity.set(null);
       this.selectedCareer.set(null);
@@ -122,7 +123,7 @@ export class AdminAcademico implements OnInit {
 
   agregarUniversidad(): void {
     if (!this.newUniName.trim()) {
-      alert('El nombre de la universidad es obligatorio.');
+      this.modal.alert('El nombre de la universidad es obligatorio.');
       return;
     }
 
@@ -138,7 +139,7 @@ export class AdminAcademico implements OnInit {
         },
         error: (err) => {
           console.error('Error creando universidad:', err);
-          alert(err.error || 'Error al crear la universidad.');
+          this.modal.alert(err.error || 'Error al crear la universidad.');
         },
       });
   }
@@ -155,7 +156,7 @@ export class AdminAcademico implements OnInit {
 
   saveEditUni(uni: University): void {
     if (!this.editUniName.trim()) {
-      alert('El nombre no puede estar vacío.');
+      this.modal.alert('El nombre no puede estar vacío.');
       return;
     }
 
@@ -167,20 +168,22 @@ export class AdminAcademico implements OnInit {
         next: () => {
           this.editingUniId = null;
           this.cargarUniversidades();
-          // Actualizar selección si era la misma
           if (this.selectedUniversity()?.id === uni.id) {
             this.selectedUniversity.set({ ...uni, name: body.name, location: body.location });
           }
         },
         error: (err) => {
           console.error('Error editando universidad:', err);
-          alert(err.error || 'Error al editar la universidad.');
+          this.modal.alert(err.error || 'Error al editar la universidad.');
         },
       });
   }
 
-  eliminarUniversidad(uni: University): void {
-    if (!confirm(`¿Eliminar "${uni.name}"? Se eliminarán todas sus carreras y materias.`)) return;
+  async eliminarUniversidad(uni: University): Promise<void> {
+    const ok = await this.modal.confirm(
+      `¿Eliminar "${uni.name}"? Se eliminarán todas sus carreras y materias.`
+    );
+    if (!ok) return;
 
     this.http
       .delete(`${environment.apiUrl}/admin/universities/delete/${uni.id}`, {
@@ -197,7 +200,7 @@ export class AdminAcademico implements OnInit {
         },
         error: (err) => {
           console.error('Error eliminando universidad:', err);
-          alert('Error al eliminar la universidad.');
+          this.modal.alert('Error al eliminar la universidad.');
         },
       });
   }
@@ -231,7 +234,7 @@ export class AdminAcademico implements OnInit {
     const uni = this.selectedUniversity();
     if (!uni) return;
     if (!this.newCareerName.trim()) {
-      alert('El nombre de la carrera es obligatorio.');
+      this.modal.alert('El nombre de la carrera es obligatorio.');
       return;
     }
 
@@ -246,7 +249,7 @@ export class AdminAcademico implements OnInit {
         },
         error: (err) => {
           console.error('Error creando carrera:', err);
-          alert(err.error || 'Error al crear la carrera.');
+          this.modal.alert(err.error || 'Error al crear la carrera.');
         },
       });
   }
@@ -262,7 +265,7 @@ export class AdminAcademico implements OnInit {
 
   saveEditCareer(career: Career): void {
     if (!this.editCareerName.trim()) {
-      alert('El nombre no puede estar vacío.');
+      this.modal.alert('El nombre no puede estar vacío.');
       return;
     }
 
@@ -280,13 +283,16 @@ export class AdminAcademico implements OnInit {
         },
         error: (err) => {
           console.error('Error editando carrera:', err);
-          alert(err.error || 'Error al editar la carrera.');
+          this.modal.alert(err.error || 'Error al editar la carrera.');
         },
       });
   }
 
-  eliminarCarrera(career: Career): void {
-    if (!confirm(`¿Eliminar "${career.name}"? Se eliminarán todas sus materias.`)) return;
+  async eliminarCarrera(career: Career): Promise<void> {
+    const ok = await this.modal.confirm(
+      `¿Eliminar "${career.name}"? Se eliminarán todas sus materias.`
+    );
+    if (!ok) return;
 
     this.http
       .delete(`${environment.apiUrl}/admin/careers/delete/${career.id}`, {
@@ -302,7 +308,7 @@ export class AdminAcademico implements OnInit {
         },
         error: (err) => {
           console.error('Error eliminando carrera:', err);
-          alert('Error al eliminar la carrera.');
+          this.modal.alert('Error al eliminar la carrera.');
         },
       });
   }
@@ -327,7 +333,7 @@ export class AdminAcademico implements OnInit {
     const career = this.selectedCareer();
     if (!career) return;
     if (!this.newSubjectName.trim()) {
-      alert('El nombre de la materia es obligatorio.');
+      this.modal.alert('El nombre de la materia es obligatorio.');
       return;
     }
 
@@ -342,7 +348,7 @@ export class AdminAcademico implements OnInit {
         },
         error: (err) => {
           console.error('Error creando materia:', err);
-          alert(err.error || 'Error al crear la materia.');
+          this.modal.alert(err.error || 'Error al crear la materia.');
         },
       });
   }
@@ -358,7 +364,7 @@ export class AdminAcademico implements OnInit {
 
   saveEditSubject(subject: Subject): void {
     if (!this.editSubjectName.trim()) {
-      alert('El nombre no puede estar vacío.');
+      this.modal.alert('El nombre no puede estar vacío.');
       return;
     }
 
@@ -373,13 +379,14 @@ export class AdminAcademico implements OnInit {
         },
         error: (err) => {
           console.error('Error editando materia:', err);
-          alert(err.error || 'Error al editar la materia.');
+          this.modal.alert(err.error || 'Error al editar la materia.');
         },
       });
   }
 
-  eliminarMateria(subject: Subject): void {
-    if (!confirm(`¿Eliminar la materia "${subject.name}"?`)) return;
+  async eliminarMateria(subject: Subject): Promise<void> {
+    const ok = await this.modal.confirm(`¿Eliminar la materia "${subject.name}"?`);
+    if (!ok) return;
 
     this.http
       .delete(`${environment.apiUrl}/admin/subjects/delete/${subject.id}`, {
@@ -390,7 +397,7 @@ export class AdminAcademico implements OnInit {
         next: () => this.cargarMaterias(),
         error: (err) => {
           console.error('Error eliminando materia:', err);
-          alert('Error al eliminar la materia.');
+          this.modal.alert('Error al eliminar la materia.');
         },
       });
   }

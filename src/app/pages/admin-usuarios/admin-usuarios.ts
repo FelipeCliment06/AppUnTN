@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../services/auth';
+import { ModalService } from '../../services/modal.service';
 import { environment } from '../../../environments/environment';
 
 interface AppUser {
@@ -25,48 +26,46 @@ export class AdminUsuarios implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly auth = inject(Auth);
   private readonly router = inject(Router);
+  private readonly modal = inject(ModalService);
 
-  
   users = signal<AppUser[]>([]);
   filtroUsername = signal('');
   filtroNombre = signal('');
   filtroEmail = signal('');
   filtroRol = signal('');
 
-  
   filteredUsers = computed(() => {
-  const username = this.filtroUsername().toLowerCase();
-  const nombre   = this.filtroNombre().toLowerCase();
-  const email    = this.filtroEmail().toLowerCase();
-  const rol      = this.filtroRol().toUpperCase(); 
+    const username = this.filtroUsername().toLowerCase();
+    const nombre   = this.filtroNombre().toLowerCase();
+    const email    = this.filtroEmail().toLowerCase();
+    const rol      = this.filtroRol().toUpperCase();
 
-  return this.users().filter((u) => {
-    const fullName = `${u.name || ''} ${u.lastname || ''}`.toLowerCase();
-    const userRol  = (u.role || '').toUpperCase();
+    return this.users().filter((u) => {
+      const fullName = `${u.name || ''} ${u.lastname || ''}`.toLowerCase();
+      const userRol  = (u.role || '').toUpperCase();
 
-    const matchRol =
-      rol === '' ||
-      (rol === 'PROFESSOR' && (userRol === 'PROFESSOR' || userRol === 'ROLE_PROFESSOR')) ||
-      (rol === 'STUDENT'  && (userRol === 'STUDENT'  || userRol === 'ROLE_STUDENT'));
+      const matchRol =
+        rol === '' ||
+        (rol === 'PROFESSOR' && (userRol === 'PROFESSOR' || userRol === 'ROLE_PROFESSOR')) ||
+        (rol === 'STUDENT'  && (userRol === 'STUDENT'  || userRol === 'ROLE_STUDENT'));
 
-    return (
-      (u.username || '').toLowerCase().includes(username) &&
-      fullName.includes(nombre) &&
-      (u.mail || '').toLowerCase().includes(email) &&
-      matchRol
-    );
+      return (
+        (u.username || '').toLowerCase().includes(username) &&
+        fullName.includes(nombre) &&
+        (u.mail || '').toLowerCase().includes(email) &&
+        matchRol
+      );
+    });
   });
-});
-
 
   usernameActual = '';
-
 
   ngOnInit(): void {
     const token = this.auth.getToken();
     if (!token) {
-      alert('Token no encontrado. Redirigiendo al login...');
-      this.router.navigate(['/login']);
+      this.modal.alert('Token no encontrado. Redirigiendo al login...').then(() => {
+        this.router.navigate(['/login']);
+      });
       return;
     }
 
@@ -75,34 +74,33 @@ export class AdminUsuarios implements OnInit {
     this.cargarUsuarios();
   }
 
-  changeRole(user: AppUser, newRole: string): void {
+  async changeRole(user: AppUser, newRole: string): Promise<void> {
     const label = newRole === 'PROFESSOR' ? 'Profesor' : 'Alumno';
-    if (!confirm(`¿Seguro que querés cambiar el rol de ${user.username} a ${label}?`)) {
-      return;
-    }
+    const ok = await this.modal.confirm(
+      `¿Seguro que querés cambiar el rol de ${user.username} a ${label}?`
+    );
+    if (!ok) return;
 
-    // El backend espera el username y el nuevo rol
     this.http
-      .patch(`${environment.apiUrl}/users/updateRole`, { 
-        username: user.username, 
-        newRole: newRole 
+      .patch(`${environment.apiUrl}/users/updateRole`, {
+        username: user.username,
+        newRole: newRole
       }, {
         headers: this.headers,
         responseType: 'text',
       })
       .subscribe({
         next: () => {
-          // Actualizamos el signal localmente para que el cambio sea instantáneo
           this.users.update((prevUsers) =>
             prevUsers.map((u) =>
               u.username === user.username ? { ...u, role: newRole } : u
             )
           );
-          alert(`El usuario ahora es ${label}`);
+          this.modal.alert(`El usuario ahora es ${label}`);
         },
         error: (err) => {
           console.error('Error al cambiar rol:', err);
-          alert('No se pudo cambiar el rol.');
+          this.modal.alert('No se pudo cambiar el rol.');
         },
       });
   }
@@ -129,7 +127,6 @@ export class AdminUsuarios implements OnInit {
       })
       .subscribe({
         next: (users) => {
-          // ❗ Acá filtramos SOLO usuarios que NO sean admin
           const soloUsuarios = users.filter(
             (u) => u.role !== 'ADMIN' && u.role !== 'ROLE_ADMIN'
           );
@@ -137,26 +134,27 @@ export class AdminUsuarios implements OnInit {
         },
         error: (err) => {
           console.error('Error cargando usuarios:', err);
-          alert('Error al cargar usuarios o acceso no autorizado.');
+          this.modal.alert('Error al cargar usuarios o acceso no autorizado.');
         },
       });
   }
 
-  deleteUser(usernameToDeleteRaw: string): void {
+  async deleteUser(usernameToDeleteRaw: string): Promise<void> {
     const usernameToDelete = (usernameToDeleteRaw || '').toLowerCase();
 
     if (usernameToDelete === 'admin0') {
-      alert('No se puede eliminar al administrador raíz (admin0).');
+      this.modal.alert('No se puede eliminar al administrador raíz (admin0).');
       return;
     }
     if (usernameToDelete === this.usernameActual) {
-      alert('No podés eliminar tu propio usuario.');
+      this.modal.alert('No podés eliminar tu propio usuario.');
       return;
     }
 
-    if (!confirm(`¿Seguro que querés eliminar al usuario ${usernameToDeleteRaw}?`)) {
-      return;
-    }
+    const ok = await this.modal.confirm(
+      `¿Seguro que querés eliminar al usuario ${usernameToDeleteRaw}?`
+    );
+    if (!ok) return;
 
     this.http
       .delete(`${environment.apiUrl}/users/deleteUser`, {
@@ -166,7 +164,7 @@ export class AdminUsuarios implements OnInit {
       })
       .subscribe({
         next: (msg) => {
-          alert(msg || 'Usuario eliminado correctamente.');
+          this.modal.alert(msg || 'Usuario eliminado correctamente.');
           this.users.set(
             this.users().filter(
               (u) => u.username.toLowerCase() !== usernameToDelete
@@ -175,19 +173,18 @@ export class AdminUsuarios implements OnInit {
         },
         error: (err) => {
           console.error('Error eliminando usuario:', err);
-          alert('Error al eliminar el usuario.');
+          this.modal.alert('Error al eliminar el usuario.');
         },
       });
   }
 
- onFiltroChange(tipo: string, event: Event): void {
+  onFiltroChange(tipo: string, event: Event): void {
     const valor = (event.target as HTMLInputElement).value;
     if (tipo === 'username') this.filtroUsername.set(valor);
     if (tipo === 'nombre') this.filtroNombre.set(valor);
     if (tipo === 'email') this.filtroEmail.set(valor);
     if (tipo === 'rol') this.filtroRol.set(valor);
   }
-
 
   volverPerfil(): void {
     this.router.navigate(['/profile']);
@@ -200,5 +197,4 @@ export class AdminUsuarios implements OnInit {
     if (r === 'STUDENT' || r === 'ROLE_STUDENT') return 'Alumno';
     return role;
   }
-
 }
