@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../services/auth';
+import { ModalService } from '../../services/modal.service';
 import { environment } from '../../../environments/environment';
 
 interface AdminUser {
@@ -24,14 +25,13 @@ export class AdminAdmins implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly auth = inject(Auth);
   private readonly router = inject(Router);
+  private readonly modal = inject(ModalService);
 
-  // ✅ signals modernas
   admins = signal<AdminUser[]>([]);
   filtroUsername = signal('');
   filtroNombre = signal('');
   filtroEmail = signal('');
 
-  // ✅ computed signal en lugar de método
   filteredAdmins = computed(() => {
     const username = this.filtroUsername().toLowerCase();
     const nombre = this.filtroNombre().toLowerCase();
@@ -53,8 +53,9 @@ export class AdminAdmins implements OnInit {
   ngOnInit(): void {
     const token = this.auth.getToken();
     if (!token) {
-      alert('Token no encontrado. Redirigiendo al login...');
-      this.router.navigate(['/login']);
+      this.modal.alert('Token no encontrado. Redirigiendo al login...').then(() => {
+        this.router.navigate(['/login']);
+      });
       return;
     }
 
@@ -94,27 +95,27 @@ export class AdminAdmins implements OnInit {
         },
         error: (err) => {
           console.error('Error cargando administradores:', err);
-          alert('Error al cargar administradores o acceso no autorizado.');
+          this.modal.alert('Error al cargar administradores o acceso no autorizado.');
         },
       });
   }
 
-  deleteUser(usernameToDeleteRaw: string): void {
+  async deleteUser(usernameToDeleteRaw: string): Promise<void> {
     const usernameToDelete = (usernameToDeleteRaw || '').toLowerCase();
 
     if (usernameToDelete === 'admin0') {
-      alert('No se puede eliminar al administrador raíz (admin0).');
+      this.modal.alert('No se puede eliminar al administrador raíz (admin0).');
       return;
     }
     if (usernameToDelete === this.usernameActual) {
-      alert('No podés eliminar tu propio usuario.');
+      this.modal.alert('No podés eliminar tu propio usuario.');
       return;
     }
 
-    if (
-      !confirm(`¿Seguro que querés eliminar al administrador ${usernameToDeleteRaw}?`)
-    )
-      return;
+    const ok = await this.modal.confirm(
+      `¿Seguro que querés eliminar al administrador ${usernameToDeleteRaw}?`
+    );
+    if (!ok) return;
 
     this.http
       .delete(`${environment.apiUrl}/users/deleteUser`, {
@@ -124,7 +125,7 @@ export class AdminAdmins implements OnInit {
       })
       .subscribe({
         next: (msg) => {
-          alert(msg || 'Administrador eliminado correctamente.');
+          this.modal.alert(msg || 'Administrador eliminado correctamente.');
           this.admins.set(
             this.admins().filter(
               (a) => a.username.toLowerCase() !== usernameToDelete
@@ -133,18 +134,17 @@ export class AdminAdmins implements OnInit {
         },
         error: (err) => {
           console.error('Error eliminando administrador:', err);
-          alert('Error al eliminar el administrador.');
+          this.modal.alert('Error al eliminar el administrador.');
         },
       });
   }
 
   onFiltroChange(tipo: 'username' | 'nombre' | 'email', event: Event): void {
-  const valor = (event.target as HTMLInputElement).value;
-  if (tipo === 'username') this.filtroUsername.set(valor);
-  if (tipo === 'nombre') this.filtroNombre.set(valor);
-  if (tipo === 'email') this.filtroEmail.set(valor);
-}
-
+    const valor = (event.target as HTMLInputElement).value;
+    if (tipo === 'username') this.filtroUsername.set(valor);
+    if (tipo === 'nombre') this.filtroNombre.set(valor);
+    if (tipo === 'email') this.filtroEmail.set(valor);
+  }
 
   volverPerfil(): void {
     this.router.navigate(['/profile']);

@@ -1,0 +1,29 @@
+@if (modal.visible()) {
+  <div class="modal-overlay" (click)="modal.cancel()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+
+      <div class="modal-icon" [class.modal-icon--confirm]="modal.config().type === 'confirm'">
+        @if (modal.config().type === 'confirm') {
+          <span>!</span>
+        } @else {
+          <span>i</span>
+        }
+      </div>
+
+      <p class="modal-message">{{ modal.config().message }}</p>
+
+      <div class="modal-divider"></div>
+
+      <div class="modal-actions">
+        @if (modal.config().type === 'confirm') {
+          <button class="btn-cancel" (click)="modal.cancel()">
+            {{ modal.config().cancelText }}
+          </button>
+        }
+        <button class="btn-accept" (click)="modal.accept()">
+          {{ modal.config().confirmText }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

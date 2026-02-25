@@ -3,8 +3,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DocumentService } from '../../services/document.service';
-import { UserService } from '../../services/user-service'; // Importar UserService
+import { UserService } from '../../services/user-service';
 import { Auth } from '../../services/auth';
+import { ModalService } from '../../services/modal.service';
 
 @Component({
   selector: 'app-document-preview',
@@ -14,20 +15,19 @@ import { Auth } from '../../services/auth';
   styleUrls: ['./document-preview.css'],
 })
 export class DocumentPreview implements OnInit {
-  // Inyecciones de dependencias
   private readonly documentService = inject(DocumentService);
   private readonly userService = inject(UserService);
   private readonly auth = inject(Auth);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly cd = inject(ChangeDetectorRef);
+  private readonly modal = inject(ModalService);
 
   docId = '';
   token = '';
   username: string | null = null;
   title = '';
-  
-  // Variables de control de roles
+
   isAdmin = false;
   isProfessor = false;
 
@@ -49,16 +49,15 @@ export class DocumentPreview implements OnInit {
       return;
     }
 
-    // 1. Verificar permisos apenas carga el componente
     this.verificarPermisos();
 
-    // 2. Cargar el documento desde la URL
     this.route.paramMap.subscribe(params => {
       this.docId = params.get('id') || '';
 
       if (!this.docId) {
-        alert('ID de documento no encontrado');
-        this.router.navigate(['/documents']);
+        this.modal.alert('ID de documento no encontrado').then(() => {
+          this.router.navigate(['/documents']);
+        });
         return;
       }
 
@@ -66,7 +65,6 @@ export class DocumentPreview implements OnInit {
     });
   }
 
-  // Lógica replicada de tu Profile.ts
   verificarPermisos(): void {
     if (!this.username) return;
 
@@ -105,52 +103,62 @@ export class DocumentPreview implements OnInit {
   }
 
   enviarPuntuacion() {
-    if (!this.puntuacionSeleccionada()) return alert('Seleccioná una puntuación');
+    if (!this.puntuacionSeleccionada()) {
+      this.modal.alert('Seleccioná una puntuación');
+      return;
+    }
 
     this.documentService.enviarPuntuacion(this.docId, this.puntuacionSeleccionada(), this.token)
       .subscribe({
         next: () => this.cargarPreview(),
         error: (err) => {
           if (err.status === 200) return this.cargarPreview();
-          alert('Error al enviar puntuación');
+          this.modal.alert('Error al enviar puntuación');
         },
       });
   }
 
-  eliminarPuntuacion(id: number) {
-    if (!confirm('¿Querés eliminar esta puntuación?')) return;
+  async eliminarPuntuacion(id: number) {
+    const ok = await this.modal.confirm('¿Querés eliminar esta puntuación?');
+    if (!ok) return;
 
     this.documentService.eliminarPuntuacion(id, this.token).subscribe({
       next: () => this.cargarPreview(),
       error: (err) => {
         if (err.status === 200) return this.cargarPreview();
-        alert('Error al eliminar puntuación');
+        this.modal.alert('Error al eliminar puntuación');
       },
     });
   }
 
   enviarComentario() {
     const content = this.nuevoComentario.trim();
-    if (!content) return alert('El comentario no puede estar vacío.');
+    if (!content) {
+      this.modal.alert('El comentario no puede estar vacío.');
+      return;
+    }
 
     this.documentService.enviarComentario(this.docId, content, this.token).subscribe({
       next: () => {
         this.nuevoComentario = '';
         this.cargarPreview();
       },
-      error: (err) => alert('Error al enviar comentario: ' + err),
+      error: (err) => this.modal.alert('Error al enviar comentario: ' + err),
     });
   }
 
-  eliminarComentario(id: number) {
-    const mensaje = this.isAdmin ? '¿Deseas moderar (eliminar) este comentario como administrador?' : '¿Querés eliminar este comentario?';
-    if (!confirm(mensaje)) return;
+  async eliminarComentario(id: number) {
+    const mensaje = this.isAdmin
+      ? '¿Deseas moderar (eliminar) este comentario como administrador?'
+      : '¿Querés eliminar este comentario?';
+    const ok = await this.modal.confirm(mensaje);
+    if (!ok) return;
 
     this.documentService.eliminarComentario(id, this.token).subscribe({
       next: () => this.cargarPreview(),
       error: (err) => {
         if (err.status === 200) return this.cargarPreview();
-        alert('Error al eliminar comentario');
+        this.modal.alert('Error al eliminar comentario');
       },
     });
   }
@@ -164,20 +172,23 @@ export class DocumentPreview implements OnInit {
         a.download = this.title;
         a.click();
       },
-      error: (err) => alert('Error al descargar resumen: ' + err),
+      error: (err) => this.modal.alert('Error al descargar resumen: ' + err),
     });
   }
 
-  eliminarResumenCompleto() {
-    if (!confirm('¿ESTÁS SEGURO? Esta acción es irreversible: se borrará el archivo y toda la actividad (comentarios/puntos) asociada.')) return;
+  async eliminarResumenCompleto() {
+    const ok = await this.modal.confirm(
+      '¿ESTÁS SEGURO? Esta acción es irreversible: se borrará el archivo y toda la actividad (comentarios/puntos) asociada.'
+    );
+    if (!ok) return;
 
-    // Asegúrate de que el método en DocumentService se llame eliminarDocumento o deleteDocument
     this.documentService.deleteDocument(this.docId, this.token).subscribe({
       next: () => {
-        alert('Resumen eliminado correctamente');
-        this.router.navigate(['/home']); 
+        this.modal.alert('Resumen eliminado correctamente').then(() => {
+          this.router.navigate(['/home']);
+        });
       },
-      error: (err) => alert('Error al eliminar: ' + (err.error || err.message))
+      error: (err) => this.modal.alert('Error al eliminar: ' + (err.error || err.message))
     });
   }
 }

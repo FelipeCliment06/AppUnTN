@@ -1,0 +1,200 @@
+/* ======== OVERLAY ======== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 15, 30, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: overlayFadeIn 0.25s ease;
+}
+
+/* ======== CARD ======== */
+.modal-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 36px 40px 28px;
+  max-width: 440px;
+  width: 90%;
+  border-top: 4px solid #007bff;
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.18),
+    0 4px 20px rgba(0, 123, 255, 0.08);
+  animation: cardSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-align: center;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ======== ICONO ======== */
+.modal-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e8f0fe, #d0e2ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  animation: iconPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+}
+
+.modal-icon span {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #007bff;
+  font-style: italic;
+  line-height: 1;
+}
+
+.modal-icon--confirm {
+  background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+}
+
+.modal-icon--confirm span {
+  color: #e65100;
+  font-style: normal;
+  font-size: 1.5rem;
+}
+
+/* ======== MENSAJE ======== */
+.modal-message {
+  font-size: 1.05rem;
+  color: #1a1a2e;
+  line-height: 1.65;
+  margin: 0 0 20px;
+  word-break: break-word;
+  font-weight: 500;
+}
+
+/* ======== DIVISOR ======== */
+.modal-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #e0e4ea, transparent);
+  margin: 0 0 22px;
+}
+
+/* ======== BOTONES ======== */
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.btn-accept {
+  padding: 11px 32px;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: #fff;
+  letter-spacing: 0.02em;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+
+.btn-accept:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+}
+
+.btn-accept:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.btn-cancel {
+  padding: 11px 32px;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: #f0f2f5;
+  color: #495057;
+  letter-spacing: 0.02em;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.15s ease;
+}
+
+.btn-cancel:hover {
+  transform: translateY(-2px);
+  background: #e4e7eb;
+}
+
+.btn-cancel:active {
+  transform: translateY(0);
+  background: #d8dbe0;
+}
+
+/* ======== ANIMACIONES ======== */
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+}
+
+@keyframes cardSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes iconPop {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ======== RESPONSIVE ======== */
+@media (max-width: 480px) {
+  .modal-card {
+    padding: 28px 24px 22px;
+    margin: 0 12px;
+    border-radius: 14px;
+  }
+
+  .modal-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .modal-icon span {
+    font-size: 1.2rem;
+  }
+
+  .modal-message {
+    font-size: 0.95rem;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+
+  .btn-accept,
+  .btn-cancel {
+    width: 100%;
+    padding: 12px;
+  }
+}
