@@ -18,7 +18,7 @@ export class ResumeUpload implements OnInit {
   selectedFile: File | null = null;
   title = '';
   description = '';
-  subject = '';
+  selectedSubjectId: number | null = null;
   successMessage = '';
   errorMessage = '';
   apiUrl = `${environment.apiUrl}/documents/add`;
@@ -35,7 +35,7 @@ export class ResumeUpload implements OnInit {
 
   private http = inject(HttpClient);
   private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
+  public cdr = inject(ChangeDetectorRef);
   private documentService = inject(DocumentService);
 
   ngOnInit(): void {
@@ -49,13 +49,13 @@ export class ResumeUpload implements OnInit {
 
   onUniversityChange(): void {
     this.selectedCareerId = null;
-    this.subject = ''; 
+    this.selectedSubjectId = null;
     this.filteredSubjects = [];
     this.filteredCareers = this.allCareers.filter(c => c.university?.id == this.selectedUniversityId);
   }
 
   onCareerChange(): void {
-    this.subject = ''; 
+    this.selectedSubjectId = null;
     this.filteredSubjects = this.allSubjects.filter(s => s.career?.id == this.selectedCareerId);
   }
 
@@ -73,6 +73,11 @@ export class ResumeUpload implements OnInit {
       return;
     }
 
+    if (!this.selectedFile || !this.selectedSubjectId || !this.title) {
+      alert("Por favor, completá todos los campos y seleccioná la materia.");
+      return;
+    }
+
     const token = localStorage.getItem('token');
     if (!token) {
       this.errorMessage = 'No estás autenticado. Iniciá sesión primero.';
@@ -84,8 +89,7 @@ export class ResumeUpload implements OnInit {
     formData.append('file', this.selectedFile);
     formData.append('title', this.title);
     formData.append('description', this.description);
-    // Ahora this.subject trae el nombre de la materia seleccionada dinámicamente
-    formData.append('subject', this.subject); 
+    formData.append('subjectId', this.selectedSubjectId.toString());
     formData.append('fileType', this.selectedFile.type);
 
     const headers = new HttpHeaders({

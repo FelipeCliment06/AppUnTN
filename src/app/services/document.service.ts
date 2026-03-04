@@ -24,6 +24,15 @@ export class DocumentService {
   }
 
   // DOCUMENTS
+
+  upload(formData: FormData, token: string) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+    
+    return this.http.post(`${this.apiDocuments}/add`, formData, { headers });
+  }
+
   getAllDocuments(token: string, orden: string = 'recientes') {
     return this.http.get<any[]>(`${this.apiDocuments}/getAll?orden=${orden}`, {
       headers: this.createHeaders(token)
@@ -109,9 +118,9 @@ export class DocumentService {
     });
   }
 
-  filterDocumentsBySubject(subjectName: string, token: string) {
+  filterDocumentsBySubject(subjectId: number, token: string) {
     return this.http.post<any[]>(`${this.apiDocuments}/filterBySubject`, 
-      { subject: subjectName }, 
+      { subjectId: subjectId }, // Enviamos ID, no el nombre
       { headers: this.createHeaders(token) }
     );
   }

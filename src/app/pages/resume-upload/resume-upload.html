@@ -40,11 +40,11 @@
 
       <div class="form-group">
         <label for="materia" class="form-label">Materia</label>
-        <select class="form-select" id="materia" name="subject" [(ngModel)]="subject" [disabled]="!selectedCareerId" required>
-          <option value="">Seleccioná una materia</option>
-          @for (m of filteredSubjects; track m.id) {
-            <option [value]="m.name">{{ m.name }}</option>
-          }
+        <select class="form-select" id="materia" name="subject" [(ngModel)]="selectedSubjectId" (change)="cdr.detectChanges()" [disabled]="!selectedCareerId" required>
+        <option [ngValue]="null">Seleccioná una materia</option>
+        <option *ngFor="let s of filteredSubjects" [value]="s.id">
+          {{ s.name }}
+        </option>
         </select>
       </div>
 
