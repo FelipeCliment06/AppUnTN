@@ -284,3 +284,31 @@ body {
     font-size: 0.85rem;
   }
 }
+
+/* ═══════════════════════════════════════ */
+/* COLUMNA "VER MÁS" (FLECHITA PARA ABAJO) */
+/* ═══════════════════════════════════════ */
+
+.col-ver-mas {
+  text-align: center;
+  vertical-align: middle;
+  width: 120px; /* Le damos un ancho fijo para que quede prolijo */
+}
+
+.icono-ver-mas {
+  display: inline-block;
+  font-size: 1.1rem;
+  color: #007bff; /* Azul botón */
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* Cuando el usuario pasa el mouse por la fila, la flecha se mueve un poquito hacia abajo */
+.tabla-cuerpo tr:hover .icono-ver-mas {
+  color: #0056b3;
+  transform: translateY(3px); 
+}
+
+/* Opcional: Si la fila ya está seleccionada, le cambiamos el color a la flecha para que no resalte tanto */
+.fila-seleccionada .icono-ver-mas {
+  color: #6c757d; 
+}

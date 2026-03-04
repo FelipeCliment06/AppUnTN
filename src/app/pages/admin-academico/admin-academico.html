@@ -32,7 +32,7 @@
             <th>Nombre</th>
             <th>Ubicación</th>
             <th>Acciones</th>
-          </tr>
+            <th>Ver Carreras</th> </tr>
         </thead>
         <tbody class="tabla-cuerpo">
           @for (uni of universities(); track uni.id) {
@@ -53,7 +53,7 @@
                     <button class="btn-cancelar" (click)="cancelEditUni()">Cancelar</button>
                   </div>
                 </td>
-              } @else {
+                <td></td> } @else {
                 <td>{{ uni.name }}</td>
                 <td>{{ uni.location || '-' }}</td>
                 <td (click)="$event.stopPropagation()">
@@ -62,11 +62,14 @@
                     <button class="btn-eliminar" (click)="eliminarUniversidad(uni)">Eliminar</button>
                   </div>
                 </td>
+                <td class="col-ver-mas">
+                  <span class="icono-ver-mas">▼</span>
+                </td>
               }
             </tr>
           } @empty {
             <tr>
-              <td colspan="3" class="tabla-vacia">No hay universidades cargadas.</td>
+              <td colspan="4" class="tabla-vacia">No hay universidades cargadas.</td>
             </tr>
           }
         </tbody>
@@ -102,7 +105,7 @@
             <tr>
               <th>Nombre</th>
               <th>Acciones</th>
-            </tr>
+              <th>Ver Materias</th> </tr>
           </thead>
           <tbody class="tabla-cuerpo">
             @for (career of filteredCareers(); track career.id) {
@@ -120,7 +123,7 @@
                       <button class="btn-cancelar" (click)="cancelEditCareer()">Cancelar</button>
                     </div>
                   </td>
-                } @else {
+                  <td></td> } @else {
                   <td>{{ career.name }}</td>
                   <td (click)="$event.stopPropagation()">
                     <div class="tabla-acciones">
@@ -128,11 +131,14 @@
                       <button class="btn-eliminar" (click)="eliminarCarrera(career)">Eliminar</button>
                     </div>
                   </td>
+                  <td class="col-ver-mas">
+                    <span class="icono-ver-mas">▼</span>
+                  </td>
                 }
               </tr>
             } @empty {
               <tr>
-                <td colspan="2" class="tabla-vacia">No hay carreras para esta universidad.</td>
+                <td colspan="3" class="tabla-vacia">No hay carreras para esta universidad.</td>
               </tr>
             }
           </tbody>
