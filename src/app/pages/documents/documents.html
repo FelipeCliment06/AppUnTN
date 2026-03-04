@@ -27,10 +27,10 @@
 
     <div>
       <label>Materia</label>
-      <select class="form-select" [(ngModel)]="materia" (change)="filtrar()" [disabled]="!selectedCareerId">
-        <option value="">Seleccionar materia...</option>
+      <select class="form-select" [(ngModel)]="selectedSubjectId" (change)="filtrar()" [disabled]="!selectedCareerId">
+        <option [ngValue]="null">Seleccionar materia...</option>
         @for (m of filteredSubjects; track m.id) {
-          <option [value]="m.name">{{ m.name }}</option>
+          <option [ngValue]="m.id">{{ m.name }}</option>
         }
       </select>
     </div>
@@ -55,7 +55,7 @@
     </div>
   </div>
 
-  @if (!materia && !nombre && !autor) {
+  @if (!selectedSubjectId && !nombre && !autor) {
     <p class="no-results">Usá los filtros para buscar resúmenes</p>
   } @else if (filtrados.length === 0) {
     <p class="no-results">No se encontraron resúmenes con los filtros aplicados</p>
