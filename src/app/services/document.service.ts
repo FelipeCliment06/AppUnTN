@@ -51,10 +51,11 @@ export class DocumentService {
       responseType: 'blob'
     });
   }
-  deleteDocument(id: string, token: string) {
+  deleteDocument(id: number | string, token: string) {
   return this.http.delete(`${this.apiDocuments}/delete`, {
     headers: this.createHeaders(token),
-    body: { id: id }
+    body: { id: id },
+    responseType: 'text' 
   });
 }
 
