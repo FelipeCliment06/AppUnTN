@@ -39,6 +39,15 @@ export class ResumeUpload implements OnInit {
   private documentService = inject(DocumentService);
 
   ngOnInit(): void {
+    this.title = '';
+    this.description = '';
+    this.selectedFile = null;
+    this.selectedUniversityId = null;
+    this.selectedCareerId = null;
+    this.selectedSubjectId = null;
+    this.successMessage = '';
+    this.errorMessage = '';
+
     const token = localStorage.getItem('token') || '';
     if (token) {
       this.documentService.getUniversities(token).subscribe(data => this.allUniversities = data);

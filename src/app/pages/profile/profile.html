@@ -115,10 +115,13 @@
         <h3 class="section-title">Materias que dictas</h3>
 
         <div class="subjects-list-container">
-          @for (sub of subjects; track sub) {
+          @for (sub of subjects; track sub.id) {
             <div class="subject-item">
-              <span class="subject-badge">{{ sub }}</span>
-              <button class="btn-delete-sm" (click)="eliminarMateria(sub)">
+              <div class="subject-info">
+                <span class="subject-badge">{{ sub.name }}</span>
+                <span class="subject-detail">{{ sub.career?.name }} - {{ sub.career?.university?.name }}</span>
+              </div>
+              <button class="btn-delete-sm" (click)="eliminarMateria(sub.id)">
                 Eliminar
               </button>
             </div>

@@ -109,6 +109,17 @@ deleteSubject(subject: string): Observable<string> {
   ) as unknown as Observable<string>;
 }
 
+deleteSubjectById(subjectId: number): Observable<string> {
+  return this.http.delete(
+    `${this.baseUrl}/subjects/delete`,
+    {
+      headers: this.authHeaders,
+      body: { subjectId },
+      responseType: 'text' as 'text'
+    }
+  ) as unknown as Observable<string>;
+}
+
 
 // ========= ROLES =========
 isAdminRole(role: string): boolean {

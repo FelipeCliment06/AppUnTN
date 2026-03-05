@@ -24,7 +24,7 @@ export class Profile implements OnInit {
   private readonly modal       = inject(ModalService);
 
   userData: UserProfile | null = null;
-  subjects: string[] = [];
+  subjects: any[] = [];
   nuevaMateria = '';
   updateMessage = '';
   loading = false;
@@ -144,7 +144,7 @@ export class Profile implements OnInit {
   cargarMateriasProfesor(): void {
     this.userService.getSubjects().subscribe({
       next: (res) => {
-        this.subjects = res.map((s: any) => s.name || s);
+        this.subjects = res;
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -164,18 +164,18 @@ export class Profile implements OnInit {
     this.userService.addSubjectById(this.selectedSubjectId).subscribe({
       next: (msg) => {
         this.modal.alert(msg);
-        this.cargarMateriasProfesor();
         this.selectedSubjectId = null;
+        this.cargarMateriasProfesor();
       },
       error: () => this.modal.alert('Error al asignar la materia.'),
     });
   }
 
-  async eliminarMateria(materia: string): Promise<void> {
+  async eliminarMateria(id: number): Promise<void> {
     const ok = await this.modal.confirm('¿Seguro que querés eliminar esta materia?');
     if (!ok) return;
 
-    this.userService.deleteSubject(materia).subscribe({
+    this.userService.deleteSubjectById(id).subscribe({
       next: (msg) => {
         this.modal.alert(msg);
         this.cargarMateriasProfesor();

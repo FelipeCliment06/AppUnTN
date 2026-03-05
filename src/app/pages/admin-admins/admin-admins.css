@@ -97,6 +97,8 @@ body {
 
 /* TABLA */
 .tabla-wrap {
+  max-height: 340px;
+  overflow-y: auto;
   overflow-x: auto;
 }
 
@@ -109,6 +111,13 @@ body {
 .tabla-cabecera {
   background-color: #f1f3f5;
   color: #0a2540;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.tabla-cabecera th {
+  background-color: #f1f3f5;
 }
 
 .tabla th,

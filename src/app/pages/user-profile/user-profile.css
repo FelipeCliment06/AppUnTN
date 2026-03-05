@@ -193,6 +193,8 @@
 /* ============================= */
 .documents-section {
   margin-top: 4px;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .section-title {
